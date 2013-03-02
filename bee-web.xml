@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <!DOCTYPE bee PUBLIC "-//Dmitriy Rogatkin//DTD Bee Project Builder 1.0//EN"
+    "http://knitknot.info/DTD/bee.dtd" [
+      <!ENTITY env SYSTEM "./env.xml">
+      <!ENTITY project "music-barrel">
+      <!ENTITY build_directory "./out">
+      <!ENTITY source_directory "src/java">
+      <!ENTITY build_file "&project;.jar"> 
+      <!ENTITY domain "rogatkin">
+      <!ENTITY manifestf ""> 
+      <!ENTITY main_class "&domain;.&project;.Main">
+      <!ENTITY webapp_file "&project;.war"> 
+      <!ENTITY projects_root "E:\projects">
+      ]>
+<!-- 
+   Music-Barrel - web interfaced juke box
+   Copyright (c) 2013 Dmitriy Rogatkin    -->
+
+<bee name="&project;" type="project">
+  &env;
+
+  <expression variable="javac">
+     <operator name="append">
+        <value variable="JAVA_HOME"/>
+        <value>/bin/javac</value>
+     </operator>
+  </expression>
+
+  <target name="check build" dir="PROJECT_HOME">
+     <dependency>
+        <expression>
+          <operator name="eq">
+            <function name ="timestamp">
+               <parameter value="&build_directory;" type="path"/>
+            </function>
+            <value></value>
+          </operator>
+        </expression>
+     </dependency>
+     <block>
+       <function name="mkd">
+         <parameter value="&build_directory;" type="path"/>
+       </function>
+     </block>
+  </target>
+
+  <!-- reconsider in case of not project root build script -->
+  <expression variable="java sources">
+        <function name="newerwithdependency">
+           <parameter value="&source_directory;/&domain;/.java"/>
+           <parameter value="&build_directory;/&domain;/.class"/>
+	   <parameter/>
+	   <parameter value="&domain;"/>
+        </function>
+  </expression>
+
+  <expression variable="class path">
+     <operator name="append">
+        <value variable="PROJECT_HOME"/>
+        <value>/build/&build_directory;</value>
+        <value variable="PATH SEPARATOR"/>
+        <value variable="CUSTOM CP"/>
+     </operator>
+  </expression>
+
+  <target name="compile" dir="PROJECT_HOME">
+    <dependency target="check build"/>
+    <dependency variable="java sources"/>
+    <echo>Compiling...</echo>
+    <task exec="javac">
+       <parameter value="-classpath"/>
+       <parameter variable="class path"/>
+       <parameter value="-source"/>
+       <parameter variable="comp target"/>
+       <parameter value="-target"/>
+       <parameter variable="comp target"/>
+       <parameter value="-d"/>comp target
+       <parameter value="&build_directory;" type="path"/>
+       <parameter variable="java sources"/>>
+      <onexit>
+        <if>
+          <expression>
+             <operator name="neq"><value variable="resultcode"/><value>0</value></operator>
+          </expression>
+          <block type="then">
+                 <echo>Error(s) at compilation</echo>
+                 <function name="stop">
+			<parameter value="1"/>
+                 </function>
+          </block>
+       </if>
+      </onexit>
+      <onexception>
+	<block>
+                 <echo>Exception at compilation</echo>
+                 <function name="stop">
+			<parameter value="-1"/>
+                 </function>
+	</block>
+      </onexception>
+    </task>
+  </target>
+
+  <expression variable="manifest file">
+     <value type="path">&manifestf;</value>
+  </expression>
+
+  <target name="jar" dir="PROJECT_HOME">
+    <echo>Jarring...</echo>
+    <dependency target="compile"/>
+    <dependency>
+           <function name="allnewer">
+              <parameter value="&build_directory;/&domain;" type="dir"/>
+              <parameter value="&build_directory;/&build_file;" type="path"/>
+           </function>
+    </dependency>
+    <dependency>
+           <function name="allnewer">
+              <parameter value="bee-web.xml" type="dir"/>
+              <parameter value="&build_directory;/&build_file;" type="path"/>
+           </function>
+    </dependency>
+
+    <task name="jar_do" code="sun.tools.jar.Main">
+       <parameter>
+          <expression>
+            <if>
+              <expression>
+                <operator name="eq">
+                  <value/>
+                  <value variable="manifest file"/>
+                </operator>
+              </expression>
+              <block type="then">
+                <value>-cf</value>
+              </block>
+              <block type="else">
+                <operator name="array">
+	           <value>-cmf</value>
+                   <value variable="manifest file"/>
+                 </operator>
+              </block>
+            </if>
+          </expression>
+       </parameter>   
+       <parameter value="&build_directory;/&build_file;" type="path"/>
+       <parameter value="-C"/>
+       <parameter value="&build_directory;" type="path"/>
+       <parameter value="&domain;"/>
+      <onexception>
+	<block>
+                 <echo>Exception at jarring</echo>
+                 <function name="stop">
+			<parameter value="-1"/>
+                 </function>
+	</block>
+      </onexception>
+    </task>
+  </target>
+
+  <target name="clean" dir="PROJECT_HOME">
+    <dependency>
+       <expression>
+         <operator name="eq">
+            <value>y</value>  
+            <function name="ask">
+               <parameter value="Are you sure to remove all files in &build_directory; [n]?"/>
+               <parameter value="n"/>
+            </function>
+        </operator>
+      </expression>
+    </dependency>
+    <block>
+      <echo>Cleaning...</echo>
+      <function name="rm">
+         <parameter value="&build_directory;/*/*/*/*/*.class" type="path"/>
+         <parameter value="&build_directory;/&build_file;" type="path"/>
+         <parameter value="&build_directory;/&webapp_file;" type="path"/>
+      </function>
+    </block>
+  </target>
+
+  <target name="deploy" dir="PROJECT_HOME">
+      <dependency target="war"/>
+      <dependency>
+          <function name="anynewer">
+              <parameter value="&build_directory;/&webapp_file;" type="path"/>
+              <parameter variable="APP DEPLOY DROP" type="path"/>
+          </function>
+      </dependency>
+      <block>
+        <echo>Deploying &build_directory;/&webapp_file;</echo>
+        <function name="cp">
+           <parameter value="&build_directory;/&webapp_file;" type="path"/>
+           <parameter variable="APP DEPLOY DROP"/>
+        </function>
+      </block>
+  </target>
+
+  <expression name="WEBBEE_VIEWS_INS">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/res/template/insert/*.htmt</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_VIEWS_JSON">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/res/template/insert/*.json</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_VIEWS">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/res/template/*.htmt</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_LABELS">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/res/text/*.properties</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_CSS">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/res/css/*.css</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_JS">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/js/*.js</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_IMAGE_GIF">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/res/image/*.gif</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_IMAGE_CAL_PNG">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/res/image/calendar/*.png</value>
+     </operator>
+  </expression>
+
+ <expression name="WEBBEE_IMAGE_CAL_GIF">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/res/image/calendar/*.gif</value>
+     </operator>
+  </expression>
+
+
+  <expression name="WEBBEE_3RD_EDITOR_GIF">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/3rdparty/editor/*.gif</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_3RD_EDITOR_PNG">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/3rdparty/editor/*.png</value>
+     </operator>
+  </expression>
+
+  <expression name="WEBBEE_3RD_EDITOR_JS">
+     <operator name="append">
+        <value variable="WEBBEE_HOME"/>
+        <value>/src/3rdparty/editor/*.js</value>
+     </operator>
+  </expression>
+ 
+  <target name="war" dir="PROJECT_HOME">
+    <dependency target="jar"/>
+    <dependency>
+       <expression>
+          <operator name="not">
+             <function name ="timestamp">
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+          </operator>
+       </expression>
+    </dependency>
+    <!-- add more resource change dependencies
+     -->
+    <dependency>
+       <expression>
+          <function name="anynewer">
+             <parameter value="build/bee-web.xml" type="path"/>
+             <parameter value="&build_directory;/&webapp_file;" type="path"/>
+          </function>
+       </expression>
+    </dependency>
+    <!-- project's resources dependencies  -->
+    <dependency>
+       <expression>
+          <operator name="or">
+             <function name="anynewer">
+                <parameter variable="src/res/view" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
+                <parameter variable="src/res/view/insert" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
+                <parameter value="src/res/cfg" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
+                <parameter value="src/js" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
+                <parameter value="src/res/text" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
+                <parameter value="src/res/css" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
+                <parameter value="src/res/html" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
+                <parameter value="src/res/image" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+          </operator>
+       </expression>
+    </dependency>
+
+    <block>
+      <echo value="...->&build_directory;/&webapp_file;"/>
+      <function name="warit">
+         <parameter value="&build_directory;/&webapp_file;" type="path"/>
+         <parameter type="path">src/res/cfg/web.xml</parameter>
+         <parameter>C &domain;</parameter>
+         <parameter type="path">&build_directory;/&domain;</parameter>
+         <parameter/>
+         <parameter>L</parameter>
+         <parameter variable="CUSTOM CP" type="array" separator="PATH SEPARATOR"/>
+         <parameter>jasper\.jar|javax\.servlet\.jar</parameter>
+         <parameter>A WEB-INF/config/</parameter>
+         <parameter type="path">src/res/cfg/*.properties</parameter>
+         <parameter>A META-INF//</parameter>
+         <parameter type="path">src/res/cfg/context.xml</parameter>
+         <!-- add more config files  -->
+         <!--   project's  &project; resources  -->
+         <parameter>A</parameter>
+         <parameter type="path">src/res/html/*.htm?</parameter>
+         <parameter>A WEB-INF/res/view/</parameter>
+         <parameter type="path">src/res/view/*.html</parameter>
+         <parameter>A WEB-INF/res/view/</parameter>
+         <parameter type="path">src/res/view/*.txt</parameter>
+         <parameter>A WEB-INF/res/view/insert</parameter>
+         <parameter type="path">src/res/view/insert/*.htm?</parameter>
+         <parameter>A WEB-INF/res/text/</parameter>
+         <parameter type="path">src/res/text/*.properties</parameter>
+         <parameter>A WEB-INF/res/text/data</parameter>
+         <parameter type="path">src/res/text/data/*.properties</parameter>
+         <parameter>A</parameter>
+         <parameter type="path">src/res/html/*.jsp</parameter>
+         <!-- images                            -->
+         <parameter>A image</parameter>
+         <parameter type="path">src/res/image/*.png</parameter>
+         <parameter>A image</parameter>
+         <parameter type="path">src/res/image/*.jpg</parameter>
+
+         <!--   Webbbee resources to avoid overwriting  -->
+         <parameter>A WEB-INF/res/view/insert</parameter>
+         <parameter type="path" variable="WEBBEE_VIEWS_INS"></parameter>
+         <parameter>A WEB-INF/res/view/insert</parameter>
+         <parameter type="path" variable="WEBBEE_VIEWS_JSON"></parameter>
+         <parameter>A WEB-INF/res/view</parameter>
+         <parameter type="path" variable="WEBBEE_VIEWS"></parameter>
+         <!-- text/labels properties resources -->
+         <parameter>A WEB-INF/res/text/</parameter>
+         <parameter type="path" variable="WEBBEE_LABELS"></parameter>
+         <parameter>A css/</parameter>
+         <parameter type="path" variable="WEBBEE_CSS"></parameter>
+         <parameter>A js/</parameter>
+         <parameter type="path" variable="WEBBEE_JS"></parameter>
+         <parameter>A image/</parameter>
+         <parameter type="path" variable="WEBBEE_IMAGE_GIF"></parameter>
+         <parameter>A image/calendar/</parameter>
+         <parameter type="path" variable="WEBBEE_IMAGE_CAL_GIF"></parameter>
+         <parameter>A image/calendar/</parameter>
+         <parameter type="path" variable="WEBBEE_IMAGE_CAL_PNG"></parameter>
+         <!-- 3rd parties  --> 
+         <parameter>A js/</parameter>
+         <parameter variable="WEBBEE_3RD_EDITOR_JS"/>
+         <parameter>A image/</parameter>
+         <parameter variable="WEBBEE_3RD_EDITOR_GIF"></parameter>     
+         <parameter>A js/</parameter>
+         <parameter variable="WEBBEE_3RD_EDITOR_PNG"></parameter>     
+       </function>
+    </block>
+  </target>
+</bee>
+

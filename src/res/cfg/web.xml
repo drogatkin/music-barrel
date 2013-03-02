@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    metadata-complete="true"
+    version="3.0"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" >
+
+    <context-param>
+        <param-name>model_datasource</param-name>
+        <param-value>jdbc/mysql/music-barrel</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>
+ rogatkin.music_barrel.model.MBModel 
+        </listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>webbee</servlet-name>
+        <description>
+ Music-Barrel 
+        </description>
+
+        <servlet-class>
+ com.beegman.webbee.base.WebApp 
+        </servlet-class>
+
+        <init-param>
+            <param-name>properties</param-name>
+            <param-value>/WEB-INF/config/music-barrel.properties</param-value>
+        </init-param>
+
+        <async-supported>
+ true 
+        </async-supported>
+
+        <multipart-config>
+
+            <file-size-threshold>
+ 4096000 
+            </file-size-threshold>
+        </multipart-config>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>webbee</servlet-name>
+        <url-pattern>/webapp/*</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>music-barrel.html</welcome-file>
+    </welcome-file-list>
+
+    <resource-ref>
+        <res-ref-name>java:comp/env/jdbc/mysql/music-barrel</res-ref-name>
+        <res-type>
+ javax.sql.DataSource 
+        </res-type>
+        <res-auth>
+ Container 
+        </res-auth>
+    </resource-ref>
+
+</web-app>

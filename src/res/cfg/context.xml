@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <!-- Specify a JDBC datasource -->
+    <Resource name="jdbc/mysql/music-barrel" 
+              auth="Container"
+              type="javax.sql.DataSource" 
+              username="root" 
+              password=""
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/music-barrrel?autoReconnect=true"
+              driverClassPath="E:\projects\music-barrel\3rdparty\MySqlDriver\bin\mysql-connector-java8-5.1.23.jar"
+              validationQuery="select 1"
+              maxActive="10" 
+              maxIdle="4"/>
+
+    <!-- Specify the security realm and location of the users file
+    <Realm className="rogatkin.tjws.app.realm.MemoryRealm" 
+           pathname="/WEB-INF/users.xml" />
+    -->
+</Context>
