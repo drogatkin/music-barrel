@@ -57,7 +57,7 @@
   <expression variable="class path">
      <operator name="append">
         <value variable="PROJECT_HOME"/>
-        <value>/build/&build_directory;</value>
+        <value>/&build_directory;</value>
         <value variable="PATH SEPARATOR"/>
         <value variable="CUSTOM CP"/>
      </operator>

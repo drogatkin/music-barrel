@@ -1,5 +1,8 @@
 package rogatkin.music_barrel.ctrl;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -29,11 +32,31 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 			for (Path entry : stream) {
 				MediaFormat mf = MediaFormatFactory.createMediaFormat(entry.toFile());
 				if (mf != null && mf.isValid()) // and can play music
-					modelData.add(mf.getMediaInfo());
+					modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[] {MediaInfo.class}, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));
 			}
 		} catch (IOException ioe) {
 			modelInsert("error", ioe);
 		}
 		return modelData;
+	}
+	
+	static class MediaInfoProxyHandler implements InvocationHandler {
+		MediaInfo mediaInfo;
+		Path mediaPath;
+		MediaInfoProxyHandler(MediaInfo mi, Path mp) {
+			mediaInfo = mi;
+			mediaPath = mp;
+		}
+		
+		public Object invoke(Object proxy,
+	            Method method,
+	            Object[] args)
+	              throws Throwable {
+			if (method.getName().equals("getAttribute")) {
+				if (args.length == 1 && "MediaPath".equals(args[0]))
+					return mediaPath;
+			} 
+			return method.invoke(mediaInfo, args);
+		}
 	}
 }

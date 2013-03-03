@@ -1,19 +1,18 @@
 <p>@error@</p>
 <table>
   <tr>
-    <th>@label.name@</th>
     <th>@label.track@</th>
     <th>@label.song@</th>
     <th>@label.artist@</th>
     <th>@label.album@</th>
     <th>@label.year@</th>
     <th>@label.genre@</th>
-    <th>@label/length@</th>
+    <th>@label.length@</th>
     <th>@label.sample@</th>
+     <th>@label.name@</th>
  </tr>
  @model(
     <tr>
-       <td>@element.getAttribute*(OriginalFilename)*@</td>
        <td>@element.getAttribute*(Track)*@</td>
        <td>@element.getAttribute*(Title)*@</td>
        <td>@element.getAttribute*(Artist)*@</td>
@@ -22,5 +21,6 @@
        <td>@element.getAttribute*(Genre)*@</td>
        <td>@element.getAttribute*(Length)*@</td>
        <td>@element.getAttribute*(Samplerate)*@</td>
+       <td>@element.getAttribute*(MediaPath)*@</td>
  )@
 </table>
