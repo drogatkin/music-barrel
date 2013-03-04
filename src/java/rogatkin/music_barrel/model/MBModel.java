@@ -17,13 +17,13 @@ public class MBModel extends AppModel {
 
 	@Override
 	protected void deactivateServices() {
-		// TODO Auto-generated method stub
+		PlayerService ps = (PlayerService)unregister(PlayerService.NAME);
+		ps.stop();
 		super.deactivateServices();
 	}
 
 	@Override
 	protected String getServletName() {
-		// TODO Auto-generated method stub
 		return super.getServletName();
 	}
 
@@ -39,4 +39,7 @@ public class MBModel extends AppModel {
 		return new Behavior ();
 	}
 
+	public PlayerService getPlayer() {
+		return (PlayerService)getService(PlayerService.NAME);
+	}
 }

@@ -2,6 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>@title@</title>
+  <style type="text/css">
+     @%'insert/headcss.htmt'@
+  </style>
+  <script src="@contextpath@/js/ajaxhelper.js" language="Javascript"></script>
+  <script src="@contextpath@/js/common.js" language="Javascript"></script>
+  <script src="@contextpath@/js/form.js" language="Javascript"></script>
+  <script>
+      function goto(loc) {
+         document.location='@contextpath@@request.getServletPath*()*@/'+loc;
+      }
+  </script>
+  <script>
+     @%'insert/headjs.htmt'@
+  </script>
+  @%headextra@
+  
 </head>
 <body>
 @%request.INNER_VIEW@

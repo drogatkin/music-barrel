@@ -1,4 +1,8 @@
 <p>@error@</p>
+<p><a href="javascript:void(0)" onclick="pausePlay()">@label.pause@</a>
+|<a href="javascript:void(0)" onclick="resumePlay()">@label.resume@</a>
+|<a href="javascript:void(0)" onclick="stopPlay()">@label.stop@</a>
+</p>
 <table>
   <tr>
     <th>@label.track@</th>
@@ -8,8 +12,8 @@
     <th>@label.year@</th>
     <th>@label.genre@</th>
     <th>@label.length@</th>
-    <th>@label.sample@</th>
-     <th>@label.name@</th>
+    <th>@label.samplerate@</th>
+     <th>&nbsp;</th>
  </tr>
  @model(
     <tr>
@@ -21,6 +25,48 @@
        <td>@element.getAttribute*(Genre)*@</td>
        <td>@element.getAttribute*(Length)*@</td>
        <td>@element.getAttribute*(Samplerate)*@</td>
-       <td>@element.getAttribute*(MediaPath)*@</td>
+       <td><div><a href="javascript:void(0)" onclick="play('@^element.getAttribute*(MediaPath)*@')">
+       <img src="../image/play_btn.png" alt="@label.play@"></a>&nbsp;
+       <a href="javascript:void(0)" onclick="addToPlay('@^element.getAttribute*(MediaPath)*@')">
+       <img src="../image/add_playlist_btn.png" alt="@label.add_play@"></a>
+       </div></td>
  )@
 </table>
+<div id="player">
+</div>
+<script>
+   
+	function play(p) {
+		top.document.title='@label.playing@ ' + p;
+		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(p),
+				true, function(res) {
+
+				}, function(err) {
+
+				});
+	}
+
+	function addToPlay(p) {
+
+	}
+
+	function playControl(c) {
+		makeGenericAjaxCall('Player', 'cmd='+c, true, function(res) {
+
+		}, function(err) {
+
+		});
+	}
+	
+	function pausePlay() { 
+		playControl(2);
+	}
+	
+	function resumePlay() {
+		playControl(1);
+	}
+	
+	function stopPlay() { 
+		playControl(0);
+	}
+</script>

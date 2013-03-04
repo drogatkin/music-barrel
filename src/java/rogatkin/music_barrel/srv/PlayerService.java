@@ -6,9 +6,12 @@ import org.aldan3.model.ServiceProvider;
 
 import photoorganizer.formats.MediaFormatFactory;
 import photoorganizer.media.MediaPlayer;
+import photoorganizer.media.MediaPlayer.Status;
 import rogatkin.music_barrel.model.MBModel;
 
 public class PlayerService implements ServiceProvider<PlayerService> {
+	public static final String NAME = "MediaPlayer";
+	
 	MBModel appModel;
 	private MediaPlayer mediaPlayer;
 
@@ -18,7 +21,7 @@ public class PlayerService implements ServiceProvider<PlayerService> {
 	
 	@Override
 	public String getPreferredServiceName() {
-		return "MediaPlayer";
+		return NAME;
 	}
 
 	@Override
@@ -39,6 +42,30 @@ public class PlayerService implements ServiceProvider<PlayerService> {
 		}
 		// TODO resolve encoding from config
 		mediaPlayer = MediaFormatFactory.getPlayer(MediaFormatFactory.createMediaFormat(media.toFile(), appModel.getCharEncoding()));
+		//System.err.printf("Player %s for %s%n", mediaPlayer, media);
+		mediaPlayer.start();
 		return getServiceProvider();
+	}
+	
+	public void pause() {
+		if (mediaPlayer != null)
+			mediaPlayer.pause();
+	}
+	
+	public void stop() {
+		if (mediaPlayer != null)
+			mediaPlayer.close();
+	}
+	
+	public void resume() {
+		//System.err.printf("Player %s resume %n", mediaPlayer);
+		if (mediaPlayer != null)
+			mediaPlayer.resume();
+	}
+	
+	public Status getStatus() {
+		if (mediaPlayer != null)
+			mediaPlayer.getStatus();
+		return null;
 	}
 }

@@ -1,10 +1,1 @@
-package rogatkin.music_barrel.ctrl;
-
-import rogatkin.music_barrel.model.PlaybackCtrl;
-
-import com.beegman.webbee.block.Gadget;
-import rogatkin.music_barrel.model.MBModel;
-
-public class Player extends Gadget<PlaybackCtrl, MBModel> {
-
-}
+package rogatkin.music_barrel.ctrl;import java.nio.file.Files;import java.nio.file.Path;import java.nio.file.FileSystems;import rogatkin.music_barrel.model.PlaybackCtrl;import com.beegman.webbee.block.Gadget;import rogatkin.music_barrel.model.MBModel;import rogatkin.music_barrel.srv.PlayerService;public class Player extends Gadget<PlaybackCtrl, MBModel> {	protected PlaybackCtrl getGadgetData() {		PlayerService player = getAppModel().getPlayer();		int cmd = getParameterValue("cmd", -1, 0);		if (cmd >= 0) {			log("Command %d", null, cmd);			if (cmd == 0)				player.stop();			else if (cmd == 1)				player.resume();			else if (cmd == 2)				player.pause();		} else {			try {				Path play = FileSystems.getDefault().getPath(getParameterValue("playPath", null, 0));				if (Files.isRegularFile(play) && Files.isReadable(play)) {					log("Playing %s", null, play);					player.play(play);				}			} catch (Exception e) {				log("", e);			}		}		PlaybackCtrl result = new PlaybackCtrl(getAppModel());		result.status = player.getStatus();		return result;	}}
