@@ -1,0 +1,55 @@
+<div>
+<table>
+    <tr>
+      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="pausePlay()"><img src="../image/pause_ctrl.png" alt="@label.pause@"></a></td>
+      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="resumePlay()"><img src="../image/play_ctrl.png" alt="@label.resume@"></a></td>
+      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="stopPlay()"><img src="../image/stop_ctrl.png" alt="@label.stop@"></a></td>
+      </tr>
+</table>
+</div>
+
+<script>
+   
+	function play(p) {
+		top.document.title='@label.playing@ ' + p;
+		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(p),
+				true, function(res) {
+
+				}, function(err) {
+
+				});
+	}
+
+	function addToPlay(p) {
+
+	}
+
+	function playControl(c) {
+		makeGenericAjaxCall('Player', 'cmd='+c, true, function(res) {
+
+		}, function(err) {
+
+		});
+	}
+	
+	function pausePlay() { 
+		playControl(2);
+		MediaControls.isPlaying = false;
+	}
+	
+	function resumePlay() {
+		playControl(1);
+		MediaControls.isPlaying = true;
+	}
+	
+	function stopPlay() { 
+		playControl(0);
+	}
+	
+	function togglePlay() {
+		if (MediaControls.isPlaying)
+			pausePlay();
+		else
+			resumePlay();
+	}
+</script>

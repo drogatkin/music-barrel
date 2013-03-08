@@ -1,8 +1,5 @@
 <p>@error@</p>
-<p><a href="javascript:void(0)" onclick="pausePlay()">@label.pause@</a>
-|<a href="javascript:void(0)" onclick="resumePlay()">@label.resume@</a>
-|<a href="javascript:void(0)" onclick="stopPlay()">@label.stop@</a>
-</p>
+@%'insert/playctrl.html'@
 <table>
   <tr>
     <th>@label.track@</th>
@@ -36,37 +33,14 @@
 </div>
 <script>
    
-	function play(p) {
-		top.document.title='@label.playing@ ' + p;
-		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(p),
-				true, function(res) {
+   function initFields() {
+	   var MediaControls = Windows.Media.MediaControl;
 
-				}, function(err) {
-
-				});
-	}
-
-	function addToPlay(p) {
-
-	}
-
-	function playControl(c) {
-		makeGenericAjaxCall('Player', 'cmd='+c, true, function(res) {
-
-		}, function(err) {
-
-		});
-	}
+	// Add event listeners for the buttons
+	MediaControls.addEventListener('playpressed', resumePlay, false);
+	MediaControls.addEventListener('pausepressed', pausePlay, false);
+	MediaControls.addEventListener('playpausetogglepressed', togglePlay, false);
 	
-	function pausePlay() { 
-		playControl(2);
-	}
-	
-	function resumePlay() {
-		playControl(1);
-	}
-	
-	function stopPlay() { 
-		playControl(0);
-	}
+   }
+   
 </script>
