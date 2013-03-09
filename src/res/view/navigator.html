@@ -13,7 +13,7 @@
      <th>&nbsp;</th>
  </tr>
  @model(
-    <tr>
+    <tr onmouseover="focusSong(this)" onmouseout="meanSong(this)">
        <td>@element.getAttribute*(Track)*@</td>
        <td>@element.getAttribute*(Title)*@</td>
        <td>@element.getAttribute*(Artist)*@</td>
@@ -22,7 +22,7 @@
        <td>@element.getAttribute*(Genre)*@</td>
        <td>@element.getAttribute*(Length)*@</td>
        <td>@element.getAttribute*(Samplerate)*@</td>
-       <td><div><a href="javascript:void(0)" onclick="play('@^element.getAttribute*(MediaPath)*@')">
+       <td><div id="play_btn" style="display:none"><a href="javascript:void(0)" onclick="play('@^element.getAttribute*(MediaPath)*@')">
        <img src="../image/play_btn.png" alt="@label.play@"></a>&nbsp;
        <a href="javascript:void(0)" onclick="addToPlay('@^element.getAttribute*(MediaPath)*@')">
        <img src="../image/add_playlist_btn.png" alt="@label.add_play@"></a>
@@ -42,5 +42,22 @@
 	MediaControls.addEventListener('playpausetogglepressed', togglePlay, false);
 	
    }
-   
+   function focusSong (tr) {
+	   tr.style.backgroundColor = '#def';
+	   var cdiv = getPlayCtrlDiv(tr);
+	   cdiv.style.display='';
+   }
+   function meanSong(tr) {
+	   tr.style.backgroundColor = '#fff';
+	   var cdiv = getPlayCtrlDiv(tr);
+	   cdiv.style.display='none';
+   }
+   function getPlayCtrlDiv(tr) {
+	   for(var i=0;i<tr.cells.length; i++) {
+		   var d = tr.cells[i].firstChild;
+		   if (d && d.id=='play_btn')
+			   return d;
+	   }
+	   return null;
+   }
 </script>
