@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 import photoorganizer.formats.MediaFormatFactory;
+import photoorganizer.formats.MP3;
 
 import mediautil.gen.MediaFormat;
 import mediautil.gen.MediaInfo;
@@ -55,15 +56,16 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 				if (args.length == 1) {
 					if ("MediaPath".equals(args[0]))
 						return mediaPath;
-					else if ("Title".equals(args[0])) {
+					else if (MediaInfo.TITLE.equals(args[0])) {
 						String title = (String) method.invoke(mediaInfo, args);
 						if (title != null && title.isEmpty() == false)
 							return title;
 						else
 							return mediaPath.getFileName();
+					} else if (MediaInfo.GENRE.equals(args[0])) {
+						return MP3.findGenre(mediaInfo);
 					}
-				}
-
+				} 
 			}
 			return method.invoke(mediaInfo, args);
 		}
