@@ -15,8 +15,8 @@ Features set
 6. Navigate over file system with filtering
 7. Play playlist in modes sequential, random, repeat
 8. Edit song tags with corresponding DB record update
-9. SUpport formats MP3, WAV, WV(ISO), FLAC, APE, AAC. OGG
-10. Break down album FLA/APE upon CUE sheet
+9. Support formats MP3, WAV, WV(ISO), FLAC, APE, AAC. OGG
+10. Break down album FLAC/APE/WV upon CUE sheet
 11. Support search back, forward, skip in individual or list playback
 12, Displaying playback progress
 13. Show song/album artwork
@@ -25,7 +25,7 @@ Features set
 
 Technologies
 
-1. MediaChest media format library
+1. MediaChest/MediaUtil media format library
 2. WebBee rapid web application building blocks
 3. TJWS
 4. Java 8
