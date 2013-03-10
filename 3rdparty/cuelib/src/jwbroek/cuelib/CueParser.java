@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -90,7 +91,8 @@ final public class CueParser
     "Invalid track number. First number must be 1; all next ones sequential.";
   private final static String WARNING_INVALID_YEAR            =
     "Invalid year. Should be a number from 1 to 9999 (inclusive).";
-  
+
+  private final static String ASCII = "iso-8859-1";  
   // Patterns used for parsing and validation. Quick and dirty. A formal grammar would be nicer.
   private final static Pattern PATTERN_POSITION               = Pattern.compile("^(\\d*):(\\d*):(\\d*)$");
   private final static Pattern PATTERN_CATALOG_NUMBER         = Pattern.compile("^\\d{13}$");
@@ -186,7 +188,7 @@ final public class CueParser
   {
     CueParser.logger.entering(CueParser.class.getCanonicalName(), "parse(InputStream)", inputStream);
     
-    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(inputStream)));
+    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(inputStream, ASCII)));
     
     CueParser.logger.exiting(CueParser.class.getCanonicalName(), "parse(InputStream)", result);
     
@@ -203,7 +205,7 @@ final public class CueParser
   {
     CueParser.logger.entering(CueParser.class.getCanonicalName(), "parse(File)", file);
     
-    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new FileReader(file)));
+    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(new FileInputStream(file), ASCII)));
     CueParser.logger.exiting(CueParser.class.getCanonicalName(), "parse(File)", result);
     return result;
   }
