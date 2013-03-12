@@ -1,14 +1,13 @@
 /*
 ** WordsUtils.java
 **
-** Copyright (c) 2007 - 2008 Peter McQuillan
+** Copyright (c) 2007 - 2013 Peter McQuillan
 **
 ** All Rights Reserved.
 **                       
 ** Distributed under the BSD Software License (see license.txt)  
 **
 */
-
 package wavpack;
 class WordsUtils
 {
@@ -17,23 +16,23 @@ class WordsUtils
 
     //////////////////////////////// local macros /////////////////////////////////
 
-    static int LIMIT_ONES = 16; // maximum consecutive 1s sent for "div" data
+    static final int LIMIT_ONES = 16; // maximum consecutive 1s sent for "div" data
 
     // these control the time constant "slow_level" which is used for hybrid mode
     // that controls bitrate as a function of residual level (HYBRID_BITRATE).
-    static int SLS = 8;
-    static int SLO = ((1 << (SLS - 1)));
+    static final int SLS = 8;
+    static final int SLO = ((1 << (SLS - 1)));
 
 
     // these control the time constant of the 3 median level breakpoints
-    static int DIV0 = 128; // 5/7 of samples
-    static int DIV1 = 64;  // 10/49 of samples
-    static int DIV2 = 32;  // 20/343 of samples
+    static final int DIV0 = 128; // 5/7 of samples
+    static final int DIV1 = 64;  // 10/49 of samples
+    static final int DIV2 = 32;  // 20/343 of samples
 
 
     ///////////////////////////// local table storage ////////////////////////////
 
-    static char nbits_table [] = 
+    static final char nbits_table [] = 
     {
     0, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4,     // 0 - 15
     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,     // 16 - 31
@@ -54,7 +53,7 @@ class WordsUtils
     };
 
 
-    static int log2_table [] = 
+    static final int log2_table [] = 
     {
     0x00, 0x01, 0x03, 0x04, 0x06, 0x07, 0x09, 0x0a, 0x0b, 0x0d, 0x0e, 0x10, 0x11, 0x12, 0x14, 0x15,
     0x16, 0x18, 0x19, 0x1a, 0x1c, 0x1d, 0x1e, 0x20, 0x21, 0x22, 0x24, 0x25, 0x26, 0x28, 0x29, 0x2a,
@@ -76,7 +75,7 @@ class WordsUtils
 
 
 
-    static int exp2_table [] = 
+    static final int exp2_table [] = 
     {
     0x00, 0x01, 0x01, 0x02, 0x03, 0x03, 0x04, 0x05, 0x06, 0x06, 0x07, 0x08, 0x08, 0x09, 0x0a, 0x0b,
     0x0b, 0x0c, 0x0d, 0x0e, 0x0e, 0x0f, 0x10, 0x10, 0x11, 0x12, 0x13, 0x13, 0x14, 0x15, 0x16, 0x16,
@@ -97,7 +96,7 @@ class WordsUtils
     };
 
 
-    static char ones_count_table [] = 
+    static final char ones_count_table [] = 
     {
     0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,5,
     0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,4,0,1,0,2,0,1,0,3,0,1,0,2,0,1,0,6,
@@ -339,10 +338,7 @@ class WordsUtils
 
             if ((flags & (Defines.MONO_FLAG | Defines.FALSE_STEREO)) == 0) // if not mono
             {
-                if (entidx == 1)
-                    entidx = 0;
-                else
-                    entidx = 1;
+				entidx = 1 - entidx;	// swaps between 0 and 1 - if entidx is 1 it becomes 0, if 0 becomes 1
             }
 
             if ((w.c[0].median[0] & ~1) == 0 && w.holding_zero == 0 && w.holding_one == 0
