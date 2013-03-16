@@ -7,7 +7,7 @@
 
     <context-param>
         <param-name>model_datasource</param-name>
-        <param-value>jdbc/mysql/music-barrel</param-value>
+        <param-value>jdbc/h2/music-barrel</param-value>
     </context-param>
 
     <listener>
@@ -53,7 +53,7 @@
     </welcome-file-list>
 
     <resource-ref>
-        <res-ref-name>java:comp/env/jdbc/mysql/music-barrel</res-ref-name>
+        <res-ref-name>java:comp/env/jdbc/h2/music-barrel</res-ref-name>
         <res-type>
  javax.sql.DataSource 
         </res-type>

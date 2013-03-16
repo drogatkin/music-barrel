@@ -201,7 +201,7 @@ public class WvDemo
                 {
                     samples_unpacked = samples_unpacked * num_channels;
 
-                    pcm_buffer = format_samples(bps, temp_buffer, samples_unpacked);
+                    pcm_buffer = format_samples(bps, temp_buffer, samples_unpacked, null);
                     fostream.write(pcm_buffer, 0, (int) samples_unpacked * bps);
                 }
 
@@ -240,14 +240,13 @@ public class WvDemo
 
     // Reformat samples from longs in processor's native endian mode to
     // little-endian data with (possibly) less than 4 bytes / sample.
-
-    public static byte [] format_samples(int bps, int src [], long samcnt)
+    public static byte [] format_samples(int bps, int src [], long samcnt, byte dst[])
     {
         int temp;
         int counter = 0;
         int counter2 = 0;
-        byte [] dst = new byte[65536/*4 * Defines.SAMPLE_BUFFER_SIZE*/];
-
+        if (dst == null)
+        	dst = new byte[65536];
         switch (bps)
         {
             case 1:

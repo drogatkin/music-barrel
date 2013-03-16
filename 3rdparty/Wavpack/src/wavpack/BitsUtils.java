@@ -124,11 +124,9 @@ class BitsUtils
                 bytes_to_read = bs.file_bytes;
 
             try
-            {
-                byte [] buf = new byte[1024];
-                bytes_read = bs.file.read(buf, 0, (int) bytes_to_read);
+            {                
+                bytes_read = bs.file.read(bs.buf, 0, (int) bytes_to_read);
                 bs.buf_index = 0;
-                bs.buf = buf;
             }
             catch (Exception e)
             {

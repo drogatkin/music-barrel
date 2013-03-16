@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
     <!-- Specify a JDBC datasource -->
-    <Resource name="jdbc/mysql/music-barrel" 
+    <Resource name="jdbc/h2/music-barrel" 
               auth="Container"
               type="javax.sql.DataSource" 
-              username="root" 
+              username="sa" 
               password=""
-              driverClassName="com.mysql.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/music-barrrel?autoReconnect=true"
-              driverClassPath="E:\projects\music-barrel\3rdparty\MySqlDriver\bin\mysql-connector-java8-5.1.23.jar"
+              driverClassName="org.h2.Driver"
+              driverClassPath="Application"
+              url="jdbc:h2:~/music-barrel"
               validationQuery="select 1"
-              maxActive="10" 
-              maxIdle="4"/>
+              maxActive="3" 
+              maxIdle="2"/>
 
     <!-- Specify the security realm and location of the users file
     <Realm className="rogatkin.tjws.app.realm.MemoryRealm" 

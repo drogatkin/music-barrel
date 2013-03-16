@@ -434,7 +434,6 @@ class UnpackUtils
         decorr_pass dpp;
         int tcount;
         int buffer_counter = 0;
-        int [] temp_buffer = new int[Defines.SAMPLE_BUFFER_SIZE];
 
         int samples_processed = 0;
 
@@ -478,9 +477,7 @@ class UnpackUtils
 
             int dpp_index = 0;
 
-            i = WordsUtils.get_words(sample_count, flags, wps.w, wps.wvbits, temp_buffer);
-
-            System.arraycopy(temp_buffer, 0, buffer, 0, (int)sample_count);
+            i = WordsUtils.get_words(sample_count, flags, wps.w, wps.wvbits, buffer);
 
             for (tcount = wps.num_terms - 1; tcount >= 0; tcount--)
             {
@@ -508,11 +505,9 @@ class UnpackUtils
 
         else
         {
-            samples_processed = WordsUtils.get_words(sample_count, flags, wps.w, wps.wvbits, temp_buffer);
+            samples_processed = WordsUtils.get_words(sample_count, flags, wps.w, wps.wvbits, buffer);
 
             i = samples_processed;
-
-            System.arraycopy(temp_buffer, 0, buffer, 0, (int)(sample_count*2));
 
             if (sample_count < 16)
             {

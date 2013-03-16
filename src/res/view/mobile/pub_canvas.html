@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--  mobile canvas  -->
+<head>
+  <title>@title@</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
+  <style type="text/css">
+     <!--/* <![CDATA[ */
+          @@import url(@contextpath@/css/base.css);
+            BODY, TD, FONT, INPUT, SELECT, TEXTAREA { font-family: Lucida Grande,Verdana,Arial; font-size: 11px; }
+         body {height:100%}
+         P {margin:0.2em 1em 0.1em 1em}
+       
+       /* ]]> */-->
+  </style>
+  <style type="text/css">
+     @%'mobile/headcss.htmt'@
+  </style>
+  <script src="@contextpath@/js/ajaxhelper.js" language="Javascript"></script>
+  <script src="@contextpath@/js/common.js" language="Javascript"></script>
+  <script src="@contextpath@/js/form.js" language="Javascript"></script>
+  <script>
+      function goto(loc) {
+         document.location='@contextpath@@request.getServletPath*()*@/'+loc;
+      }
+  </script>
+  <script>
+     @%'insert/headjs.htmt'@
+  </script>
+  @%headextra@
+</head>
+<body onload="init()">
+<div style="width:100%;text-align:right">@toplinks(<a href="javascript:void(0)" onclick="goto('@element.getAnchor*()*@')">@element.getTitle*()*@</a>&nbsp;|)@</div>
+<div id="tabs">@tabs(<div id="tab" title="@element.getDescription*()*@"><a class="atab" href="@element.getAnchor*()*@">@element.getTitle*()*@</a></div>)@</div>
+@%request.INNER_VIEW@
+</body>
+</html>
