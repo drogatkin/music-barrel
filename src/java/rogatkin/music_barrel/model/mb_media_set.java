@@ -14,13 +14,13 @@ public class mb_media_set extends SimpleCoordinator<MBModel> {
 	@DBField(key = true, auto = 1)
 	int id;
 	
-	@DBField
+	@DBField(size = 200)
 	String title;
 	
 	@DBField
 	int year;
 	
-	@DBField
+	@DBField(size = 200)
 	String studio;
 	
 	@DBField

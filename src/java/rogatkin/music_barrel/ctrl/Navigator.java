@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import photoorganizer.formats.MediaFormatFactory;
 import photoorganizer.formats.MP3;
@@ -25,10 +27,10 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	@Override
 	protected List<MediaInfo> getTabularData(long pos, int size) {
 		List<MediaInfo> modelData = new ArrayList<>();
-		Path p = FileSystems.getDefault().getPath(getParameterValue("path", "/", 0));
-		if (Files.isDirectory(p) == false)
-			p = p.getParent();
 		try {
+			Path p = FileSystems.getFileSystem(new URI("file:///")).getPath(getParameterValue("path", "/", 0));
+			if (Files.isDirectory(p) == false)
+				p = p.getParent();
 			DirectoryStream<Path> stream = Files.newDirectoryStream(p);
 			for (Path entry : stream) {
 				MediaFormat mf = MediaFormatFactory.createMediaFormat(entry.toFile());
@@ -36,7 +38,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 					modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
 							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));
 			}
-		} catch (IOException ioe) {
+		} catch (IOException | URISyntaxException ioe) {
 			modelInsert("error", ioe);
 		}
 		return modelData;

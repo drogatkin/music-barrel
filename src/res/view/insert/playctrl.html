@@ -1,4 +1,4 @@
-<div style="border:1px solid black">
+<div style="border:1px solid black;width:300px;background-color:#EEE">
 <table>
     <tr>
       <td style="margin-left:1em"><a href="javascript:void(0)" onclick="pausePlay()"><img src="../image/pause_ctrl.png" alt="@label.pause@"></a></td>
@@ -21,8 +21,17 @@
 				});
 	}
 
+	function songFinished() {
+		top.document.title='@label.title@';
+	}
+	
 	function addToPlay(p) {
+		makeGenericAjaxCall('Player/ajax/addItem', 'playPath=' + encodeURIComponent(p),
+				true, function(res) {
 
+				}, function(err) {
+
+				});
 	}
 
 	function playControl(c) {

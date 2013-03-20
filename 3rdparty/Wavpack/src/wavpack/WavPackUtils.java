@@ -179,9 +179,6 @@ public class WavPackUtils
     // also be clipped). The actual number of samples unpacked is returned,
     // which should be equal to the number requested unless the end of fle is
     // encountered or an error occurs.
- 
-    static int [] temp_buffer = new int[Defines.SAMPLE_BUFFER_SIZE];
- 
     public static long WavpackUnpackSamples(WavpackContext wpc, int [] buffer, long samples)
     {
         WavpackStream wps = wpc.stream;
@@ -191,7 +188,8 @@ public class WavPackUtils
 
         int buf_idx = 0;
         int bytes_returned = 0;
-
+        int [] temp_buffer = new int[Defines.SAMPLE_BUFFER_SIZE];
+        
         while (samples > 0)
         {
             if (wps.wphdr.block_samples == 0 || (wps.wphdr.flags & Defines.INITIAL_BLOCK) == 0

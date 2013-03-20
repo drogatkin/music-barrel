@@ -16,10 +16,10 @@ public class mb_media_item extends SimpleCoordinator<MBModel> {
 	@DBField(key = true, auto = 1)
 	public long id;
 	
-	@DBField
+	@DBField(size = 200)
 	public String title;
 	
-	@DBField
+	@DBField(size = 100)
 	public String performer;
 	
 	@DBField
@@ -34,7 +34,7 @@ public class mb_media_item extends SimpleCoordinator<MBModel> {
 	@DBField
 	public int year;
 	
-	@DBField
+	@DBField(size = 60)
 	public String genre;
 	
 	@DBField
@@ -49,7 +49,8 @@ public class mb_media_item extends SimpleCoordinator<MBModel> {
 	@DBField
 	public long artwork_id;
 	
-	@DBField
+	@DBField(size = 1000)
+	@FormField(formFieldName="playPath")
 	public String path;
 	
 	@DBField

@@ -14,19 +14,27 @@ public class mb_play_list extends SimpleCoordinator<MBModel> {
 	@DBField(key = true, auto = 1)
 	public int id;
 	
+	@DBField(size = 200)
 	public String title;
 	
+	@DBField
 	public long item_id;
-	
+
+	@DBField
 	public int play_mode;
 	
+	@DBField
 	public int start_pos;
 	
+	@DBField
 	public int play_duration;
 	
+	@DBField
 	public int play_count;
 	
+	@DBField
 	public Date modified_on;
 	
+	@DBField(auto = -1)
 	public Date created_on;
 }
