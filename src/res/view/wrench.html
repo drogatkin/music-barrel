@@ -6,12 +6,12 @@
 </form>
 <div>
   <input type="button" name="init_schema" value="@label.init_schema@" onclick="initSchema()">
- 
+  <input type="checkbox" name="discardExisting" value="true">@label.drop_schema@
 </div>
 
 <script>
    function initSchema() {
-	   makeGenericAjaxCall('Dbsetup', 'submit=yes',
+	   makeGenericAjaxCall('Dbsetup', 'submit=yes&drop_schema=',
 				true, function(res) {
 		   alert('done');
 

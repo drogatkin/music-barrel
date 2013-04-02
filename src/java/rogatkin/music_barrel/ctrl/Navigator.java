@@ -28,16 +28,20 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	protected List<MediaInfo> getTabularData(long pos, int size) {
 		List<MediaInfo> modelData = new ArrayList<>();
 		try {
-			Path p = FileSystems.getFileSystem(new URI("file:///")).getPath(getParameterValue("path", "/", 0));
-			if (Files.isDirectory(p) == false)
+			String ps = getParameterValue("path", "", 0);
+			if (ps.isEmpty())
+				return modelData;
+			Path p = FileSystems.getFileSystem(new URI("file:///")).getPath(ps);
+			if (Files.isDirectory(p) == false && p.getParent() != null)
 				p = p.getParent();
 			DirectoryStream<Path> stream = Files.newDirectoryStream(p);
 			for (Path entry : stream) {
 				MediaFormat mf = MediaFormatFactory.createMediaFormat(entry.toFile());
-				if (mf != null && mf.isValid()) // and can play music
+				if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0)  // and can play music
 					modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
-							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));
+							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));				
 			}
+			modelInsert("path", p);
 		} catch (IOException | URISyntaxException ioe) {
 			modelInsert("error", ioe);
 		}

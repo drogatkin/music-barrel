@@ -1,0 +1,42 @@
+<div id="gadget_directories">
+	<table>
+		<tr id="directories_t"></tr>
+	</table>
+</div>
+
+<script>
+	makeJSONAjaxCall('@contextpath@@servletpath@/Directories', 'path=@:path@',
+			true, function(json) {
+				var dr = getElement('directories_t');
+				for ( var i = 0; i < json.length; i++) {
+					if (!json[i])
+						break;
+					var cc = dr.insertCell(i); // js fields already encoded as required
+					cc.innerHTML = '<a href="Navigator?path='  //@:path@
+							+ json[i].path
+							+ '"><img src="@contextpath@/image/directory.png">'
+							+ json[i].name + '</a>';
+				}
+			}, function(e) {
+			});
+	/*
+	 var timername; 
+	 if (gadgetHandlers != undefined) gadgetHandlers.push(updatename);
+	 var sta_name;
+	 function updatename() {
+	 makeJSONAjaxCall('path/name?random='+Math.random(), params, true,
+	 function(json) {
+	 getElement('gadget_name').innerHTML =function_gen;
+	 if (sta_name) {
+	 getElement('status').innerHTML = '';
+	 sta_name = false;
+	 }
+	 },
+	 function(e) {
+	 if (sta_name)
+	 return;
+	 getElement('status').innerHTML = 'Can\'t connect to server';
+	 sta_name = true;
+	 });
+	 timername=setTimeout(updatename,20);*/
+</script>
