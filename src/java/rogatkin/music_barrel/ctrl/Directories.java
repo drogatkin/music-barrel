@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import rogatkin.music_barrel.model.MBModel;
 
@@ -18,13 +19,9 @@ public class Directories extends Gadget<Collection<Path>, MBModel> {
 		ArrayList<Path> result = new ArrayList<>();
 		FileSystem fs = FileSystems.getDefault();
 		String ps = getParameterValue("path", "", 0);
-		if (ps.isEmpty()) {
-			for (Path p : fs.getRootDirectories()) {
-				result.add(p);
-			}
-		} else {
-			Path cp = fs.getPath(ps);
-			result.add(cp.getParent());
+		Path cp = null;
+		if (ps.isEmpty() == false) {
+			cp = fs.getPath(ps);
 			try {
 				for (Path p : Files.newDirectoryStream(cp)) {
 					if (Files.isDirectory(p))
@@ -33,7 +30,15 @@ public class Directories extends Gadget<Collection<Path>, MBModel> {
 			} catch (Exception e) {
 				log("", e);
 			}
+			Collections.sort(result);
+			cp = cp.getParent();
 		}
+		if (cp == null)
+			for (Path p : fs.getRootDirectories()) {
+				result.add(p);
+			}
+		else
+			result.add(cp);
 		return result;
 	}
 }

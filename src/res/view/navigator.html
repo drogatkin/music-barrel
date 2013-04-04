@@ -32,33 +32,40 @@
 </table>
 <div id="player">
 </div>
-<script>
-   
-   function initFields() {
-	   var MediaControls = Windows.Media.MediaControl;
+<script src="@contextpath@/js/ui.js" language="Javascript"></script>
+<script>   
+	function initFields() {
+		try {
+			var MediaControls = Windows.Media.MediaControl;
 
-	// Add event listeners for the buttons
-	MediaControls.addEventListener('playpressed', resumePlay, false);
-	MediaControls.addEventListener('pausepressed', pausePlay, false);
-	MediaControls.addEventListener('playpausetogglepressed', togglePlay, false);
-	
-   }
-   function focusSong (tr) {
-	   tr.style.backgroundColor = '#def';
-	   var cdiv = getPlayCtrlDiv(tr);
-	   cdiv.style.display='';
-   }
-   function meanSong(tr) {
-	   tr.style.backgroundColor = '#fff';
-	   var cdiv = getPlayCtrlDiv(tr);
-	   cdiv.style.display='none';
-   }
-   function getPlayCtrlDiv(tr) {
-	   for(var i=0;i<tr.cells.length; i++) {
-		   var d = tr.cells[i].firstChild;
-		   if (d && d.id=='play_btn')
-			   return d;
-	   }
-	   return null;
-   }
+			// Add event listeners for the buttons
+			MediaControls.addEventListener('playpressed', resumePlay, false);
+			MediaControls.addEventListener('pausepressed', pausePlay, false);
+			MediaControls.addEventListener('playpausetogglepressed',
+					togglePlay, false);
+		} catch (e) {
+		}		
+		handlerUrl = 'Navigator/ajax/Asyncupdate';
+		// run it async
+		updateUI();
+		updateDirectories();
+	}
+	function focusSong(tr) {
+		tr.style.backgroundColor = '#def';
+		var cdiv = getPlayCtrlDiv(tr);
+		cdiv.style.display = '';
+	}
+	function meanSong(tr) {
+		tr.style.backgroundColor = '#fff';
+		var cdiv = getPlayCtrlDiv(tr);
+		cdiv.style.display = 'none';
+	}
+	function getPlayCtrlDiv(tr) {
+		for ( var i = 0; i < tr.cells.length; i++) {
+			var d = tr.cells[i].firstChild;
+			if (d && d.id == 'play_btn')
+				return d;
+		}
+		return null;
+	}
 </script>

@@ -41,6 +41,7 @@
  4096000 
             </file-size-threshold>
         </multipart-config>
+        <async-supported>true</async-supported>
     </servlet>
 
     <servlet-mapping>

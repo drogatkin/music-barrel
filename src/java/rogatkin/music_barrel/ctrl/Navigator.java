@@ -48,6 +48,11 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 		return modelData;
 	}
 
+	@Override
+	protected String getUIID() {
+		return getAppModel().getAppName();
+	}
+
 	static class MediaInfoProxyHandler implements InvocationHandler {
 		MediaInfo mediaInfo;
 		Path mediaPath;

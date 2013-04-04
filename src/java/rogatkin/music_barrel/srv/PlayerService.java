@@ -81,7 +81,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		AsyncUpdater updater = (AsyncUpdater) appModel.getService(AsyncUpdater.NAME);
 		UIEvent uie = new UIEvent();
 		uie.eventHandler = "songFinished";
-		uie.parameters = new Object[0];
+		uie.parameters = new Object[] {mediaPlayer.getStatus()};
 		updater.addEvent(appModel.getAppName(), uie);
 	}
 
