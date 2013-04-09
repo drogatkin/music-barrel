@@ -1,3 +1,8 @@
+<script>
+  var pl = [
+            @model({'path':'@^element.getAttribute*(MediaPath)*@', 'title':'@~element.getAttribute*(Title)*@'},)@
+            ];
+</script>
 <p>@error@</p>
 @%'insert/playctrl.html'@
 @%'insert/directories.html'@
@@ -17,10 +22,10 @@
        <td>@element.getAttribute*(Track)*@</td>
        <td>
          <div>@element.getAttribute*(Title)*@</div>
-         <div id="play_btn" style="display:none;position:relative;left:0"><a href="javascript:void(0)" onclick="play('@^element.getAttribute*(MediaPath)*@')">
-           <img src="../image/play_btn.png" alt="@label.play@"></a>&nbsp;
+         <div id="play_btn" style="display:none;position:relative;left:0"><a href="javascript:void(0)" onclick="playI(@index@)">
+           <img src="../image/play_btn.png" alt="@label.play@" border="0"></a>&nbsp;
            <a href="javascript:void(0)" onclick="addToPlay('@^element.getAttribute*(MediaPath)*@')">
-           <img src="../image/add_playlist_btn.png" alt="@label.add_play@"></a>
+           <img src="../image/add_playlist_btn.png" alt="@label.add_play@" border="0"></a>
          </div>
        </td>
        <td>@element.getAttribute*(Artist)*@</td>
@@ -49,9 +54,15 @@
 		}		
 		handlerUrl = 'Navigator/ajax/Asyncupdate';
 		// run it async
+		window.onunload = releaseUI;
 		updateUI();
 		updateDirectories();
 	}
+	
+	function notifyUnload() {
+		
+	}
+	
 	function focusSong(tr) {
 		tr.style.backgroundColor = '#def';
 		var cdiv = getPlayCtrlDiv(tr);

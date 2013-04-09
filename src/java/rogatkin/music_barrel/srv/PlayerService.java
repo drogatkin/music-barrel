@@ -83,6 +83,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		uie.eventHandler = "songFinished";
 		uie.parameters = new Object[] {mediaPlayer.getStatus()};
 		updater.addEvent(appModel.getAppName(), uie);
+		System.err.printf("event %s dropped for %s%n", uie, mediaPlayer);
 	}
 
 	@Override

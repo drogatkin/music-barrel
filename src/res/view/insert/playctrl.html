@@ -1,15 +1,17 @@
 <div style="border:1px solid black;width:300px;background-color:#EEE">
 <table>
     <tr>
-      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="pausePlay()"><img src="../image/pause_ctrl.png" alt="@label.pause@"></a></td>
-      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="resumePlay()"><img src="../image/play_ctrl.png" alt="@label.resume@"></a></td>
-      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="stopPlay()"><img src="../image/stop_ctrl.png" alt="@label.stop@"></a></td>
-      <td style="margin-left:1em;width:120px"><img src="../image/progress_bar.png" width="120px" height="24"></td>
+      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="pausePlay()"><img src="../image/pause_ctrl.png" alt="@label.pause@" border="0"></a></td>
+      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="resumePlay()"><img src="../image/play_ctrl.png" alt="@label.resume@" border="0"></a></td>
+      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="nextPlay()"><img src="../image/next_ctrl.png" alt="@label.next@" border="0"></a></td>
+      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="stopPlay()"><img src="../image/stop_ctrl.png" alt="@label.stop@" border="0"></a></td>
+      <td style="margin-left:1em;width:120px"><img src="../image/progress_bar.png" width="120px" height="24" border="0"></td>
       </tr>
 </table>
 </div>
 
 <script>
+   var cp = -1;
    
 	function play(p) {
 		top.document.title='@label.playing@ ' + p;
@@ -20,10 +22,28 @@
 
 				});
 	}
+	
+	function playI(i) {
+		var pi = pl[i];
+		if (!pi) {
+			cp = -1;
+			return;
+		}
+		cp = i;
+		top.document.title='@label.playing@ ' + pi.title;
+		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
+				true, function(res) {
+
+				}, function(err) {
+
+				});
+	}
 
 	function songFinished(m) {
 		//alert('done');
 		top.document.title='@label.title@ '+m;
+		if (cp >= 0)
+			playI(cp+1);
 	}
 	
 	function addToPlay(p) {
@@ -53,7 +73,12 @@
 		MediaControls.isPlaying = true;
 	}
 	
+	function nextPlay() { 
+		playControl(0);
+	}
+	
 	function stopPlay() { 
+		cp = -1;
 		playControl(0);
 	}
 	
