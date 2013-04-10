@@ -18,7 +18,7 @@ Features set
 9. Support formats MP3, WAV, WV(ISO), FLAC, APE, AAC. OGG
 10. Break down album FLAC/APE/WV upon CUE sheet
 11. Support search back, forward, skip in individual or list playback
-12, Displaying playback progress
+12. Displaying playback progress
 13. Show song/album artwork
 14. Research on net for song, album, artist details
 15. Adding new songs by uploading and other ways
