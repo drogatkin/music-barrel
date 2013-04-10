@@ -9,4 +9,9 @@ public class PlaybackCtrl extends SimpleCoordinator<MBModel> {
 	public PlaybackCtrl(MBModel m) {
 		super(m);
 	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(status);
+	}
 }

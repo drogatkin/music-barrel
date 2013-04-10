@@ -1,0 +1,10 @@
+<table>
+  <tr><th>@label.title@</th><th>@label.performer@</tr>
+  @model(
+   <tr>
+      <td>@element.get*(TITLE)*@</td>
+      <td>@element.get*(PERFORMER)*@</td>
+      </tr>
+  )@
+
+</table>

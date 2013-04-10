@@ -70,8 +70,8 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	
 	public Status getStatus() {
 		if (mediaPlayer != null)
-			mediaPlayer.getStatus();
-		return null;
+			return mediaPlayer.getStatus();
+		return Status.closed;
 	}
 	
 	//////// progress listener interface  ////
@@ -81,9 +81,9 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		AsyncUpdater updater = (AsyncUpdater) appModel.getService(AsyncUpdater.NAME);
 		UIEvent uie = new UIEvent();
 		uie.eventHandler = "songFinished";
-		uie.parameters = new Object[] {mediaPlayer.getStatus()};
+		uie.parameters = new Object[] {getStatus()};
 		updater.addEvent(appModel.getAppName(), uie);
-		System.err.printf("event %s dropped for %s%n", uie, mediaPlayer);
+		//System.err.printf("event %s dropped for %s%n", uie, mediaPlayer);
 	}
 
 	@Override

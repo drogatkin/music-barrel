@@ -30,13 +30,26 @@
 			return;
 		}
 		cp = i;
+		makeJSONAjaxCall('Player', 'cmd=3', true, function(res) {
+			if(res.error == 'playing') {
+				cp--;
+				nextPlay();
+				return;
+			}
+			playE(pi);
+		}, function(err) {
+
+		});
+	}
+	
+	function playE(pi) {
 		top.document.title='@label.playing@ ' + pi.title;
 		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
 				true, function(res) {
-
+					
 				}, function(err) {
 
-				});
+				});		
 	}
 
 	function songFinished(m) {
