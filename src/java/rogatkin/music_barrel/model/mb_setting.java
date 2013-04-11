@@ -13,7 +13,7 @@ import com.beegman.webbee.util.DODelegatorEx;
 @DataRelation
 public class mb_setting extends SimpleCoordinator<MBModel> {
 	public enum output_type {
-		ANALOG, HDMI, SPDIF
+		ANALOG, HDMI, SPDIF, AUTO
 	};
 
 	public mb_setting(MBModel arg0) {

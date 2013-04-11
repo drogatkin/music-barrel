@@ -1,12 +1,51 @@
 package rogatkin.music_barrel.ctrl;
 
+import java.io.IOException;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.mb_setting;
-
 import com.beegman.webbee.block.Form;
 
-public class Wrench extends Form<mb_setting,MBModel> {
+public class Wrench extends Form<mb_setting, MBModel> {
 	protected mb_setting getFormModel() {
 		return new mb_setting(getAppModel());
+	}
+
+	@Override
+	protected Object storeModel(mb_setting model) {
+		navigation = "Navigator";
+		//getAppModel().getDOService().updateObjectsLike(arg0, arg1);
+		try {
+			switch (model.output_type) {
+			case ANALOG:
+				setOutType(1);
+				break;
+			case HDMI:
+				setOutType(2);
+				break;
+			case AUTO:
+				setOutType(0);
+				break;
+			}
+			return "";
+		} catch (Exception e) {
+			log("", e);
+			return "" + e;
+		}
+	}
+
+	@Override
+	protected void loadModel(mb_setting model) {
+
+	}
+
+	void setOutType(int type) throws IOException {
+		log("Setting out %d", null, type);
+		// TODO check if not root, then add sudo
+		Process p = Runtime.getRuntime().exec("amixer cset numid=3 " + type);
+		try {
+			p.waitFor();
+		} catch (Exception e) {
+
+		}
 	}
 }

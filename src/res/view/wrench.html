@@ -1,8 +1,8 @@
-
+<div id="error">@error@</div>
 
 <form name="wrench" method="POST">
-  @label.output_type@<br/>@.ui.select*(output_type,java.lang.Object^@model@)*@
-
+  <div>@label.output_type@<br/>@.ui.select*(output_type,java.lang.Object^@model@)*@</div>
+<div><input type="submit" name="submit" value="@commonlabels.submit@"></div>
 </form>
 <div>
   <input type="button" name="init_schema" value="@label.init_schema@" onclick="initSchema()">

@@ -12,6 +12,7 @@
 
 <script>
    var cp = -1;
+   var prevTitle = '@label.title@';
    
 	function play(p) {
 		top.document.title='@label.playing@ ' + p;
@@ -77,11 +78,14 @@
 	}
 	
 	function pausePlay() { 
+		prevTitle = top.document.title;
+		top.document.title = '@label.paused@'
 		playControl(2);
 		MediaControls.isPlaying = false;
 	}
 	
 	function resumePlay() {
+		top.document.title = prevTitle;
 		playControl(1);
 		MediaControls.isPlaying = true;
 	}
