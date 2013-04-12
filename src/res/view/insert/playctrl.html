@@ -13,7 +13,7 @@
 <script>
    var cp = -1;
    var prevTitle = '@label.title@';
-   
+   var tk;
 	function play(p) {
 		top.document.title='@label.playing@ ' + p;
 		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(p),
@@ -47,7 +47,9 @@
 		top.document.title='@label.playing@ ' + pi.title;
 		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
 				true, function(res) {
-					
+					tk = getElement('track_'+cp);
+					if (tk)
+						tk.className = 'play_progress';
 				}, function(err) {
 
 				});		
@@ -56,6 +58,8 @@
 	function songFinished(m) {
 		//alert('done');
 		top.document.title='@label.title@ '+m;
+		if (tk)
+			tk.className = '';
 		if (cp >= 0)
 			playI(cp+1);
 	}

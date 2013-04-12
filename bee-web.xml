@@ -381,7 +381,8 @@
          <parameter type="path">src/res/image/*.png</parameter>
          <parameter>A image</parameter>
          <parameter type="path">src/res/image/*.jpg</parameter>
-
+		<parameter>A image</parameter>
+         <parameter type="path">src/res/image/*.gif</parameter>
          <!--   Webbbee resources to avoid overwriting  -->
          <parameter>A WEB-INF/res/view/insert</parameter>
          <parameter type="path" variable="WEBBEE_VIEWS_INS"></parameter>

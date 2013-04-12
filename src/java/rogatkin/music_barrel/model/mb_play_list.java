@@ -16,9 +16,6 @@ public class mb_play_list extends SimpleCoordinator<MBModel> {
 	
 	@DBField(size = 200)
 	public String title;
-	
-	@DBField
-	public long item_id;
 
 	@DBField
 	public int play_mode;
