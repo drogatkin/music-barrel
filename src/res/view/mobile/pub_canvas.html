@@ -29,9 +29,10 @@
   </script>
   @%headextra@
 </head>
+<div style="width:82%;margin:auto">
+<a style="float:left" href="@contextpath@"><img src="@contextpath@/image/home.png" border="0" alt="@commonlabels.home@"></img></a>
+</div>
 <body onload="init()">
-<div style="width:100%;text-align:right">@toplinks(<a href="javascript:void(0)" onclick="goto('@element.getAnchor*()*@')">@element.getTitle*()*@</a>&nbsp;|)@</div>
-<div id="tabs">@tabs(<div id="tab" title="@element.getDescription*()*@"><a class="atab" href="@element.getAnchor*()*@">@element.getTitle*()*@</a></div>)@</div>
 @%request.INNER_VIEW@
 </body>
 </html>
