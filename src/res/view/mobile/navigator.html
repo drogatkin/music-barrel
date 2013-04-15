@@ -1,5 +1,12 @@
+@%'insert/directories.html'@
+
+<div id="music_holder">
+   <table id="music_list">
+   
+   </table>
+</div>
+
 <script>
-alert('L');
   var dl = [@model({'title':'@~element.getAttribute*(Title)*@',
 	  'path':'@^element.getAttribute*(MediaPath)*@',
 	  'artist':'@~element.getAttribute*(Performer)*@',
@@ -7,9 +14,8 @@ alert('L');
 	  'genre':'@~element.getAttribute*(Genre)*@',
 	  'year':'@~element.getAttribute*(Year)*@'},)@
             ];
-  alert('--'+dl.length);
   updateDirectories();
-  var ml=getElement('music_list');
+  var table=getElement('music_list');
   for (var i=0; dl[i]; i++) {
      var row=table.insertRow(i);
       var cell1=row.insertCell(0);
@@ -23,10 +29,3 @@ alert('L');
 	  }
   }
 </script>
-@%'insert/directories.html'@
-hjgjhjh
-<div id="music_holder">
-   <table id="music_list">
-   
-   </table>
-</div>
