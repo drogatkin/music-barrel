@@ -10,15 +10,16 @@
             BODY, TD, FONT, INPUT, SELECT, TEXTAREA { font-family: Lucida Grande,Verdana,Arial; font-size: 11px; }
          body {height:100%}
          P {margin:0.2em 1em 0.1em 1em}
-       
+       .play_tag {box-shadow: 10px 10px 5px #999; border-radius:6px; border:2px solid; margin:16px 1em 1em 1em}
        /* ]]> */-->
   </style>
   <style type="text/css">
-     @%'mobile/headcss.htmt'@
+     @%'mobile/headcss.html'@
   </style>
   <script src="@contextpath@/js/ajaxhelper.js" language="Javascript"></script>
   <script src="@contextpath@/js/common.js" language="Javascript"></script>
   <script src="@contextpath@/js/form.js" language="Javascript"></script>
+  <script src="@contextpath@/js/ctrl.js" language="Javascript"></script>
   <script>
       function goto(loc) {
          document.location='@contextpath@@request.getServletPath*()*@/'+loc;
@@ -31,6 +32,7 @@
 </head>
 <div style="width:82%;margin:auto">
 <a style="float:left" href="@contextpath@"><img src="@contextpath@/image/home.png" border="0" alt="@commonlabels.home@"></img></a>
+&nbsp;&nbsp;<img onclick="playControl(0)" src="@contextpath@/image/stop_ctrl.png" border="0" alt="@commonlabels.stop@"></img>
 </div>
 <body onload="init()">
 @%request.INNER_VIEW@
