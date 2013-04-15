@@ -316,6 +316,14 @@
                 <parameter value="&build_directory;/&webapp_file;" type="path"/>
              </function>
              <function name="anynewer">
+                <parameter variable="src/res/view/mobile" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
+                <parameter variable="src/res/view/gadget" type="path"/>
+                <parameter value="&build_directory;/&webapp_file;" type="path"/>
+             </function>
+             <function name="anynewer">
                 <parameter value="src/res/cfg" type="path"/>
                 <parameter value="&build_directory;/&webapp_file;" type="path"/>
              </function>
@@ -368,6 +376,8 @@
          <parameter type="path">src/res/view/*.txt</parameter>
          <parameter>A WEB-INF/res/view/insert</parameter>
          <parameter type="path">src/res/view/insert/*.htm?</parameter>
+         <parameter>A WEB-INF/res/view/mobile</parameter>
+         <parameter type="path">src/res/view/mobile/*.htm?</parameter>
          <parameter>A WEB-INF/res/view/gadget</parameter>
          <parameter type="path">src/res/view/gadget/*.json</parameter>
          <parameter>A WEB-INF/res/text/</parameter>
