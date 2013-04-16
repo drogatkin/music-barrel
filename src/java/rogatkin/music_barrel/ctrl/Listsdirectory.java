@@ -11,7 +11,7 @@ public class Listsdirectory extends Gadget<Collection<DataObject>, MBModel> {
 	@Override
 	protected Collection<DataObject> getGadgetData() {
 		try {
-			return getAppModel().getDOService().getObjectsByQuery("select * from mb_play_list", 0, -1, null);
+			return getAppModel().getDOService().getObjectsByQuery("select id, title, play_mode, start_pos from mb_play_list", 0, -1, null);
 		} catch (Exception e) {
 			log("", e);
 		}

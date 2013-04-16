@@ -1,14 +1,31 @@
+@%'insert/listsdirectory.html'@
 <table>
-  <tr><th>@label.title@</th><th>@label.performer@</th>
-  <th>@label.genre@</th><th>@label.year@</th>
+  <tr><th>&nbsp;<th>@label.title@</th><th>@label.performer@</th>
+  <th>@label.genre@</th><th>@label.year@</th><th>&nbsp;</th>
   </tr>
   @model(
-   <tr>
+   <tr id="TR_@element.get*(ID)*@">
+      <td><div ></div></td>
       <td>@element.get*(TITLE)*@</td>
       <td>@element.get*(PERFORMER)*@</td>
       <td>@element.get*(GENRE)*@</td>
       <td>@element.get*(YEAR)*@</td>
+      <td onclick="deleteItem(@element.get*(ID)*@, @element.get*(LIST_ID)*@)">x</td>
       </tr>
   )@
 
 </table>
+
+<script>
+   function initFields() {
+	   updatePlaylists();
+   }
+   
+   function deleteItem(i, l) {
+	   
+   }
+   
+   function playItem(i, l) {
+	   
+   }
+</script>

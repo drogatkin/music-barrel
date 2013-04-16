@@ -32,7 +32,7 @@ public class MBModel extends AppModel {
 	@Override
 	protected void deactivateServices() {
 		PlayerService ps = (PlayerService) unregister(PlayerService.NAME);
-		ps.stop();
+		ps.stopAll();
 		super.deactivateServices();
 	}
 
