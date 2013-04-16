@@ -1,3 +1,4 @@
+@%'insert/playctrl.html'@
 @%'insert/listsdirectory.html'@
 <table>
   <tr><th>&nbsp;<th>@label.title@</th><th>@label.performer@</th>
@@ -13,12 +14,14 @@
       <td onclick="deleteItem(@element.get*(ID)*@, @element.get*(LIST_ID)*@)">x</td>
       </tr>
   )@
-
 </table>
 
 <script>
+   var playState = new Object();
+   
    function initFields() {
 	   updatePlaylists();
+	   playState.stopped = true;
    }
    
    function deleteItem(i, l) {
@@ -26,6 +29,36 @@
    }
    
    function playItem(i, l) {
-	   
+	   playState.stopped = false;
+	   makeGenericAjaxCall('Player', 'playItem=' + i + '&playList='+l+'&playMode=0',
+				true, function(res) {
+					var tdk = getElement('TR_'+i);
+					
+				}, function(err) {
+
+				});	
    }
+   
+   function pausePlay() { 
+		top.document.title = '@label.paused@';
+		playControl(2);
+	}
+	
+	function resumePlay() {
+		top.document.title = '@label.playing@';
+		if (playState.stopped)
+			playItem(0, '@model[0](@element.get*(LIST_ID)*@)@');
+		else
+			playControl(1);
+	}
+	
+	function nextPlay() { 
+		playControl(0);
+	}
+	
+	function stopPlay() { 
+		playControl(4);
+		playState.stopped = true;
+		top.document.title = '@label.stopped@';
+	}
 </script>

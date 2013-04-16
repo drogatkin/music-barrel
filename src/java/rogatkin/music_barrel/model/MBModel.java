@@ -108,12 +108,14 @@ public class MBModel extends AppModel {
 	}
 
 	public static Path getItemPath(String path) {
-		Path result = FileSystems.getDefault().getPath(path);
-		if (Files.isRegularFile(result) && Files.isReadable(result))
-			return result;
+		if (path != null) {
+			Path result = FileSystems.getDefault().getPath(path);
+			if (Files.isRegularFile(result) && Files.isReadable(result))
+				return result;
+		}
 		return null;
 	}
-	
+
 	public static int intValue(Object o) {
 		if (o instanceof Number)
 			return ((Number) o).intValue();

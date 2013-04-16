@@ -32,7 +32,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	public PlayerService(MBModel am) {
 		appModel = am;
 		playQueue = new LinkedBlockingQueue<>(1024);
-		listPlayer = new Thread(NAME);
+		listPlayer = new Thread(this, NAME);
 		listPlayer.setDaemon(true);
 		listPlayer.start();
 	}
@@ -72,14 +72,14 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			Collection<DataObject> list = appModel.getDOService().getObjectsByQuery(
 					GET_LIST_Q + " where l.id=" + list_id, 0, -1);
 			LinkedList<String> playList = new LinkedList<>();
-			boolean add = false;
+			boolean add = start_item <= 0;
 			for (DataObject dob : list) {
 				if (add == false) {
 					int iid = (int) dob.get("ID");
 					add = start_item == iid;
 				}
 				if (add)
-					playQueue.add((String) dob.get("PATH"));
+					playQueue.add(""+ dob.get("PATH"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

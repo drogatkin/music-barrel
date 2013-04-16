@@ -85,3 +85,95 @@
 		return null;
 	}
 </script>
+<script>
+   var cp = -1;
+   var prevTitle = '@label.title@';
+   var tk;
+	function play(p) {
+		top.document.title='@label.playing@ ' + p;
+		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(p),
+				true, function(res) {
+
+				}, function(err) {
+
+				});
+	}
+	
+	function playI(i) {
+		var pi = pl[i];
+		if (!pi) {
+			cp = -1;
+			return;
+		}
+		cp = i;
+		makeJSONAjaxCall('Player', 'cmd=3', true, function(res) {
+			if(res.error == 'playing') {
+				cp--;
+				nextPlay();
+				return;
+			}
+			playE(pi);
+		}, function(err) {
+
+		});
+	}
+	
+	function playE(pi) {
+		top.document.title='@label.playing@ ' + pi.title;
+		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
+				true, function(res) {
+					tk = getElement('track_'+cp);
+					if (tk)
+						tk.className = 'play_progress';
+				}, function(err) {
+
+				});		
+	}
+
+	function songFinished(m) {
+		//alert('done');
+		top.document.title='@label.title@ '+m;
+		if (tk)
+			tk.className = '';
+		if (cp >= 0)
+			playI(cp+1);
+	}
+	
+	function addToPlay(p) {
+		makeGenericAjaxCall('Player/ajax/addItem', 'playPath=' + encodeURIComponent(p),
+				true, function(res) {
+
+				}, function(err) {
+
+				});
+	}
+	
+	function pausePlay() { 
+		prevTitle = top.document.title;
+		top.document.title = '@label.paused@';
+		playControl(2);
+		MediaControls.isPlaying = false;
+	}
+	
+	function resumePlay() {
+		top.document.title = prevTitle;
+		playControl(1);
+		MediaControls.isPlaying = true;
+	}
+	
+	function nextPlay() { 
+		playControl(0);
+	}
+	
+	function stopPlay() { 
+		cp = -1;
+		playControl(0);
+	}
+	
+	function togglePlay() {
+		if (MediaControls.isPlaying)
+			pausePlay();
+		else
+			resumePlay();
+	}
+</script>

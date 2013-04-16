@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>@title@</title>
@@ -23,7 +23,10 @@
 </head>
 <body onload="init()">
 <div style="width:82%;margin:auto">
-<a style="float:right" href="@contextpath@"><img src="@contextpath@/image/home.png" border="0" alt="@commonlabels.home@"></img></a>
+<table>
+<tr><td id="error">@error@</td>
+ <td><a style="float:right" href="@contextpath@"><img src="@contextpath@/image/home.png" border="0" alt="@commonlabels.home@"/></a></td></tr>
+</table>
 </div>
 @%request.INNER_VIEW@
 </body>
