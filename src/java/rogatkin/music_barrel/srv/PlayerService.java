@@ -75,7 +75,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			boolean add = start_item <= 0;
 			for (DataObject dob : list) {
 				if (add == false) {
-					int iid = (int) dob.get("ID");
+					long iid = (long) dob.get("ID");
 					add = start_item == iid;
 				}
 				if (add)

@@ -1,0 +1,11 @@
+package rogatkin.music_barrel.model;
+
+public interface Name {
+	public static final String V_PLAY_PATH = "playPath";
+	public static final String V_PLAY_LIST = "playList";
+	public static final String V_PLAY_ITEM = "playItem";
+	public static final String V_PLAY_MODE = "playMode";
+	
+	public static final String ERROR = "Error";
+	public static final String OK = "Ok";
+}
