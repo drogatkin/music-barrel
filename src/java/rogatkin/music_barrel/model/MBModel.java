@@ -14,6 +14,7 @@ import photoorganizer.formats.MediaFormatFactory;
 import mediautil.gen.MediaFormat;
 import mediautil.gen.MediaInfo;
 
+import rogatkin.music_barrel.srv.MediaCrawler;
 import rogatkin.music_barrel.srv.PlayerService;
 
 import com.beegman.webbee.model.AppModel;
@@ -33,6 +34,8 @@ public class MBModel extends AppModel {
 	protected void deactivateServices() {
 		PlayerService ps = (PlayerService) unregister(PlayerService.NAME);
 		ps.stopAll();
+		MediaCrawler mc = (MediaCrawler) unregister(MediaCrawler.NAME);
+		mc.shutdown();
 		super.deactivateServices();
 	}
 
@@ -46,6 +49,7 @@ public class MBModel extends AppModel {
 
 		super.initServices();
 		register(new PlayerService(this));
+		register(new MediaCrawler(this));
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class MBModel extends AppModel {
 		return (PlayerService) getService(PlayerService.NAME);
 	}
 
-	public void addPlayItem(mb_media_item item, String listName) throws MBError {
+	public void addToPlayList(mb_media_item item, String listName) throws MBError {
 		MediaFormat mf = MediaFormatFactory.createMediaFormat(getItemPath(item.path).toFile(), getCharEncoding());
 		if (mf == null || mf.isValid() == false)
 			throw new MBError("Ivalid format :" + item);
@@ -95,7 +99,20 @@ public class MBModel extends AppModel {
 			plm.related_on = new Date();
 			dos.addObject(new DODelegator(plm));
 		} catch (Exception e) {
-			throw new MBError("Add item error", e);
+			throw new MBError("Add item to list error", e);
+		}
+	}
+
+	public void addToLibrary(MediaFormat mf, Path p) throws MBError {
+		mb_media_item item = new mb_media_item(this);
+		fillMediaModel(item, mf.getMediaInfo());
+		item.path = p.toString();
+		try {
+			getDOService().addObject(new DODelegator(item, null, "", "id"), "id");
+			// TODO update set
+			mb_media_set set = new mb_media_set(this);
+		} catch (Exception e) {
+			throw new MBError("Add item to library error: " + mf, e);
 		}
 	}
 

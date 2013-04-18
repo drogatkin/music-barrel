@@ -1,0 +1,25 @@
+<script>
+   var lib = [
+              @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@',
+            	  'genre':'@~element.get*(GENRE)*@'},)@
+              ];
+   function initFields() {
+	   fillTable();
+   }
+   
+   function fillTable() {
+	   var tbl = getElement('lib_content');
+	   for(var i=0; i<lib.length; i++) {
+		   var r = tbl.insertRow(i+1);
+		   r.insertCell(0).innerHTML=lib[i].title;
+		   r.insertCell(1).innerHTML=lib[i].artist;
+		   //r.insertCell(0).innerHTML=lib[i]title;
+	   }
+   }
+</script>
+<div>
+  <table id="lib_content">
+		<tr><th>@label.song@</th><th>@label.artist@</th></tr>
+		  
+  </table>
+</div>
