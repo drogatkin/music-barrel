@@ -24,7 +24,8 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 	public final static String NAME = "Media-Crawler";
 
 	String[] skip_directories = { "Windows", "Program Files", "dell", "Program Files (x86)", "Drivers", "$RECYCLE.BIN",
-			"$Recycle.Bin", "MSOCache", "ProgramData" };
+			"$Recycle.Bin", "MSOCache", "ProgramData",
+		 	"etc","lib", "lost+found", "opt", "proc", "run", "sbin", "srv", "sys", "tmp", "usr", "var"};
 
 	private Object ctrl;
 
