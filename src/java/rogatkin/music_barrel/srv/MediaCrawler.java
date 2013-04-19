@@ -1,7 +1,7 @@
 package rogatkin.music_barrel.srv;
 
 import java.nio.file.FileVisitResult;
-
+import java.util.Date;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.FileSystems;
@@ -54,8 +54,13 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 	
 	@Override
 	protected long getInitialInterval() {
-		// TODO calculate up to 24 hours from last run
-		return 2;
+		Date last = appModel.getSettings().last_scan;
+		if (last == null)
+			return 0;
+		long result = System.currentTimeMillis() - last.getDate() - getInterval()*1000*60*60;
+		if (result < 0)
+			return 0;
+		return result;
 	}
 
 	@Override
@@ -87,6 +92,7 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 			}
 		}
 		// TODO put mark last run
+		appModel.getSettings().last_scan = new Date();
 	}
 
 	protected void crawl(Path path) throws IOException {
@@ -110,7 +116,7 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 						}
 						ctrl = null;
 					}
-				MediaFormat mf = MediaFormatFactory.createMediaFormat(file.toFile());
+				MediaFormat mf = MediaFormatFactory.createMediaFormat(file.toFile(), appModel.getCharEncoding(), true);
 				if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0) {
 					try {
 						appModel.addToLibrary(mf, file);
@@ -138,8 +144,8 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 				return false;
 
 		}
-		System.err.printf("Accepting %s, %d - %s%n", path, path.getNameCount(),
-				path.getNameCount() > 1 ? path.subpath(1, 2) : path);
+		//System.err.printf("Accepting %s, %d - %s%n", path, path.getNameCount(),
+			//	path.getNameCount() > 1 ? path.subpath(1, 2) : path);
 		return result;
 	}
 

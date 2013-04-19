@@ -5,8 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
 
+import javax.sql.DataSource;
+
 import org.aldan3.data.DODelegator;
 import org.aldan3.data.DOService;
+import org.aldan3.model.ProcessException;
 
 import photoorganizer.formats.MP3;
 import photoorganizer.formats.MediaFormatFactory;
@@ -19,7 +22,9 @@ import rogatkin.music_barrel.srv.PlayerService;
 
 import com.beegman.webbee.model.AppModel;
 
-public class MBModel extends AppModel {
+public class MBModel extends AppModel implements Name {
+
+	private mb_setting settings;
 
 	@Override
 	public String getAppName() {
@@ -35,8 +40,21 @@ public class MBModel extends AppModel {
 		PlayerService ps = (PlayerService) unregister(PlayerService.NAME);
 		ps.stopAll();
 		MediaCrawler mc = (MediaCrawler) unregister(MediaCrawler.NAME);
-		mc.shutdown();
+		if (mc != null)
+			mc.shutdown();
+		try {
+			saveSettings();
+		} catch (ProcessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		super.deactivateServices();
+	}
+	
+	public void saveSettings() throws ProcessException {
+		//System.err.printf("--->Object: %s%n", new DODelegator(settings, null, "", "id").get("output_type").getClass());
+		getDOService().addObject(new DODelegator(settings, null, "", "id"), null, 
+				new DODelegator(settings, null, "", "id"));
 	}
 
 	@Override
@@ -46,12 +64,35 @@ public class MBModel extends AppModel {
 
 	@Override
 	protected void initServices() {
-
 		super.initServices();
+		settings = new mb_setting(this);
+		settings.id = 1;
+		try {
+			getDOService().getObjectLike(new DODelegator(settings, null, "", "id") {
+				@Override
+				protected String normilizeFieldName(String fieldName) {
+					return fieldName.toUpperCase();
+				}
+			});
+		} catch (ProcessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		register(new PlayerService(this));
-		register(new MediaCrawler(this));
+		if (settings.perform_scan)
+			register(new MediaCrawler(this));
 	}
-
+	
+	@Override
+	protected DOService createDataService(DataSource datasource) {
+		return new DOService(datasource) {
+			@Override
+			protected int getInsertUpdateVariant() {
+				return 2;
+			}
+		};
+	}
+	
 	@Override
 	public Behavior getCommonBehavior() {
 		return new Behavior();
@@ -61,8 +102,12 @@ public class MBModel extends AppModel {
 		return (PlayerService) getService(PlayerService.NAME);
 	}
 
+	public mb_setting getSettings() {
+		return settings;
+	}
+
 	public void addToPlayList(mb_media_item item, String listName) throws MBError {
-		MediaFormat mf = MediaFormatFactory.createMediaFormat(getItemPath(item.path).toFile(), getCharEncoding());
+		MediaFormat mf = MediaFormatFactory.createMediaFormat(getItemPath(item.path).toFile(), getCharEncoding(), true);
 		if (mf == null || mf.isValid() == false)
 			throw new MBError("Ivalid format :" + item);
 		mb_play_list pl = new mb_play_list(this);

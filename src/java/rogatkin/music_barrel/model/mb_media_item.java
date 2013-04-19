@@ -49,10 +49,13 @@ public class mb_media_item extends SimpleCoordinator<MBModel> {
 	@DBField
 	public long artwork_id;
 	
-	@DBField(size = 1000)
+	@DBField(size = 1024, unique=true, type="varchar")
 	@FormField(formFieldName="playPath")
 	public String path;
 	
 	@DBField
 	public int play_count;
+	
+	@DBField
+	public int volume_adjustment;
 }

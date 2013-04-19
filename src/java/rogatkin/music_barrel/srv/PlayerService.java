@@ -60,7 +60,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		}
 		// TODO resolve encoding from config
 		mediaPlayer = MediaFormatFactory.getPlayer(MediaFormatFactory.createMediaFormat(media.toFile(),
-				appModel.getCharEncoding()));
+				appModel.getCharEncoding(), true));
 		//System.err.printf("Player %s for %s%n", mediaPlayer, media);
 		mediaPlayer.setProgressListener(this);
 		mediaPlayer.start();

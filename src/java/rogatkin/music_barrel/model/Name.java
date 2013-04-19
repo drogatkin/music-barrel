@@ -8,4 +8,6 @@ public interface Name {
 	
 	public static final String ERROR = "Error";
 	public static final String OK = "Ok";
+	
+	public static final String CFG_AUTO_SCAN = "auto_scan";
 }

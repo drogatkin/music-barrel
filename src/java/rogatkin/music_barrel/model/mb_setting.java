@@ -9,7 +9,10 @@ import org.aldan3.annot.OptionMap;
 import org.aldan3.data.util.DataFiller;
 import org.aldan3.data.util.FieldFiller;
 import com.beegman.webbee.util.DODelegatorEx;
-
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import org.aldan3.data.util.FieldConverter;
 @DataRelation
 public class mb_setting extends SimpleCoordinator<MBModel> {
 	public enum output_type {
@@ -19,8 +22,18 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	public mb_setting(MBModel arg0) {
 		super(arg0);
 	}
-
+	
+	@DBField(unique=true)
+	public int id;
+	
 	@DBField()
+	public Date last_scan;
+	
+	@DBField()
+	@FormField
+	public boolean perform_scan;
+	
+	@DBField(size=30, converter=AOEnumConv.class)
 	@FormField(presentFiller = EnumFiller.class)
 	public output_type output_type;
 
@@ -47,6 +60,18 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 				};
 			}
 			return result;
+		}
+	}
+	
+	public static class AOEnumConv implements FieldConverter<output_type> {
+		@Override
+		public output_type convert(String value, TimeZone tz, Locale l) {
+			return Enum.valueOf(output_type.class, value);
+		}
+		
+		@Override
+		public String deConvert(output_type value, TimeZone tz, Locale l) {
+			return value.toString();
 		}
 	}
 }
