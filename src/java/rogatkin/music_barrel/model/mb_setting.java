@@ -34,6 +34,10 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	public int page_size;
 	
 	@DBField()
+	@FormField(defaultTo="UTF-8", presentSize=16)
+	public String char_encoding;
+	
+	@DBField()
 	@FormField
 	public boolean perform_scan;
 	

@@ -32,6 +32,8 @@ public class MBModel extends AppModel implements Name {
 	}
 
 	public String getCharEncoding() {
+		if (settings.char_encoding != null)
+			return settings.char_encoding;
 		return "UTF-8";
 	}
 
@@ -152,6 +154,7 @@ public class MBModel extends AppModel implements Name {
 		mb_media_item item = new mb_media_item(this);
 		mb_media_set set = new mb_media_set(this);
 		fillMediaModel(item, set, mf.getMediaInfo());
+		item.losed = "FLACWVM4AAPE".indexOf(mf.getDescription()) < 0;
 		DODelegator dod;
 		try {
 			if (set.title != null && set.title.isEmpty() == false) {
@@ -164,7 +167,7 @@ public class MBModel extends AppModel implements Name {
 						}			
 					});
 				}
-				item.set_id = set.id;//(int) dod.get("id");
+				item.set_id = set.id;
 			}
 		} catch (ProcessException e) {
 			throw new MBError("Add set to library error: " + mf, e);
@@ -187,6 +190,7 @@ public class MBModel extends AppModel implements Name {
 		mi.track = intValue(info.getAttribute(MediaInfo.TRACK));
 		mi.year = intValue(info.getAttribute(MediaInfo.YEAR));
 		mi.genre = MP3.findGenre(info);
+		mi.added_on = new Date();
 		if (set != null) {
 			set.title = (String) info.getAttribute(MediaInfo.ALBUM);
 			String partofset = (String) info.getAttribute(MediaInfo.PARTOFSET);

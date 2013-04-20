@@ -6,7 +6,7 @@ import org.aldan3.annot.FormField;
 
 import com.beegman.webbee.model.AppModel;
 import com.beegman.webbee.util.SimpleCoordinator;
-
+import java.util.Date;
 @DataRelation
 public class mb_media_item extends SimpleCoordinator<MBModel> {
 
@@ -43,6 +43,7 @@ public class mb_media_item extends SimpleCoordinator<MBModel> {
 	@DBField
 	public boolean losed;
 	
+	// TODO consider to remove
 	@DBField
 	public long artwork_id;
 	
@@ -55,4 +56,7 @@ public class mb_media_item extends SimpleCoordinator<MBModel> {
 	
 	@DBField
 	public int volume_adjustment;
+	
+	@DBField(auto=-1)
+	public Date added_on;
 }
