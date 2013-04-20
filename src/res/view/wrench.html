@@ -1,6 +1,8 @@
 <form name="wrench" method="POST">
   <div>@label.output_type@<br/>@.ui.select*(output_type,java.lang.Object^@model@)*@</div>
   <div>@label.auto_scan@<br/>@.ui.check*(perform_scan,java.lang.Object^@model@)*@</div>
+  <div>@label.rescan_soonn@<br/>@.ui.check*(rescan_soon,java.lang.Object^@model@)*@</div>
+  <div>@label.page_size@<br/>@.ui.field*(page_size,java.lang.Object^@model@)*@</div>
 <div><input type="submit" name="submit" value="@commonlabels.submit@"></div>
 </form>
 <div>

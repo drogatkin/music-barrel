@@ -14,6 +14,9 @@ public class Wrench extends Form<mb_setting, MBModel> {
 	protected Object storeModel(mb_setting model) {
 		navigation = "Navigator";
 		try {
+			if (model.rescan_soon){
+				getAppModel().getSettings().last_scan = null;
+			}
 			getAppModel().saveSettings();
 			if (model.output_type != null)
 				switch (model.output_type) {

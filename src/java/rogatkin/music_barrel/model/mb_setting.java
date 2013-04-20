@@ -30,8 +30,15 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	public Date last_scan;
 	
 	@DBField()
+	@FormField(defaultTo="40", presentSize=3)
+	public int page_size;
+	
+	@DBField()
 	@FormField
 	public boolean perform_scan;
+	
+	@FormField
+	public boolean rescan_soon;
 	
 	@DBField(size=30, converter=AOEnumConv.class)
 	@FormField(presentFiller = EnumFiller.class)

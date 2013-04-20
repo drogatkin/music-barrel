@@ -50,10 +50,10 @@ public class MBModel extends AppModel implements Name {
 		}
 		super.deactivateServices();
 	}
-	
+
 	public void saveSettings() throws ProcessException {
 		//System.err.printf("--->Object: %s%n", new DODelegator(settings, null, "", "id").get("output_type").getClass());
-		getDOService().addObject(new DODelegator(settings, null, "", "id"), null, 
+		getDOService().addObject(new DODelegator(settings, null, "", "id"), null,
 				new DODelegator(settings, null, "", "id"));
 	}
 
@@ -82,7 +82,7 @@ public class MBModel extends AppModel implements Name {
 		if (settings.perform_scan)
 			register(new MediaCrawler(this));
 	}
-	
+
 	@Override
 	protected DOService createDataService(DataSource datasource) {
 		return new DOService(datasource) {
@@ -92,7 +92,7 @@ public class MBModel extends AppModel implements Name {
 			}
 		};
 	}
-	
+
 	@Override
 	public Behavior getCommonBehavior() {
 		return new Behavior();
@@ -150,23 +150,50 @@ public class MBModel extends AppModel implements Name {
 
 	public void addToLibrary(MediaFormat mf, Path p) throws MBError {
 		mb_media_item item = new mb_media_item(this);
-		fillMediaModel(item, mf.getMediaInfo());
+		mb_media_set set = new mb_media_set(this);
+		fillMediaModel(item, set, mf.getMediaInfo());
+		DODelegator dod;
+		try {
+			if (set.title != null && set.title.isEmpty() == false) {
+				getDOService().addObject(dod = new DODelegator(set, null, "", "id,title,subset_num"), "id", new DODelegator(set, null, "id", "title,subset_num"));
+				if (dod.get("id") == null) {
+					getDOService().getObjectLike(dod = new DODelegator(set, null, "title,subset_num", "title,subset_num"));
+				}
+				item.set_id = (int) dod.get("id");
+			}
+		} catch (ProcessException e) {
+			throw new MBError("Add set to library error: " + mf, e);
+		}
 		item.path = p.toString();
 		try {
 			getDOService().addObject(new DODelegator(item, null, "", "id"), "id");
-			// TODO update set
-			mb_media_set set = new mb_media_set(this);
 		} catch (Exception e) {
 			throw new MBError("Add item to library error: " + mf, e);
 		}
 	}
 
 	public static void fillMediaModel(mb_media_item mi, MediaInfo info) {
+		fillMediaModel(mi, null, info);
+	}
+
+	public static void fillMediaModel(mb_media_item mi, mb_media_set set, MediaInfo info) {
 		mi.title = (String) info.getAttribute(MediaInfo.TITLE);
 		mi.performer = (String) info.getAttribute(MediaInfo.ARTIST);
 		mi.track = intValue(info.getAttribute(MediaInfo.TRACK));
 		mi.year = intValue(info.getAttribute(MediaInfo.YEAR));
 		mi.genre = MP3.findGenre(info);
+		if (set != null) {
+			set.title = (String) info.getAttribute(MediaInfo.ALBUM);
+			String partofset = (String) info.getAttribute(MediaInfo.PARTOFSET);
+			if (partofset != null && !partofset.isEmpty()) {
+				String[] parts = partofset.split("/");
+				set.subset_num = intValue(parts[0]);
+				if (parts.length > 1)
+					set.num_subsets = intValue(parts[1]);
+			}
+			set.studio = (String) info.getAttribute(MediaInfo.PUBLISHER);
+			set.year = intValue(info.getAttribute(MediaInfo.YEAR));
+		}
 	}
 
 	public static Path getItemPath(String path) {
@@ -182,7 +209,11 @@ public class MBModel extends AppModel implements Name {
 		if (o instanceof Number)
 			return ((Number) o).intValue();
 		else if (o instanceof String)
-			return Integer.valueOf((String) o).intValue();
+			try {
+				return Integer.valueOf((String) o).intValue();
+			} catch (NumberFormatException e) {
+		
+			}
 		return 0;
 	}
 }

@@ -35,8 +35,9 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 			if (Files.isDirectory(p) == false && p.getParent() != null)
 				p = p.getParent();
 			DirectoryStream<Path> stream = Files.newDirectoryStream(p);
+			String enc = getAppModel().getCharEncoding();
 			for (Path entry : stream) {
-				MediaFormat mf = MediaFormatFactory.createMediaFormat(entry.toFile());
+				MediaFormat mf = MediaFormatFactory.createMediaFormat(entry.toFile(), enc, true);
 				if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0)  // and can play music
 					modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
 							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));				

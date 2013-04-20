@@ -27,9 +27,6 @@ public class mb_media_item extends SimpleCoordinator<MBModel> {
 	
 	@DBField
 	public int track;
-	
-	@DBField
-	public int set;
 
 	@DBField
 	public int year;

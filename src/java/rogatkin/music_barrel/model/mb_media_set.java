@@ -12,24 +12,21 @@ public class mb_media_set extends SimpleCoordinator<MBModel> {
 	}
 	
 	@DBField(key = true, auto = 1)
-	int id;
+	public int id;
 	
 	@DBField(size = 200)
-	String title;
+	public String title;
 	
 	@DBField
-	int year;
+	public int year;
 	
 	@DBField(size = 200)
-	String studio;
+	public String studio;
 	
 	@DBField
-	int num_subsets;
+	public int num_subsets;
 	
 	@DBField
-	int subset_num;
-	
-	@DBField
-	public long item_id;
+	public int subset_num;
 
 }
