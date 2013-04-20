@@ -156,10 +156,15 @@ public class MBModel extends AppModel implements Name {
 		try {
 			if (set.title != null && set.title.isEmpty() == false) {
 				getDOService().addObject(dod = new DODelegator(set, null, "", "id,title,subset_num"), "id", new DODelegator(set, null, "id", "title,subset_num"));
-				if (dod.get("id") == null) {
-					getDOService().getObjectLike(dod = new DODelegator(set, null, "title,subset_num", "title,subset_num"));
+				if (set.id == 0) {
+					getDOService().getObjectLike(dod = new DODelegator(set, null, "num_subsets,studio,year", "title,subset_num") {
+						@Override
+						protected String normilizeFieldName(String fieldName) {
+							return fieldName.toUpperCase();
+						}			
+					});
 				}
-				item.set_id = (int) dod.get("id");
+				item.set_id = set.id;//(int) dod.get("id");
 			}
 		} catch (ProcessException e) {
 			throw new MBError("Add set to library error: " + mf, e);
