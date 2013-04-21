@@ -15,7 +15,15 @@ public class Dbsetup extends Systemsetup<Setup, MBModel> {
 	@Override
 	protected Object storeModel(Setup setup) {
 		setup.model_package_name = getDefaultModelPackage();
-		setup.discardExisting = true; // TODO take it as force parameter
-		return super.storeModel(setup);
+		//setup.discardExisting = true; // TODO take it as force parameter
+		String result =  (String)super.storeModel(setup);
+		if (result.isEmpty())
+			return getResourceString("done", "done");
+		return result;
+	}
+	
+	@Override
+	protected String getCanvasView() {
+		return null;
 	}
 }

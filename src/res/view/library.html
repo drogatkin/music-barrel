@@ -1,7 +1,7 @@
 <script>
    var lib = [
               @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@',
-            	  'genre':'@~element.get*(GENRE)*@'},)@
+            	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@'},)@
               ];
    function initFields() {
 	   fillTable();
@@ -9,17 +9,30 @@
    
    function fillTable() {
 	   var tbl = getElement('lib_content');
-	   for(var i=0; i<lib.length; i++) {
+	   for(var i=0; i<lib.length-1; i++) {
 		   var r = tbl.insertRow(i+1);
-		   r.insertCell(0).innerHTML=lib[i].title;
-		   r.insertCell(1).innerHTML=lib[i].artist;
-		   //r.insertCell(0).innerHTML=lib[i]title;
+		   r.insertCell(0).innerHTML='<div id="T_"'+i+'" onclick="play(\''+lib[i].path+'\')">P</div>';
+		   r.insertCell(1).innerHTML=lib[i].title;
+		   r.insertCell(2).innerHTML=lib[i].artist;
+		   r.insertCell(3).innerHTML=lib[i].album;
+		   r.insertCell(4).innerHTML=lib[i].genre;
 	   }
    }
 </script>
+<div id="search_sec">
+   <form method="get">
+      <table>
+         <tr><td></td><td><input type="text" placeholder="@label.song@" name="filter_title" value="@filter_title@"></td>
+         <td><input type="text" placeholder="@label.album@" name="filter_album" value="@filter_album@"></td>
+         <td><input type="text" placeholder="@label.artist@" name="filter_performer" value="@filter_performer@"></td>
+         <td><input type="text" placeholder="@label.genre@" name="filter_genre" value="@filter_genre@"></td>
+         <td><input type="submit" name="search" value="@label.filter@">
+         </tr>
+      </table>   
+   </form>
+</div>
 <div>
   <table id="lib_content">
-		<tr><th>@label.song@</th><th>@label.artist@</th></tr>
-		  
+		<tr><th>&nbsp;</th><th>@label.song@</th><th>@label.artist@</th><th>@label.album@</th><th>@label.genre@</th></tr>
   </table>
 </div>

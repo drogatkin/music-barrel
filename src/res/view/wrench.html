@@ -6,17 +6,18 @@
   <div>@label.page_size@<br/>@.ui.field*(page_size,java.lang.Object^@model@)*@</div>
 <div><input type="submit" name="submit" value="@commonlabels.submit@"></div>
 </form>
+<form name="db_setup">
 <div>
   <input type="button" name="init_schema" value="@label.init_schema@" onclick="initSchema()">
   <input type="checkbox" name="discardExisting" value="true">@label.drop_schema@
+  <input type="hidden" name="submit" value="yes">
 </div>
-
+</form>
 <script>
    function initSchema() {
-	   makeGenericAjaxCall('Dbsetup', 'submit=yes&drop_schema=',
+	   makeGenericAjaxCall('Dbsetup', formValues2String(document.forms.db_setup),
 				true, function(res) {
-		   alert('done');
-
+		   getElement('error').innerHTML = res;
 				}, function(err) {
 
 				});
