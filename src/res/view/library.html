@@ -3,6 +3,8 @@
               @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@',
             	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@'},)@
               ];
+   var current = -1;
+   var currentEl = null;
    function initFields() {
 	   fillTable();
    }
@@ -11,22 +13,77 @@
 	   var tbl = getElement('lib_content');
 	   for(var i=0; i<lib.length-1; i++) {
 		   var r = tbl.insertRow(i+1);
-		   r.insertCell(0).innerHTML='<div id="T_"'+i+'" onclick="play('+i+')">P</div>';
-		   r.insertCell(1).innerHTML=lib[i].title;
+		   r.onmouseover = activateRow;
+		   r.onmouseout = deactivateRow;
+		   r.setAttribute('mb-data', i);
+		   r.insertCell(0).innerHTML=lib[i].title
+		   r.insertCell(1).innerHTML= '&nbsp;';//'<img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" style="cursor:pointer" onclick="play('+i+')">'
 		   r.insertCell(2).innerHTML=lib[i].artist;
 		   r.insertCell(3).innerHTML=lib[i].album;
 		   r.insertCell(4).innerHTML=lib[i].genre;
 	   }
    }
-   function play(i) {
-		top.document.title='@label.playing@ ' + lib[i].title;
-		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(lib[i].path),
+   function add() {
+	   if (current < 0)
+		   return;
+	   var tbl = getElement('play_list');
+	   //tbl.rows = [];
+	   for(var i = tbl.rows.length - 1; i >= 0; i--)
+           tbl.deleteRow(i);
+	   document.forms.new_list.playPath.value=lib[current].path;
+	   makeJSONAjaxCall('Listsdirectory', null, true, function (json) {
+		   if (json) {
+		     for(var i=0; i<json.length; i++) {
+		    	 tbl.insertRow(i).insertCell(0).innerHTML='<a href="javascript:void(0)" onclick="addToList(\''+
+		    			 json[i].title+'\')">'+json[i].title+'</a>';
+		    	    
+		     }
+		   }
+		   var pld =  getElement('play_list_div');
+		   centerElement(pld);
+		   pld.style.display='block';
+	   }, function(e) {});
+   }
+   function barrel() {
+	   if (current < 0)
+		   return;
+	   makeGenericAjaxCall('Player/ajax/addPlay', 'playPath=' + encodeURIComponent(lib[current].path),
 				true, function(res) {
+			
+		}, function(err) {
 
+		});
+   }
+  
+   function play() {
+	   if (current < 0)
+		   return;
+		top.document.title='@label.playing@ ' + lib[current].title;
+		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(lib[current].path),
+				true, function(res) {
+			
 				}, function(err) {
 
 				});
 	}
+   function addToList(n) {
+	   if (!current)
+		   return;
+	   if (!n) {
+		   n = document.forms.new_list.listName.value;
+		   if (!n) {
+			   getElement('error').innerHTML='@label.err_emptyname@';
+			   return;
+		   }
+	   }
+	   // disable interaction, show spin, or hide
+	   makeGenericAjaxCall('Player/ajax/addItem', 'playPath=' + encodeURIComponent(document.forms.new_list.playPath.value)+'&listName='+encodeURIComponent(n),
+				true, function(res) {
+		   getElement('play_list_div').style.display='none';
+				}, function(err) {
+
+				});
+   }
    function pausePlay() { 
 		top.document.title = '@label.paused@';
 		playControl(2);
@@ -44,6 +101,35 @@
 		playControl(4);
 		top.document.title = '@label.stopped@';
 	}
+	
+	function activateRow(e) {
+		//var e = arguments[0];
+		if (! e)
+			e = window.event; 
+		if (currentEl == e.currentTarget)
+			return;
+		currentEl = e.currentTarget;
+		e.currentTarget.style.backgroundColor = '#bdf';
+		current = e.currentTarget.getAttribute('mb-data'); 
+		//e.currentTarget.cells[1].innerHTML = '<img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" style="cursor:pointer" onclick="play('+current+')">';
+		var ctrl = getElement('float_ctrl');
+		//getElement('error').innerHTML = e.currentTarget.cells[1].offsetLeft + 'x' + e.currentTarget.cells[1].offsetTop;
+		ctrl.style.left =  getOffsetLeft(e.currentTarget.cells[1]) + 'px';
+		ctrl.style.top =  getOffsetTop(e.currentTarget.cells[1]) + 'px';
+		ctrl.style.display='block';
+	}
+	
+	function deactivateRow(e) {
+		//var e = arguments[0];
+		if (! e)
+			e = window.event;
+		e.currentTarget.style.backgroundColor = '#fff';
+		//e.currentTarget.cells[1].innerHTML = '';
+		//current = -1;
+		currentEl = null;
+		//var ctrl = getElement('float_ctrl');
+		//ctrl.style.display='none';
+	}
 </script>
 @%'insert/playctrl.html'@
 <div id="search_sec">
@@ -58,8 +144,26 @@
       </table>   
    </form>
 </div>
-<div>
-  <table id="lib_content">
-		<tr><th>&nbsp;</th><th>@label.song@</th><th>@label.artist@</th><th>@label.album@</th><th>@label.genre@</th></tr>
+<div style="position:relative" >
+  <table id="lib_content" style="width:82%;margin-left:auto;margin-right:auto" >
+		<tr><th>@label.song@</th><th style="width:56px">&nbsp;</th><th>@label.artist@</th><th>@label.album@</th><th>@label.genre@</th></tr>
   </table>
 </div>
+  <div id="float_ctrl" style="display:none;position:absolute; width:60ph;height:20px">
+<img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" title="@commonlabels.play@" style="cursor:pointer" onclick="play()">
+<img src="@contextpath@/image/add_playlist_btn.png" alt="@commonlabels.addlist@" title="@commonlabels.addlist@" style="cursor:pointer" onclick="add()">
+<img src="@contextpath@/image/add_barrel_btn.png" alt="@commonlabels.barrel@" title="@commonlabels.barrel@" style="cursor:pointer" onclick="barrel()">
+</div>
+
+<div id="play_list_div" style="position:absolute;display:none;background-color:#ddf;border:1px solid black;padding-left:1em;padding-right:1em;z-index:99;height:200px;overflow:scroll">
+   <div style="float:right;cursor:pointer;background-color:#aaa" title="@commonlabels.close@" onclick="getElement('play_list_div').style.display='none'">X</div>
+   <div>@label.list_names@</div>
+   <table id="play_list">
+   </table>
+   <form name="new_list" action="Player/ajax/addItem">
+      <div>@label.list_name@<br/> <input type="text" name="listName"></div>
+      <input name="playPath" type="hidden">
+      <div><input type="button" name="submit" value="@label.submit@" onclick="addToList()"></div>   
+   </form>
+</div>
+

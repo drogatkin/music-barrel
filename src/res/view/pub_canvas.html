@@ -3,7 +3,7 @@
 <head>
   <title>@title@</title>
   <style type="text/css">
-     #error {}
+     #error {background-color:#fdd;}
      .play_progress {background-image:url('@contextpath@/image/playing.gif');background-repeat:no-repeat}
      .play_btn {background-image:url('@contextpath@/image/play_btn.png');background-repeat:no-repeat;cursor:pointer}
   </style>
@@ -23,12 +23,13 @@
   
 </head>
 <body onload="init()">
-<div style="width:82%;margin:auto">
-<table>
-<tr><td id="error">@error@</td>
- <td><a style="float:right" href="@contextpath@"><img src="@contextpath@/image/home.png" border="0" alt="@commonlabels.home@"/></a></td></tr>
-</table>
-</div>
-@%request.INNER_VIEW@
+ <div style="line-height:42px">&nbsp;</div>
+ @%request.INNER_VIEW@
+ <div style="width:50%;margin-left:auto;position:fixed;bottom:0px;right:0px;z-index:99">
+     <table style="margin-left:auto">
+       <tr><td id="error">@error@</td>
+           <td><a href="@contextpath@"><img src="@contextpath@/image/home.png" border="0" title="@commonlabels.home@" alt="@commonlabels.home@"/></a></td></tr>
+     </table>
+   </div>
 </body>
 </html>

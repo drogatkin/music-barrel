@@ -79,12 +79,34 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 					add = start_item == iid;
 				}
 				if (add)
-					playQueue.add(""+ dob.get("PATH"));
+					playQueue.add("" + dob.get("PATH"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return getServiceProvider();
+	}
+
+	public PlayerService playItem(String path, long item_id) {
+		if (path == null || path.isEmpty()) {
+			try {
+				DataObject item = appModel.getDOService().getObjectByQuery(
+						"select path from mb_media_item where id=" + item_id, null);
+				if (item != null)
+					path = "" + item.get("PATH");
+				else
+					return null;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		playQueue.add(path);
+		return getServiceProvider();
+	}
+
+	public void removePlay(String path) {
+
 	}
 
 	public void pause() {
