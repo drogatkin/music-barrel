@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import org.aldan3.data.DODelegator;
 import org.aldan3.data.DOService;
 import org.aldan3.model.ProcessException;
+import org.aldan3.util.DataConv;
 
 import photoorganizer.formats.MP3;
 import photoorganizer.formats.MediaFormatFactory;
@@ -189,7 +190,7 @@ public class MBModel extends AppModel implements Name {
 		mi.performer = (String) info.getAttribute(MediaInfo.ARTIST);
 		mi.track = intValue(info.getAttribute(MediaInfo.TRACK));
 		mi.year = intValue(info.getAttribute(MediaInfo.YEAR));
-		mi.genre = MP3.findGenre(info);
+		mi.genre = DataConv.ifNull(MP3.findGenre(info), "Unknown");
 		mi.added_on = new Date();
 		if (set != null) {
 			set.title = (String) info.getAttribute(MediaInfo.ALBUM);
