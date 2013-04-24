@@ -44,7 +44,7 @@
    
    function playItem(i, l) {
 	   playState.stopped = false;
-	   makeGenericAjaxCall('Player', 'playItem=' + i + '&playList='+l+'&playMode=0',
+	   makeGenericAjaxCall('Player', 'playItem=' + i + '&playList='+l+'&playMode='+getPlayMode(),
 		     true, function(res) {
 		    	var tdk = getElement('TR_'+i);
 			}, function(err) {

@@ -6,7 +6,21 @@
       <td style="margin-left:1em"><a href="javascript:void(0)" onclick="nextPlay()"><img src="../image/next_ctrl.png" alt="@label.next@" border="0"></a></td>
       <td style="margin-left:1em"><a href="javascript:void(0)" onclick="stopPlay()"><img src="../image/stop_ctrl.png" alt="@label.stop@" border="0"></a></td>
       <td style="margin-left:1em;width:120px"><img src="../image/progress_bar.png" width="120px" height="24" border="0"></td>
-      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="toggleMode()"><img src="../image/once_ctrl.png" alt="@label.next@" border="0"></a></td>
+      <td style="margin-left:1em"><a href="javascript:void(0)" onclick="toggleMode()"><img id="toggle_btn" src="../image/once_ctrl.png" alt="@label.next@" border="0"></a></td>
       </tr>
 </table>
 </div>
+<script>
+var curr_mod = 0;
+var mod_img = ['../image/once_ctrl.png', '../image/cycle_ctrl.png', '../image/shuffle_ctrl.png'];
+ function toggleMode() {
+	 if (curr_mod < mod_img.length-1)
+		 curr_mod++;
+	 else
+	      curr_mod = 0;
+	 getElement('toggle_btn').src = mod_img[curr_mod];
+ }
+ function getPlayMode() {
+	 return curr_mod;
+ }
+ </script>

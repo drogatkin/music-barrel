@@ -1,7 +1,7 @@
 <script>
    var lib = [
               @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@',
-            	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@'},)@
+            	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@','play_count':@^element.get*(PLAY_COUNT)*@},)@
               ];
    var current = -1;
    var currentEl = null;
@@ -11,7 +11,7 @@
    
    function fillTable() {
 	   var tbl = getElement('lib_content');
-	   for(var i=0; i<lib.length-1; i++) {
+	   for(var i=0; i<lib.length; i++) {
 		   var r = tbl.insertRow(i+1);
 		   r.onmouseover = activateRow;
 		   r.onmouseout = deactivateRow;
@@ -72,7 +72,7 @@
 	   if (!n) {
 		   n = document.forms.new_list.listName.value;
 		   if (!n) {
-			   getElement('error').innerHTML='@label.err_emptyname@';
+			   messg('@label.err_emptyname@');
 			   return;
 		   }
 	   }
@@ -113,7 +113,6 @@
 		current = e.currentTarget.getAttribute('mb-data'); 
 		//e.currentTarget.cells[1].innerHTML = '<img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" style="cursor:pointer" onclick="play('+current+')">';
 		var ctrl = getElement('float_ctrl');
-		//getElement('error').innerHTML = e.currentTarget.cells[1].offsetLeft + 'x' + e.currentTarget.cells[1].offsetTop;
 		ctrl.style.left =  getOffsetLeft(e.currentTarget.cells[1]) + 'px';
 		ctrl.style.top =  getOffsetTop(e.currentTarget.cells[1]) + 'px';
 		ctrl.style.display='block';
@@ -149,11 +148,11 @@
 		<tr><th>@label.song@</th><th style="width:56px">&nbsp;</th><th>@label.artist@</th><th>@label.album@</th><th>@label.genre@</th></tr>
   </table>
 </div>
-  <div id="float_ctrl" style="display:none;position:absolute; width:60ph;height:20px">
-<img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" title="@commonlabels.play@" style="cursor:pointer" onclick="play()">
-<img src="@contextpath@/image/add_playlist_btn.png" alt="@commonlabels.addlist@" title="@commonlabels.addlist@" style="cursor:pointer" onclick="add()">
-<img src="@contextpath@/image/add_barrel_btn.png" alt="@commonlabels.barrel@" title="@commonlabels.barrel@" style="cursor:pointer" onclick="barrel()">
-</div>
+ <div id="float_ctrl" style="display:none;position:absolute; width:60ph;height:20px">
+    <img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" title="@commonlabels.play@" style="cursor:pointer" onclick="play()">
+    <img src="@contextpath@/image/add_playlist_btn.png" alt="@commonlabels.addlist@" title="@commonlabels.addlist@" style="cursor:pointer" onclick="add()">
+    <img src="@contextpath@/image/add_barrel_btn.png" alt="@commonlabels.barrel@" title="@commonlabels.barrel@" style="cursor:pointer" onclick="barrel()">
+ </div>
 
 <div id="play_list_div" style="position:absolute;display:none;background-color:#ddf;border:1px solid black;padding-left:1em;padding-right:1em;z-index:99;height:200px;overflow:scroll">
    <div style="float:right;cursor:pointer;background-color:#aaa" title="@commonlabels.close@" onclick="getElement('play_list_div').style.display='none'">X</div>
