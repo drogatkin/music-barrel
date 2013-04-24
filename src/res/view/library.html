@@ -31,6 +31,7 @@
 	   for(var i = tbl.rows.length - 1; i >= 0; i--)
            tbl.deleteRow(i);
 	   document.forms.new_list.playPath.value=lib[current].path;
+	   document.forms.new_list.listName.value='';
 	   makeJSONAjaxCall('Listsdirectory', null, true, function (json) {
 		   if (json) {
 		     for(var i=0; i<json.length; i++) {
