@@ -35,25 +35,27 @@ public class Musicbarrel extends Grid<CellModelExample, MBModel> {
 
 	@Override
 	protected CellModelExample getCellModel(int col, int row) {
-		log("requested %d,%d from %d", null, col, row, playQueue.length);
+		//log("requested %d,%d from %d", null, col, row, playQueue.length);
 		CellModelExample result = new CellModelExample();
-		try {
-			DataObject dob = getAppModel()
-					.getDOService()
-					.getObjectByQuery(
-							String.format(
-									"select i.title, performer, track, i.year, genre, s.title album, play_count, path from mb_media_item i left join mb_media_set s on i.set_id=s.id where path='%s'",
-									/*do service get sql*/Sql.escapeQuote(playQueue[row * numCols() + col])), null);
-			if (dob != null) {
+		if (row * numCols() + col < playQueue.length)
+			try {
+				DataObject dob = getAppModel()
+						.getDOService()
+						.getObjectByQuery(
+								String.format(
+										"select i.title, performer, track, i.year, genre, s.title album, play_count, path from mb_media_item i left join mb_media_set s on i.set_id=s.id where path='%s'",
+										/*do service get sql*/Sql.escapeQuote(playQueue[row * numCols() + col])), null);
+				if (dob != null) {
 
-				result.title = "" + dob.get("TITLE");
-				result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"), dob.get("ALBUM"), dob.get("YEAR"));
-				result.content = String.format("<div><img src=\"Artwork?path=%s\"></div>",
-						URLEncoder.encode(""+dob.get("PATH"), getCharSet()));
+					result.title = "" + dob.get("TITLE");
+					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"), dob.get("ALBUM"),
+							dob.get("YEAR"));
+					result.content = String.format("<div><img src=\"Artwork?path=%s\"></div>",
+							URLEncoder.encode("" + dob.get("PATH"), getCharSet()));
+				}
+			} catch (Exception e) {
+				log("", e);
 			}
-		} catch (Exception e) {
-			log("", e);
-		}
 		return result;
 	}
 }
