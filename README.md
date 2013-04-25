@@ -1,14 +1,14 @@
 Music-Barrel
 ============
 
-Web interfaced musicl juke box for Raspberry Pi
+Web interfaced music juke box for Raspberry Pi
 
 Features set
 
 1. auto scan local and remote storage for music file and store them in database with
   separated type, quality, year, genre, album, artist, composer, song, duration, tags,
   and original location
-2. Manually adding directories or song in the database above
+2. Manually adding directories or songs in the database above
 3. Create playlists (static)
 4. Create playlist ad hoc by query or wizard driven
 5. Add songs to static playlists
