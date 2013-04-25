@@ -36,8 +36,7 @@
 		   if (json) {
 		     for(var i=0; i<json.length; i++) {
 		    	 tbl.insertRow(i).insertCell(0).innerHTML='<a href="javascript:void(0)" onclick="addToList(\''+
-		    			 json[i].title+'\')">'+json[i].title+'</a>';
-		    	    
+		    	 json[i].title_js.replace(/'/g, "\\'")+'\')">'+json[i].title+'</a>'; // JSON.stringify(test).replace(/"/g,"&quot;")
 		     }
 		   }
 		   var pld =  getElement('play_list_div');
@@ -76,7 +75,7 @@
 			   messg('@label.err_emptyname@');
 			   return;
 		   }
-	   }
+	   } 
 	   // disable interaction, show spin, or hide
 	   makeGenericAjaxCall('Player/ajax/addItem', 'playPath=' + encodeURIComponent(document.forms.new_list.playPath.value)+'&listName='+encodeURIComponent(n),
 				true, function(res) {

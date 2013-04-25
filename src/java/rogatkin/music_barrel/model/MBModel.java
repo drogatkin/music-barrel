@@ -120,6 +120,7 @@ public class MBModel extends AppModel implements Name {
 			pl.title = listName;
 		DOService dos = getDOService();
 		try {
+			// TODO use create or update
 			dos.getObjectLike(new DODelegator(pl, null, "", "title") {
 				@Override
 				protected String normilizeFieldName(String fieldName) {
@@ -128,6 +129,7 @@ public class MBModel extends AppModel implements Name {
 			});
 			if (pl.id <= 0) {
 				pl.created_on = new Date();
+				pl.modified_on = pl.created_on;
 				dos.addObject(new DODelegator(pl, null, "", "id"), "id");
 			}
 			dos.getObjectLike(new DODelegator(item, null, "", "path") {

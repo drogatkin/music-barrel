@@ -1,1 +1,1 @@
-[@model({'title':'@~element.get*(TITLE)*@', 'list_id':@element.get*(ID)*@, 'play_mode':'@^element.get*(PLAY_MODE)*@','start_pos':@element.get*(START_POS)*@},)@]
+[@model({'title':'@~element.get*(TITLE)*@', 'title_js':"@.org.aldan3.util.inet.HttpUtils.toJSONString*(@element.get*(TITLE)*@)*@", 'list_id':@element.get*(ID)*@, 'play_mode':'@^element.get*(PLAY_MODE)*@','start_pos':@element.get*(START_POS)*@},)@]

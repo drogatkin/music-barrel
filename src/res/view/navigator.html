@@ -135,8 +135,15 @@
 		top.document.title='@label.title@ '+m;
 		if (tk)
 			tk.className = '';
-		if (cp >= 0)
-			playI(cp+1);
+		if (cp >= 0) {
+			var pm = getPlayMode();
+			if (pm == 1) {
+				if (cp > pl.length - 2)
+					cp = -1;
+			} else if (pm == 2)
+				cp=Math.floor(Math.random()*pl.length) - 1;
+ 		    playI(cp+1);
+		}
 	}
 	
 	function addToPlay(p) {

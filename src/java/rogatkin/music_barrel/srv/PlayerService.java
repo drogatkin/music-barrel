@@ -3,8 +3,10 @@ package rogatkin.music_barrel.srv;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.aldan3.model.DataObject;
@@ -18,6 +20,7 @@ import photoorganizer.media.MediaPlayer;
 import photoorganizer.media.MediaPlayer.ProgressListener;
 import photoorganizer.media.MediaPlayer.Status;
 import rogatkin.music_barrel.model.MBModel;
+import rogatkin.music_barrel.model.PlayMode;
 
 public class PlayerService implements ServiceProvider<PlayerService>, ProgressListener, Runnable {
 	public static final String NAME = "MediaPlayer";
@@ -28,6 +31,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	private MediaPlayer mediaPlayer;
 	Thread listPlayer;
 	LinkedBlockingQueue<String> playQueue;
+	PlayMode playMode;
 
 	public PlayerService(MBModel am) {
 		appModel = am;
@@ -71,15 +75,27 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		try {
 			Collection<DataObject> list = appModel.getDOService().getObjectsByQuery(
 					GET_LIST_Q + " where l.id=" + list_id, 0, -1);
-			LinkedList<String> playList = new LinkedList<>();
+			playMode = PlayMode.getMode(mode);
 			boolean add = start_item <= 0;
+			ArrayList<String> shuffle = null;
+			if (PlayMode.shuffle.equals(playMode))
+				shuffle = new ArrayList<>(list.size());
 			for (DataObject dob : list) {
 				if (add == false) {
 					long iid = (long) dob.get("ID");
 					add = start_item == iid;
 				}
 				if (add)
-					playQueue.add("" + dob.get("PATH"));
+					if (shuffle != null)
+						shuffle.add("" + dob.get("PATH"));
+					else
+						playQueue.add("" + dob.get("PATH"));
+			}
+			if (shuffle != null) {
+				Random random = new Random();
+				while (shuffle.size() > 0) {
+					playQueue.add(shuffle.remove(random.nextInt(shuffle.size())));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -162,7 +178,12 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	}
 
 	Path getNext() throws InterruptedException {
-		return FileSystems.getDefault().getPath(playQueue.take());
+		String p = playQueue.take();
+		switch (playMode) {
+		case repeat:
+			playQueue.add(p);
+		}
+		return FileSystems.getDefault().getPath(p);
 	}
 
 	@Override
