@@ -182,6 +182,10 @@ public class MBModel extends AppModel implements Name {
 			throw new MBError("Add item to library error: " + mf, e);
 		}
 	}
+	
+	public void removePlayList(String name, int list_id) {
+		
+	}
 
 	public static void fillMediaModel(mb_media_item mi, MediaInfo info) {
 		fillMediaModel(mi, null, info);

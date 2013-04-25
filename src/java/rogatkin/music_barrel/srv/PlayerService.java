@@ -94,6 +94,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			if (shuffle != null) {
 				Random random = new Random();
 				while (shuffle.size() > 0) {
+					//System.err.printf("--Shuffled size %d%n", shuffle.size());
 					playQueue.add(shuffle.remove(random.nextInt(shuffle.size())));
 				}
 			}

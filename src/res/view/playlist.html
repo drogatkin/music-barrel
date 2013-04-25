@@ -15,7 +15,7 @@
       </tr>
   )@
 </table>
-
+<div><a href="javascript:void(0)" onclick="deleteList(@model[0](@element.get*(LIST_ID)*@)@)">@label.delete_all@</a></div>
 <script>
    var playState = new Object();
    
@@ -40,6 +40,23 @@
 		}, function(err) {
 
 			});
+   }
+   
+   function deleteList(l) {
+	   makeGenericAjaxCall('Playlist/ajax/deleteList', 'playList='+l,
+				true, function(res) {
+		   if (res == 'Ok') {
+		       var tbl = getElement('list_table');
+		       for(var i = tbl.rows.length - 1; i > 0; i--)
+		           tbl.deleteRow(i);
+		       var dr = getElement('playlists_t');
+		       for(var i = dr.cells.length - 1; i >= 0; i--)
+		           dr.deleteCell(i);
+		       updatePlaylists();
+		   }
+		}, function(err) {
+
+			}); 
    }
    
    function playItem(i, l) {
