@@ -42,6 +42,11 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 	public MediaCrawler getServiceProvider() {
 		return this;
 	}
+	
+	@Override
+	protected String getName() {
+		return super.getName()+getPreferredServiceName();
+	}
 
 	@Override
 	protected Runnable getTask() {

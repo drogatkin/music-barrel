@@ -2,8 +2,17 @@
   var pl = [
             @model({'path':'@^element.getAttribute*(MediaPath)*@', 'title':'@~element.getAttribute*(Title)*@'},)@
             ];
+  function focusSong(tr) {
+		tr.style.backgroundColor = '#def';
+		var cdiv = getPlayCtrlDiv(tr);
+		cdiv.style.display = '';
+  }
+  function meanSong(tr) {
+		tr.style.backgroundColor = '#DDE';
+		var cdiv = getPlayCtrlDiv(tr);
+		cdiv.style.display = 'none';
+  }
 </script>
-<p>@error@</p>
 @%'insert/playctrl.html'@
 @%'insert/directories.html'@
 <table style="width:900px;margin:auto;background-color:#DDE">
@@ -61,17 +70,6 @@
 	
 	function notifyUnload() {
 		
-	}
-	
-	function focusSong(tr) {
-		tr.style.backgroundColor = '#def';
-		var cdiv = getPlayCtrlDiv(tr);
-		cdiv.style.display = '';
-	}
-	function meanSong(tr) {
-		tr.style.backgroundColor = '#DDE';
-		var cdiv = getPlayCtrlDiv(tr);
-		cdiv.style.display = 'none';
 	}
 	function getPlayCtrlDiv(tr) {
 		for ( var i = 0; i < tr.cells.length; i++) {

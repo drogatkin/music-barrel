@@ -11,10 +11,10 @@ public class mb_play_list_map extends SimpleCoordinator<MBModel> {
 		super(model);
 	}
 
-	// TODO provide functionality for th field
+	// TODO provide functionality for the field
 	public long relation_id;
 
-	@DBField
+	@DBField(index = true)
 	public int list_id;
 	@DBField
 	public long item_id;

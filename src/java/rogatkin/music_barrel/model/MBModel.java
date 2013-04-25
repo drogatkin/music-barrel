@@ -41,7 +41,8 @@ public class MBModel extends AppModel implements Name {
 	@Override
 	protected void deactivateServices() {
 		PlayerService ps = (PlayerService) unregister(PlayerService.NAME);
-		ps.stopAll();
+		ps.terminate();
+		
 		MediaCrawler mc = (MediaCrawler) unregister(MediaCrawler.NAME);
 		if (mc != null)
 			mc.shutdown();

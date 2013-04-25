@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.aldan3.model.DataObject;
+import org.aldan3.model.Log;
 import org.aldan3.model.ServiceProvider;
 
 import com.beegman.webbee.util.AsyncUpdater;
@@ -35,8 +36,9 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 
 	public PlayerService(MBModel am) {
 		appModel = am;
+		playMode = PlayMode.once; // TODO take from config
 		playQueue = new LinkedBlockingQueue<>(1024);
-		listPlayer = new Thread(this, NAME);
+		listPlayer = new Thread(this, getPreferredServiceName());
 		listPlayer.setDaemon(true);
 		listPlayer.start();
 	}
@@ -99,7 +101,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.l.error(getPreferredServiceName(), e);
 		}
 		return getServiceProvider();
 	}
@@ -114,7 +116,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 				else
 					return null;
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.l.error(NAME, e);
 				return null;
 			}
 		}
@@ -123,7 +125,12 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	}
 
 	public void removePlay(String path) {
-
+		playQueue.remove(path);
+	}
+	
+	public String [] getPlayQueue() {
+		// TODO size can be changed, so actual result can be inaccurate
+		return playQueue.toArray(new String[playQueue.size()]);
 	}
 
 	public void pause() {
@@ -142,6 +149,11 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			mediaPlayer.close();
 	}
 
+	public void terminate() {
+		stopAll();
+		listPlayer.interrupt();
+	}
+	
 	public void resume() {
 		//System.err.printf("Player %s resume %n", mediaPlayer);
 		if (mediaPlayer != null)
@@ -194,9 +206,12 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 				play(getNext());
 			} catch (InterruptedException ie) {
 				break;
+			} catch(Exception e) {
+				Log.l.error(getPreferredServiceName(), e);
 			}
 			if (mediaPlayer != null)
 				mediaPlayer.waitPlayEnds();
 		} while (true);
+		//System.err.println("Exited===========play thread");
 	}
 }
