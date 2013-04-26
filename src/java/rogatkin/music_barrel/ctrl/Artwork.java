@@ -2,6 +2,7 @@ package rogatkin.music_barrel.ctrl;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -23,7 +24,7 @@ public class Artwork extends Stream<MBModel> {
 			os.close();
 			return;
 		}
-		Path p = FileSystems.getDefault().getPath(sp);
+		Path p = Paths.get(sp);
 		if (Files.isRegularFile(p) == false) {
 			os.close();
 			return;

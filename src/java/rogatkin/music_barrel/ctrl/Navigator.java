@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -31,7 +31,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 			String ps = getParameterValue("path", "", 0);
 			if (ps.isEmpty())
 				return modelData;
-			Path p = FileSystems.getFileSystem(new URI("file:///")).getPath(ps);
+			Path p = Paths.get(ps);
 			if (Files.isDirectory(p) == false && p.getParent() != null)
 				p = p.getParent();
 			DirectoryStream<Path> stream = Files.newDirectoryStream(p);
@@ -43,7 +43,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));				
 			}
 			modelInsert("path", p);
-		} catch (IOException | URISyntaxException ioe) {
+		} catch (IOException ioe) {
 			modelInsert("error", ioe);
 		}
 		return modelData;

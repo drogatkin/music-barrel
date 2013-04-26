@@ -1,7 +1,7 @@
 package rogatkin.music_barrel.srv;
 
 import java.net.URL;
-import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -196,7 +196,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		case repeat:
 			playQueue.add(p);
 		}
-		return FileSystems.getDefault().getPath(p);
+		return Paths.get(p);
 	}
 
 	@Override

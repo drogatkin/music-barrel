@@ -1,8 +1,8 @@
 package rogatkin.music_barrel.model;
 
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
 import javax.sql.DataSource;
@@ -215,7 +215,7 @@ public class MBModel extends AppModel implements Name {
 
 	public static Path getItemPath(String path) {
 		if (path != null) {
-			Path result = FileSystems.getDefault().getPath(path);
+			Path result = Paths.get(path);
 			if (Files.isRegularFile(result) && Files.isReadable(result))
 				return result;
 		}
