@@ -5,6 +5,7 @@
               ];
    var current = -1;
    var currentEl = null;
+   
    function initFields() {
 	   fillTable();
    }
@@ -15,6 +16,7 @@
 		   var r = tbl.insertRow(i+1);
 		   r.onmouseover = activateRow;
 		   r.onmouseout = deactivateRow;
+		   r.onmousedown = selectRow;
 		   r.setAttribute('mb-data', i);
 		   r.insertCell(0).innerHTML=lib[i].title
 		   r.insertCell(1).innerHTML= '&nbsp;';//'<img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" style="cursor:pointer" onclick="play('+i+')">'
@@ -47,7 +49,9 @@
    function barrel() {
 	   if (current < 0)
 		   return;
-	   makeGenericAjaxCall('Player/ajax/addPlay', 'playPath=' + encodeURIComponent(lib[current].path),
+	   var params =  'playPath=' + encodeURIComponent(lib[current].path);
+	   params += selectedToParams();
+	   makeGenericAjaxCall('Player/ajax/addPlay', params,
 				true, function(res) {
 			
 		}, function(err) {
@@ -77,7 +81,9 @@
 		   }
 	   } 
 	   // disable interaction, show spin, or hide
-	   makeGenericAjaxCall('Player/ajax/addItem', 'playPath=' + encodeURIComponent(document.forms.new_list.playPath.value)+'&listName='+encodeURIComponent(n),
+	   var params = 'playPath=' + encodeURIComponent(document.forms.new_list.playPath.value);
+	   params += selectedToParams();
+	   makeGenericAjaxCall('Player/ajax/addItem', params +'&listName='+encodeURIComponent(n),
 				true, function(res) {
 		   getElement('play_list_div').style.display='none';
 				}, function(err) {
@@ -122,12 +128,55 @@
 		//var e = arguments[0];
 		if (! e)
 			e = window.event;
-		e.currentTarget.style.backgroundColor = '#fff';
+		//console.log('des :'+e.currentTarget.style.backgroundColor);
+		if (!e.currentTarget.getAttribute('selected'))
+		    e.currentTarget.style.backgroundColor = '#fff';
+		else
+			e.currentTarget.style.backgroundColor = '#ffa';
 		//e.currentTarget.cells[1].innerHTML = '';
 		//current = -1;
 		currentEl = null;
 		//var ctrl = getElement('float_ctrl');
 		//ctrl.style.display='none';
+	}
+	
+	function selectRow(e) {
+		if (e.ctrlKey==1) {
+			if (e.currentTarget.getAttribute('selected')) {
+				e.currentTarget.removeAttribute('selected');
+			} else {
+			    e.currentTarget.style.backgroundColor = '#ffa';
+			    e.currentTarget.setAttribute('selected', true);
+		    }
+		} if (e.shiftKey == 1) {
+			var tbl = getElement('lib_content');
+			var sm = false;
+			for(var i=0; i<tbl.rows.length; i++) {
+				if (sm) {
+					tbl.rows[i].style.backgroundColor = '#ffa';
+					tbl.rows[i].setAttribute('selected', true);
+				}
+					
+				if (tbl.rows[i].getAttribute('selected'))
+					sm = true;
+				if (tbl.rows[i] == e.currentTarget)
+					break;
+			}
+		}
+	}
+	function selectedToParams() {
+		var res = '';
+		var tbl = getElement('lib_content');
+		for(var i=0; i<tbl.rows.length; i++) {
+			if (tbl.rows[i].getAttribute('selected')) {
+				//li = tbl.rows[i].setAttribute('mb-data');
+				if (i != current && lib[i].path != document.forms.new_list.playPath.value)
+				      res += '&playPath=' + encodeURIComponent(lib[i].path);
+				tbl.rows[i].removeAttribute('selected');
+				tbl.rows[i].style.backgroundColor = '#fff';
+			}
+		}
+		return res;
 	}
 </script>
 @%'insert/playctrl.html'@
@@ -159,7 +208,7 @@
    <div>@label.list_names@</div>
    <table id="play_list">
    </table>
-   <form name="new_list" action="Player/ajax/addItem">
+   <form name="new_list" action="Player/ajax/addItem" onsubmit="addToList(); return false;">
       <div>@label.list_name@<br/> <input type="text" name="listName"></div>
       <input name="playPath" type="hidden">
       <div><input type="button" name="submit" value="@label.submit@" onclick="addToList()"></div>   
