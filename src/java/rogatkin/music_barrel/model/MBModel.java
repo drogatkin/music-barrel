@@ -94,6 +94,10 @@ public class MBModel extends AppModel implements Name {
 			protected int getInsertUpdateVariant() {
 				return 2;
 			}
+			@Override
+			protected boolean isCreateIndex() {
+				return true;
+			}
 		};
 	}
 
