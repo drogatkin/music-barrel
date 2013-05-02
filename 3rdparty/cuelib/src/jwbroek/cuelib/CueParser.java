@@ -184,11 +184,23 @@ final public class CueParser
    * @return A representation of the cue sheet.
    * @throws IOException
    */
-  public static CueSheet parse(final InputStream inputStream) throws IOException
+  public static CueSheet parse(final InputStream inputStream) throws IOException {
+	  return parse(inputStream, ASCII);
+  }
+  
+  /**
+   * Parse a cue sheet that will be read from the InputStream.
+   * @param inputStream An {@link java.io.InputStream} that produces a cue sheet. The stream will be closed
+   * afterward.
+   * @param character encoding
+   * @return A representation of the cue sheet.
+   * @throws IOException
+   */
+  public static CueSheet parse(final InputStream inputStream, String encoding) throws IOException
   {
     CueParser.logger.entering(CueParser.class.getCanonicalName(), "parse(InputStream)", inputStream);
     
-    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(inputStream, ASCII)));
+    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(inputStream, encoding)));
     
     CueParser.logger.exiting(CueParser.class.getCanonicalName(), "parse(InputStream)", result);
     
@@ -201,11 +213,22 @@ final public class CueParser
    * @return A representation of the cue sheet.
    * @throws IOException
    */
-  public static CueSheet parse(final File file) throws IOException
+  public static CueSheet parse(final File file) throws IOException {
+	  return parse(file, ASCII);
+  }
+  
+  /**
+   * Parse a cue sheet file.
+   * @param file A cue sheet file.
+   * @param char encoding
+   * @return A representation of the cue sheet.
+   * @throws IOException
+   */
+  public static CueSheet parse(final File file, String encoding) throws IOException
   {
     CueParser.logger.entering(CueParser.class.getCanonicalName(), "parse(File)", file);
     
-    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(new FileInputStream(file), ASCII)));
+    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(new FileInputStream(file), encoding)));
     CueParser.logger.exiting(CueParser.class.getCanonicalName(), "parse(File)", result);
     return result;
   }
