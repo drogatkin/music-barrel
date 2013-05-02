@@ -145,6 +145,7 @@ public class MBModel extends AppModel implements Name {
 			});
 			//log("Object %s for path %s", null, oo, li.path);
 			if (item.id <= 0) {
+				// TODO add play item with possible album creation and connection
 				fillMediaModel(item, mf.getMediaInfo());
 				dos.addObject(new DODelegator(item, null, "", "id"), "id");
 			}
