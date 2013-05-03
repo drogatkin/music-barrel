@@ -2,7 +2,7 @@
    @grid(   
      <div style="height:100%;width:100%">
          @element(
-             <div style="width:33%;float:left; height:100%"> @model.title@ @.model.content@"</div>
+             <div style="width:@w@;float:left; height:100%" title="@model.comment@">@.model.content@ @model.title@</div>
          )@
      </div>
   )@

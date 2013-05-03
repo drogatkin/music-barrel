@@ -3,6 +3,7 @@ package rogatkin.music_barrel.ctrl;
 import java.net.URLEncoder;
 
 import org.aldan3.model.DataObject;
+import org.aldan3.util.DataConv;
 import org.aldan3.util.Sql;
 
 import rogatkin.music_barrel.model.MBModel;
@@ -48,9 +49,9 @@ public class Musicbarrel extends Grid<CellModelExample, MBModel> {
 				if (dob != null) {
 
 					result.title = "" + dob.get("TITLE");
-					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"), dob.get("ALBUM"),
+					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"), DataConv.ifNull(dob.get("ALBUM"), ""),
 							dob.get("YEAR"));
-					result.content = String.format("<div><img src=\"Artwork?path=%s\"></div>",
+					result.content = String.format("<div style=\"margin-left:auto;margin-right:auto;width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: 260px; max-height: 260px;\"></div>",
 							URLEncoder.encode("" + dob.get("PATH"), getCharSet()));
 				}
 			} catch (Exception e) {
