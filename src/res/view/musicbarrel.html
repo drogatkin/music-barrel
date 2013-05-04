@@ -2,9 +2,22 @@
    @grid(   
      <div style="height:100%;width:100%">
          @element(
-             <div style="width:@w@;float:left; height:100%" title="@model.comment@">@.model.content@ @model.title@</div>
+             <div style="width:@w@;float:left; height:100%" title="@model.comment@">@.model.content@ 
+                 <span style="font-weight:bold;text-align:center;display:block">@model.title@</span></div>
          )@
      </div>
   )@
 </div>
-
+<script src="@contextpath@/js/ui.js" language="Javascript"></script>
+<script>
+    function initFields() {
+    	handlerUrl = 'Navigator/ajax/Asyncupdate';
+		// run it async
+		window.onunload = releaseUI;
+		updateUI();
+    }
+    
+    function songFinished(m) {
+    	window.location.reload();
+    }
+</script>

@@ -9,6 +9,8 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import mediautil.gen.MediaFormat;
+
 import org.aldan3.model.DataObject;
 import org.aldan3.model.Log;
 import org.aldan3.model.ServiceProvider;
@@ -62,7 +64,6 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	public synchronized PlayerService play(Path media) {
 		if (mediaPlayer != null) {
 			mediaPlayer.close();
-
 		}
 		
 		mediaPlayer = MediaFormatFactory.getPlayer(MediaFormatFactory.createMediaFormat(media.toFile(),
@@ -166,6 +167,12 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		if (mediaPlayer != null)
 			return mediaPlayer.getStatus();
 		return Status.closed;
+	}
+	
+	public MediaFormat getCurrentMedia() {
+		if (mediaPlayer != null)
+			return mediaPlayer.getMedia();
+		return null;
 	}
 
 	//////// progress listener interface  ////

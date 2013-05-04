@@ -29,10 +29,15 @@ public class Artwork extends Stream<MBModel> {
 			os.close();
 			return;
 		}
-		MediaFormat mf = MediaFormatFactory.createMediaFormat(p.toFile());
+		MediaFormat mf = MediaFormatFactory.createMediaFormat(p.toFile(), getAppModel().getCharEncoding(), true);
 		if (mf != null && mf.isValid()) {
 			os.write(mf.getThumbnailData(null));
 		}
 		os.close();
+	}
+	
+	@Override
+	protected boolean canCache() {
+		return true;
 	}
 }

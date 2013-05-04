@@ -51,12 +51,18 @@ public class Musicbarrel extends Grid<CellModelExample, MBModel> {
 					result.title = "" + dob.get("TITLE");
 					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"), DataConv.ifNull(dob.get("ALBUM"), ""),
 							dob.get("YEAR"));
-					result.content = String.format("<div style=\"margin-left:auto;margin-right:auto;width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: 260px; max-height: 260px;\"></div>",
+					result.content = String.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: 260px; max-height: 260px;margin:auto;display:block\"></div>",
 							URLEncoder.encode("" + dob.get("PATH"), getCharSet()));
 				}
 			} catch (Exception e) {
 				log("", e);
 			}
 		return result;
+	}
+	
+	@Override
+	protected String getTitle() {
+		// TODO consider using String format
+		return super.getTitle() + " - " + DataConv.ifNull(getAppModel().getPlayer().getCurrentMedia(), getResourceString("idle", "Idle"));
 	}
 }
