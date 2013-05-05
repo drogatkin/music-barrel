@@ -1,1 +1,34 @@
-under construction
+<div style="width:100%;overflow:scroll">
+@%'insert/listsdirectory.html'@
+</div>
+ <div id="music_holder" style="width:100%">
+   <table id="music_list">
+   
+   </table>
+</div>
+<script>
+  var pl = [@model({"id":@element.get*(ID)*@,"artist":"@~element.get*(PERFORMER)*@", "song":"@~element.get*(TITLE)*@", "album":"@~element.get*(ALBUM)*@", "list_id":@element.get*(LIST_ID)*@,"year":"@element.get*(YEAR)*@","genre":"@element.get*(GENRE)*@"},)@];
+
+  var table=getElement('music_list');
+  for (var i=0; pl[i]; i++) {
+     var row=table.insertRow(i);
+      var cell1=row.insertCell(0);
+      cell1.innerHTML = '<strong>'+pl[i].song+'</strong><br/>'+pl[i].artist+'<br/>'+pl[i].album+'<br/>'+pl[i].year+'&nbsp;<i>'+pl[i].genre+'</i>';
+      cell1.onclick = clousurePlaymenu(i);
+      cell1.className = 'play_tag';
+  }
+  updatePlaylists();
+  
+  function clousurePlaymenu(i) {
+	  return function() {
+		  makeGenericAjaxCall('Player', 'playItem=' + pl[i].id + '&playList='+pl[i].list_id+'&playMode=0',
+				     true, function(res) {
+				    	// splash ...playing...
+					}, function(err) {
+
+						});
+		  //alert('Play '+dl[i].path);
+	  }
+  }
+ </script>
+  

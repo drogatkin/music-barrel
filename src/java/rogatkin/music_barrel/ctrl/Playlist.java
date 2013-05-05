@@ -51,4 +51,5 @@ public class Playlist extends SqlTabular<DataObject, MBModel> implements Name {
 		}
 		return ERROR;
 	}
+	
 }

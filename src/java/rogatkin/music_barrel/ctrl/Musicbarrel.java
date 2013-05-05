@@ -10,6 +10,7 @@ import rogatkin.music_barrel.model.MBModel;
 
 import com.beegman.webbee.block.Grid;
 import com.beegman.webbee.block.Grid.CellModelExample;
+import com.beegman.webbee.model.Appearance;
 
 public class Musicbarrel extends Grid<CellModelExample, MBModel> {
 	protected String[] playQueue;
@@ -51,8 +52,8 @@ public class Musicbarrel extends Grid<CellModelExample, MBModel> {
 					result.title = "" + dob.get("TITLE");
 					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"), DataConv.ifNull(dob.get("ALBUM"), ""),
 							dob.get("YEAR"));
-					result.content = String.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: 260px; max-height: 260px;margin:auto;display:block\"></div>",
-							URLEncoder.encode("" + dob.get("PATH"), getCharSet()));
+					result.content = String.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
+							URLEncoder.encode("" + dob.get("PATH"), getCharSet()), appearance == Appearance.mobile?96:260);
 				}
 			} catch (Exception e) {
 				log("", e);

@@ -1,0 +1,46 @@
+ <div id="music_holder" style="width:100%">
+   <table id="music_list">
+   
+   </table>
+</div>
+<table style="width:100%">
+  <tr><td style="width:50%" onclick="prev()"><span style="font-size:14pt">&lt;&lt;</span></td>
+    <td style="width:50%" onclick="next()"><span style="font-size:14pt">&gt;&gt;</span></td>
+    </tr>
+    </table>
+<script>
+   // TODO make it insert
+   var lib = [
+              @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@',
+            	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@','play_count':@^element.get*(PLAY_COUNT)*@},)@
+              ];
+   var page = @pageinfo.page@;
+   var table=getElement('music_list');
+   for (var i=0; lib[i]; i++) {
+      var row=table.insertRow(i);
+       var cell1=row.insertCell(0);
+       cell1.innerHTML = '<strong>'+lib[i].title+'</strong><br/>'+lib[i].artist+'<br/>'+lib[i].album+'<br/>'+lib[i].year+'&nbsp;<i>'+lib[i].genre+'</i>';
+       cell1.onclick = clousureAddPlay(i);
+       cell1.className = 'play_tag';
+   }
+   
+   function next() {
+	   window.location.href = window.location.pathname+'?page='+(page+1);
+   }
+   function prev() {
+	   if (page > 0)
+	   window.location.href = window.location.pathname+'?page='+(page-1);
+   }
+   function clousureAddPlay(i) {
+	   return function() {
+		   var params =  'playPath=' + encodeURIComponent(lib[i].path);
+		   //params += selectedToParams();
+		   makeGenericAjaxCall('Player/ajax/addPlay', params,
+					true, function(res) {
+				
+			}, function(err) {
+
+			});
+	   }
+   }
+ </script>
