@@ -11,11 +11,13 @@
 </div>
 <script src="@contextpath@/js/ui.js" language="Javascript"></script>
 <script>
+   var song_len = @song_len@;
     function initFields() {
     	handlerUrl = 'Navigator/ajax/Asyncupdate';
 		// run it async
 		window.onunload = releaseUI;
 		updateUI();
+		startProgress(song_len);
     }
     
     function songFinished(m) {
@@ -24,9 +26,10 @@
     
     function pausePlay() {
     	playControl(2);
+    	pauseProgress();
     }
     function resumePlay() {
-    	playControl(1);
+    	playControl(1, function() {resumeProgress();});
     }
     function nextPlay() { 
 		playControl(0);

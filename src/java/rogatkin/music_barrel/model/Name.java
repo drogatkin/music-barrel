@@ -11,5 +11,7 @@ public interface Name {
 	
 	public static final String ON_THE_GO = "On The Go";
 	
-	public static final String CFG_AUTO_SCAN = "auto_scan";
+	//public static final String CFG_AUTO_SCAN = "auto_scan";
+	
+	public static final String VV_SONGLENGTH = "song_len";
 }

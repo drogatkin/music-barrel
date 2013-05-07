@@ -28,7 +28,7 @@
  </tr>
  @model(
     <tr onmouseover="focusSong(this)" onmouseout="meanSong(this)">
-       <td id="track_@index@">@element.getAttribute*(Track)*@</td>
+       <td id="track_@index@" timeData="@element.getIntAttribute*(Length)*@">@element.getAttribute*(Track)*@</td>
        <td>
          <div>@element.getAttribute*(Title)*@</div>
          <div id="play_btn" style="display:none;position:relative;left:0"><a href="javascript:void(0)" onclick="playI(@index@)">
@@ -121,9 +121,12 @@
 		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
 				true, function(res) {
 					tk = getElement('track_'+cp);
-					if (tk)
+					var l =  0;
+					if (tk) {
 						tk.className = 'play_progress';
-					startProgress(60);
+						l = tk.getAttribute('timeData');
+					}
+					startProgress(l);
 				}, function(err) {
 
 				});		

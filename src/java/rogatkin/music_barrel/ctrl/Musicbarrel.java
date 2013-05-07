@@ -2,17 +2,21 @@ package rogatkin.music_barrel.ctrl;
 
 import java.net.URLEncoder;
 
+import mediautil.gen.MediaFormat;
+import mediautil.gen.MediaInfo;
+
 import org.aldan3.model.DataObject;
 import org.aldan3.util.DataConv;
 import org.aldan3.util.Sql;
 
 import rogatkin.music_barrel.model.MBModel;
+import rogatkin.music_barrel.model.Name;
 
 import com.beegman.webbee.block.Grid;
 import com.beegman.webbee.block.Grid.CellModelExample;
 import com.beegman.webbee.model.Appearance;
 
-public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
+public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implements Name {
 	protected String[] playQueue;
 
 	@Override
@@ -65,7 +69,14 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 	@Override
 	protected String getTitle() {
 		// TODO consider using String format
-		return super.getTitle() + " - " + DataConv.ifNull(getAppModel().getPlayer().getCurrentMedia(), getResourceString("idle", "Idle"));
+		MediaFormat mf = getAppModel().getPlayer().getCurrentMedia();
+		if (mf != null) {
+			// assert mf.getMediaInfo() != null
+			// TODO make it prorated to the current player position
+			modelInsert(VV_SONGLENGTH, mf.getMediaInfo().getIntAttribute(MediaInfo.LENGTH));
+		} else
+			modelInsert(VV_SONGLENGTH, 0);
+		return super.getTitle() + " - " + DataConv.ifNull(mf, getResourceString("idle", "Idle"));
 	}
 	
 	public static final class CellModel2 {
