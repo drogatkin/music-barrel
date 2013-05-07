@@ -120,10 +120,11 @@ public class MBModel extends AppModel implements Name {
 			throw new MBError("Ivalid format :" + item);
 		mb_play_list pl = new mb_play_list(this);
 		if (listName == null || listName.isEmpty())
-			pl.title = "On The Go";
+			pl.title = ON_THE_GO;
 		else
 			pl.title = listName;
 		DOService dos = getDOService();
+		// TODO synchronize playlist creation to avoid multiple
 		try {
 			// TODO use create or update
 			dos.getObjectLike(new DODelegator(pl, null, "", "title") {
@@ -137,17 +138,10 @@ public class MBModel extends AppModel implements Name {
 				pl.modified_on = pl.created_on;
 				dos.addObject(new DODelegator(pl, null, "", "id"), "id");
 			}
-			dos.getObjectLike(new DODelegator(item, null, "", "path") {
-				@Override
-				protected String normilizeFieldName(String fieldName) {
-					return fieldName.toUpperCase();
-				}
-			});
+			item = addToLibrary(mf);
 			//log("Object %s for path %s", null, oo, li.path);
 			if (item.id <= 0) {
-				// TODO add play item with possible album creation and connection
-				fillMediaModel(item, mf.getMediaInfo());
-				dos.addObject(new DODelegator(item, null, "", "id"), "id");
+				throw new MBError("Can't add item "+mf +" to library");
 			}
 			mb_play_list_map plm = new mb_play_list_map(this);
 			plm.item_id = item.id;
@@ -159,11 +153,12 @@ public class MBModel extends AppModel implements Name {
 		}
 	}
 
-	public void addToLibrary(MediaFormat mf, Path p) throws MBError {
+	public mb_media_item addToLibrary(MediaFormat mf) throws MBError {
 		mb_media_item item = new mb_media_item(this);
 		mb_media_set set = new mb_media_set(this);
 		fillMediaModel(item, set, mf.getMediaInfo());
 		item.losed = "FLACWVM4AAPE".indexOf(mf.getDescription()) < 0;
+		item.path = mf.getFile().toPath().toString();
 		DODelegator dod;
 		try {
 			if (set.title != null && set.title.isEmpty() == false) {
@@ -180,18 +175,24 @@ public class MBModel extends AppModel implements Name {
 			}
 		} catch (ProcessException e) {
 			throw new MBError("Add set to library error: " + mf, e);
-		}
-		item.path = p.toString();
+		};
 		try {
-			getDOService().addObject(new DODelegator(item, null, "", "id"), "id");
+			getDOService().addObject(new DODelegator(item, null, "path", "id"), "id", dod = new DODelegator(item, null, "", "path") {
+				@Override
+				protected String normilizeFieldName(String fieldName) {
+					return fieldName.toUpperCase();
+				}
+			});
+			if (item.id <= 0) {
+				if (getDOService().getObjectLike(dod) == null)
+					throw new MBError("Can't resolve item at "+item.path); 
+			}
 		} catch (Exception e) {
 			throw new MBError("Add item to library error: " + mf, e);
 		}
+		return item;
 	}
 	
-	public void removePlayList(String name, int list_id) {
-		
-	}
 
 	public static void fillMediaModel(mb_media_item mi, MediaInfo info) {
 		fillMediaModel(mi, null, info);

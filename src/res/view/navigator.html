@@ -8,15 +8,15 @@
 		cdiv.style.display = '';
   }
   function meanSong(tr) {
-		tr.style.backgroundColor = '#DDE';
+		tr.style.backgroundColor = '';
 		var cdiv = getPlayCtrlDiv(tr);
 		cdiv.style.display = 'none';
   }
 </script>
 @%'insert/playctrl.html'@
 @%'insert/directories.html'@
-<table style="width:900px;margin:auto;background-color:#DDE">
-  <tr>
+<table style="width:900px;margin:auto;" class="bg_theme">
+  <tr class="bg_hd_theme">
     <th>@label.track@</th>
     <th>@label.song@</th>
     <th>@label.artist@</th>
@@ -42,7 +42,7 @@
        <td>@element.getAttribute*(Year)*@</td>
        <td>@element.getAttribute*(Genre)*@</td>
        <td>@element.getAttribute*(Length)*@</td>
-       <td>@element.getAttribute*(Samplerate)*@</td>
+       <td style="text-align:right">@element.getAttribute*(Samplerate)*@</td>
     </tr>
  )@
 </table>

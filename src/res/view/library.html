@@ -170,7 +170,7 @@
 		for(var i=1; i<tbl.rows.length; i++) {
 			if (tbl.rows[i].getAttribute('selected')) {
 				//li = tbl.rows[i].setAttribute('mb-data');
-				if ((i-1) != current && lib[i].path != document.forms.new_list.playPath.value)
+				if ((i-1) != current && lib[i-1].path != document.forms.new_list.playPath.value)
 				      res += '&playPath=' + encodeURIComponent(lib[i-1].path);
 				tbl.rows[i].removeAttribute('selected');
 				tbl.rows[i].style.backgroundColor = '#fff';

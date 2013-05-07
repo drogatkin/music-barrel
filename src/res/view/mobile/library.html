@@ -1,11 +1,12 @@
+@%'insert/albums.html'@
  <div id="music_holder" style="width:100%">
-   <table id="music_list">
+   <table id="music_list" style="margin:auto">
    
    </table>
 </div>
 <table style="width:100%">
   <tr><td style="width:50%" onclick="prev()"><span style="font-size:14pt">&lt;&lt;</span></td>
-    <td style="width:50%" onclick="next()"><span style="font-size:14pt">&gt;&gt;</span></td>
+    <td style="text-align:right" onclick="next()"><span style="font-size:14pt">&gt;&gt;</span></td>
     </tr>
     </table>
 <script>
@@ -23,6 +24,7 @@
        cell1.onclick = clousureAddPlay(i);
        cell1.className = 'play_tag';
    }
+   updateAlbums();
    
    function next() {
 	   window.location.href = window.location.pathname+'?page='+(page+1);

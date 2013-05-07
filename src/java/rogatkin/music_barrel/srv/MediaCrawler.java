@@ -125,7 +125,7 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 				MediaFormat mf = MediaFormatFactory.createMediaFormat(file.toFile(), appModel.getCharEncoding(), true);
 				if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0) {
 					try {
-						appModel.addToLibrary(mf, file);
+						appModel.addToLibrary(mf);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

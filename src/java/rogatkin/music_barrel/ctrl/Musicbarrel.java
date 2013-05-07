@@ -12,7 +12,7 @@ import com.beegman.webbee.block.Grid;
 import com.beegman.webbee.block.Grid.CellModelExample;
 import com.beegman.webbee.model.Appearance;
 
-public class Musicbarrel extends Grid<CellModelExample, MBModel> {
+public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 	protected String[] playQueue;
 
 	@Override
@@ -36,9 +36,9 @@ public class Musicbarrel extends Grid<CellModelExample, MBModel> {
 	}
 
 	@Override
-	protected CellModelExample getCellModel(int col, int row) {
+	protected CellModel2 getCellModel(int col, int row) {
 		//log("requested %d,%d from %d", null, col, row, playQueue.length);
-		CellModelExample result = new CellModelExample();
+		CellModel2 result = new CellModel2() ;
 		if (row * numCols() + col < playQueue.length)
 			try {
 				DataObject dob = getAppModel()
@@ -54,6 +54,7 @@ public class Musicbarrel extends Grid<CellModelExample, MBModel> {
 							dob.get("YEAR"));
 					result.content = String.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
 							URLEncoder.encode("" + dob.get("PATH"), getCharSet()), appearance == Appearance.mobile?96:260);
+					result.path = "" + dob.get("PATH");
 				}
 			} catch (Exception e) {
 				log("", e);
@@ -65,5 +66,12 @@ public class Musicbarrel extends Grid<CellModelExample, MBModel> {
 	protected String getTitle() {
 		// TODO consider using String format
 		return super.getTitle() + " - " + DataConv.ifNull(getAppModel().getPlayer().getCurrentMedia(), getResourceString("idle", "Idle"));
+	}
+	
+	public static final class CellModel2 {
+		public String path;
+		public String content;
+		public String comment;
+		public String title;
 	}
 }

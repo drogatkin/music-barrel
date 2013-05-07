@@ -3,7 +3,7 @@
    @grid(   
      <div style="height:100%;width:100%">
          @element(
-             <div style="width:@w@;float:left; height:100%" title="@model.comment@">@.model.content@ 
+             <div style="width:@w@;float:left; height:100%" title="@model.comment@" onclick="removePlay('@^model.path@')">@.model.content@ 
                  <span style="font-weight:bold;text-align:center;display:block">@model.title@</span></div>
          )@
      </div>
@@ -21,4 +21,28 @@
     function songFinished(m) {
     	window.location.reload();
     }
+    
+    function pausePlay() {
+    	playControl(2);
+    }
+    function resumePlay() {
+    	playControl(1);
+    }
+    function nextPlay() { 
+		playControl(0);
+	}
+	
+	function stopPlay() { 
+		playControl(4, function() {window.location.reload();});
+		
+	}
+	
+	function removePlay(p) {
+		makeGenericAjaxCall('Player/ajax/removePlay', 'playPath='+encodeURIComponent(p),
+				true, function(res) {
+		   if (res == 'Ok') {
+			   window.location.reload();
+		   }
+		   });
+	}
 </script>

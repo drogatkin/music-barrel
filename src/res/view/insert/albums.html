@@ -1,0 +1,24 @@
+<div id="gadget_albums" style="width:100%;overflow: auto; ">
+	<table>
+		<tr id="albums_t"></tr>
+	</table>
+</div>
+
+<script>
+  function updateAlbums() {
+	makeJSONAjaxCall('@contextpath@@servletpath@/Albums', '',
+			true, function(json) {
+				var dr = getElement('albums_t');
+				for ( var i = 0; i < json.length; i++) {
+					if (!json[i])
+						break;
+					var cc = dr.insertCell(i); // js fields already encoded as required
+					cc.innerHTML = '<a href="Library?filter_album='  //@:path@
+							+ encodeURIComponent(json[i].title_js)
+							+ '"><img border="0" src="@contextpath@/image/playlist.png">'
+							+ json[i].title + '</a>';
+				}
+			}, function(e) {
+			});
+  }
+</script>

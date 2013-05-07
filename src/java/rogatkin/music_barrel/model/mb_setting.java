@@ -47,6 +47,10 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	@DBField()
 	@FormField
 	public boolean perform_scan;
+	
+	@DBField()
+	@FormField
+	public boolean allow_duplicates;
 
 	@FormField
 	public boolean rescan_soon;
