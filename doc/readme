@@ -1,0 +1,21 @@
+Music-Barrel  0.9 alpha
+=======================
+
+Music Juke box for Raspberry Pi
+
+1. Installation
+---------------
+
+An installation package is coming, however for now just follow
+the guide to install app server on Raspberry Pi
+http://tjws.sourceforge.net/arch-raspi-java8.html
+And then drop the .war file in webapps deploy directory.
+
+Point your desktop or mobile browser to http://raspberrypi/music-barrel
+Visit Setting barrel first to initialize database schema.
+
+
+2. Sources access
+-----------------
+
+Visit https://github.com/drogatkin/music-barrel
