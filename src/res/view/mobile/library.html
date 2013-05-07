@@ -27,11 +27,11 @@
    updateAlbums();
    
    function next() {
-	   window.location.href = window.location.pathname+'?page='+(page+1);
+	   window.location.href = window.location.pathname+'?page='+(page+1)+'&filter_album=@:filter_album@';
    }
    function prev() {
 	   if (page > 0)
-	   window.location.href = window.location.pathname+'?page='+(page-1);
+	   window.location.href = window.location.pathname+'?page='+(page-1)+'&filter_album=@:filter_album@';
    }
    function clousureAddPlay(i) {
 	   return function() {
