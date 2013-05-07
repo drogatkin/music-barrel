@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.sql.DataSource;
 
@@ -26,6 +27,7 @@ import com.beegman.webbee.model.AppModel;
 public class MBModel extends AppModel implements Name {
 
 	private mb_setting settings;
+	private HashMap<String, Object> preserve;
 
 	@Override
 	public String getAppName() {
@@ -53,6 +55,7 @@ public class MBModel extends AppModel implements Name {
 			e.printStackTrace();
 		}
 		super.deactivateServices();
+		preserve.clear();
 	}
 
 	public void saveSettings() throws ProcessException {
@@ -68,6 +71,7 @@ public class MBModel extends AppModel implements Name {
 
 	@Override
 	protected void initServices() {
+		preserve = new HashMap<>();
 		super.initServices();
 		settings = new mb_setting(this);
 		settings.id = 1;
@@ -112,6 +116,22 @@ public class MBModel extends AppModel implements Name {
 
 	public mb_setting getSettings() {
 		return settings;
+	}
+	
+	synchronized public <T> T preserveSate(T state, String name) {
+		T oldState = null;
+		// TODO generally can be stored on session level but since no sessions
+		if (preserve.containsKey(name)) {
+			oldState = (T) preserve.remove(name);
+		}
+		preserve.put(name, state);
+		return oldState;
+	}
+	
+	synchronized public <T>  T  getState(String name, T defVal) {
+		if (preserve.containsKey(name)) 
+		return (T) preserve.get(name);
+		return defVal;	
 	}
 
 	public void addToPlayList(mb_media_item item, String listName) throws MBError {

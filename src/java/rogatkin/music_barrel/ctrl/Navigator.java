@@ -28,12 +28,14 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	protected List<MediaInfo> getTabularData(long pos, int size) {
 		List<MediaInfo> modelData = new ArrayList<>();
 		try {
-			String ps = getParameterValue("path", "", 0);
-			if (ps.isEmpty())
+			String ps = getParameterValue("path", getAppModel().getState(getClass().getName(), ""), 0);
+			if (ps.isEmpty()) 
 				return modelData;
+			
 			Path p = Paths.get(ps);
 			if (Files.isDirectory(p) == false && p.getParent() != null)
 				p = p.getParent();
+			getAppModel().preserveSate(p.toString(), getClass().getName());
 			DirectoryStream<Path> stream = Files.newDirectoryStream(p);
 			String enc = getAppModel().getCharEncoding();
 			for (Path entry : stream) {
