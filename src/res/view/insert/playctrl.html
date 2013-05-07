@@ -5,7 +5,8 @@
       <td style="margin-left:1em"><a href="javascript:void(0)" onclick="resumePlay()"><img src="../image/play_ctrl.png" alt="@label.resume@" border="0"></a></td>
       <td style="margin-left:1em"><a href="javascript:void(0)" onclick="nextPlay()"><img src="../image/next_ctrl.png" alt="@label.next@" border="0"></a></td>
       <td style="margin-left:1em"><a href="javascript:void(0)" onclick="stopPlay()"><img src="../image/stop_ctrl.png" alt="@label.stop@" border="0"></a></td>
-      <td style="margin-left:1em;width:120px"><img src="../image/progress_bar.png" width="120px" height="24" border="0"></td>
+      <td style="margin-left:1em;width:120px;background-color:#ddd;background-image:url('../image/progress_bar.png');"><img id="progres_pusher" src="../image/dot.png" width="1" height="24" border="0">
+         <img src="../image/progress_arrow.png" border="0"></td>
       <td style="margin-left:1em"><a href="javascript:void(0)" onclick="toggleMode()"><img id="toggle_btn" src="../image/once_ctrl.png" alt="@label.next@" border="0"></a></td>
       </tr>
 </table>
@@ -13,6 +14,9 @@
 <script>
 var curr_mod = 0;
 var mod_img = ['../image/once_ctrl.png', '../image/cycle_ctrl.png', '../image/shuffle_ctrl.png'];
+var curr_prog=0;
+var step ;
+var prog_tmr;
  function toggleMode() {
 	 if (curr_mod < mod_img.length-1)
 		 curr_mod++;
@@ -22,5 +26,24 @@ var mod_img = ['../image/once_ctrl.png', '../image/cycle_ctrl.png', '../image/sh
  }
  function getPlayMode() {
 	 return curr_mod;
+ }
+ function startProgress(l) {
+	 getElement('progres_pusher').width = 1;
+	 pauseProgress();
+	 if (l > 0) {
+	    step = (120-8)/l;
+	    curr_prog = 0;
+	    resumeProgress();
+	 }
+	
+ }
+ function pauseProgress() {
+	 if (prog_tmr)
+		 clearInterval(prog_tmr);
+	 prog_tmr = null;
+ }
+ function resumeProgress() {
+	 if (!prog_tmr)
+	 	prog_tmr = setInterval(function () { curr_prog +=step; if (curr_prog < (120-7)) getElement('progres_pusher').width = curr_prog; else pauseProgress(); }, 1000);
  }
  </script>

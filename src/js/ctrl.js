@@ -1,8 +1,8 @@
 function playControl(c,oncompl) {
 	makeGenericAjaxCall('Player', 'cmd=' + c, true, function(res) {
 		if (oncompl) {
-			if ('Ok' == res)
-				oncompl();
+			if (res)
+				oncompl(res);
 		}
 	}, function(err) {
 

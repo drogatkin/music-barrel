@@ -28,7 +28,7 @@
   
   function clousurePlaymenu(i) {
 	  return function() {
-		  makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(dl[i].path),
+		  makeGenericAjaxCall('Player/ajax/addPlay', 'playPath=' + encodeURIComponent(dl[i].path),
 					true, function(res) {
 						
 					}, function(err) {

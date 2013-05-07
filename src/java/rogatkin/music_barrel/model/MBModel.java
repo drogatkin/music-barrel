@@ -147,7 +147,10 @@ public class MBModel extends AppModel implements Name {
 			plm.item_id = item.id;
 			plm.list_id = pl.id;
 			plm.related_on = new Date();
-			dos.addObject(new DODelegator(plm));
+			if (getSettings().allow_duplicates)
+				dos.addObject(new DODelegator(plm));
+			else
+				dos.addObject(new DODelegator(plm, null, "item_id,list_id", "id"), null, new DODelegator(plm, null, "", "item_id,list_id"));
 		} catch (Exception e) {
 			throw new MBError("Add item to list error", e);
 		}

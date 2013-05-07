@@ -123,6 +123,7 @@
 					tk = getElement('track_'+cp);
 					if (tk)
 						tk.className = 'play_progress';
+					startProgress(60);
 				}, function(err) {
 
 				});		
@@ -157,14 +158,16 @@
 		prevTitle = top.document.title;
 		top.document.title = '@label.paused@';
 		playControl(2);
+		pauseProgress();
 		MediaControls.isPlaying = false;
 	}
 	
 	function resumePlay() {
 		top.document.title = prevTitle;
-		playControl(1);
+		playControl(1, function() {resumeProgress();});
 		MediaControls.isPlaying = true;
 	}
+	
 	
 	function nextPlay() { 
 		playControl(0);
@@ -172,6 +175,7 @@
 	
 	function stopPlay() { 
 		cp = -1;
+		startProgress(0);
 		playControl(0);
 	}
 	

@@ -45,4 +45,12 @@
 			});
 	   }
    }
+   function setupScroll() {
+	   document.addEventListener('scroll', function(e) {
+		    if (document.body.scrollHeight - (window.innerHeight+window.scrollY) == 0) {
+		        // call next page and add to table and merge arrays
+		        //lib = lib.concat(pageLib);
+		    }
+		});
+   }
  </script>
