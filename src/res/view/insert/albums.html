@@ -14,7 +14,7 @@
 						break;
 					var cc = dr.insertCell(i); // js fields already encoded as required
 					cc.innerHTML = '<a href="Library?filter_album='  //@:path@
-							+ encodeURIComponent(json[i].title_js)
+							+ (json[i].title_js=='All Albums'?'':encodeURIComponent(json[i].title_js))
 							+ '"><img border="0" src="@contextpath@/image/playlist.png">'
 							+ json[i].title + '</a>';
 				}
