@@ -21,7 +21,7 @@ public class Library extends SqlTabular<DataObject, MBModel> implements Name {
 	@Override
 	protected PageInfo getPagination() {
 		if (appearance == Appearance.mobile) {
-			return new PageInfo(getAppModel().getSettings().page_size, 0, "page");
+			return new PageInfo(Math.max(getAppModel().getSettings().page_size, 5), 0, "page");
 		}
 		return null;
 	}

@@ -12,7 +12,7 @@ public class Albums extends Gadget<Collection<DataObject>, MBModel> {
 	@Override
 	protected Collection<DataObject> getGadgetData() {
 		try {
-			return getAppModel().getDOService().getObjectsByQuery("select id, title, year, subset_num, num_subsets from mb_media_set union select 0,'All Albums',0,0,0", 0, -1, null);
+			return getAppModel().getDOService().getObjectsByQuery("select id, title, year, subset_num, num_subsets from mb_media_set", 0, -1, null);
 		} catch (Exception e) {
 			log("", e);
 		}

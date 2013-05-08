@@ -9,15 +9,17 @@
 	makeJSONAjaxCall('@contextpath@@servletpath@/Albums', '',
 			true, function(json) {
 				var dr = getElement('albums_t');
-				for ( var i = 0; i < json.length; i++) {
+				var i;
+				for ( i = 0; i < json.length; i++) {
 					if (!json[i])
 						break;
 					var cc = dr.insertCell(i); // js fields already encoded as required
 					cc.innerHTML = '<a href="Library?filter_album='  //@:path@
-							+ (json[i].title_js=='All Albums'?'':encodeURIComponent(json[i].title_js))
+							+ encodeURIComponent(json[i].title_js)
 							+ '"><img border="0" src="@contextpath@/image/playlist.png">'
 							+ json[i].title + '</a>';
 				}
+				cc = dr.insertCell(i).innerHTML = '<a href="Library"><img border="0" src="@contextpath@/image/playlist.png">@commonlabels.all_albums@</a>';
 			}, function(e) {
 			});
   }
