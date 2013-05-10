@@ -18,6 +18,8 @@
  */
 package jwbroek.cuelib;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
@@ -200,7 +202,46 @@ final public class CueParser
   {
     CueParser.logger.entering(CueParser.class.getCanonicalName(), "parse(InputStream)", inputStream);
     
-    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(inputStream, encoding)));
+    // auto detect encoding
+    /*
+    // give the author to manage
+
+   Bytes 	Encoding Form
+   00 00 FE FF 	UTF-32, big-endian
+   FF FE 00 00 	UTF-32, little-endian
+   FE FF 	UTF-16, big-endian
+   FF FE 	UTF-16, little-endian
+   EF BB BF 	UTF-8
+   */
+		InputStream is = inputStream;
+		if (inputStream.markSupported() == false) {
+			ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+			byte[] buf = new byte[512];
+			int l;
+			try {
+				while ((l = inputStream.read(buf)) > 0)
+					os.write(buf, 0, l);
+			} finally {
+				inputStream.close();
+			}
+			is = new ByteArrayInputStream(os.toByteArray());
+		}
+		byte[] marker = new byte[3];
+		is.mark(4);
+		int l = is.read(marker);
+		if (l == marker.length) {
+			if ((marker[0] & 255) == 0xef && (marker[1] & 255) == 0xbb && (marker[2] & 255) == 0xbf)
+				encoding = "UTF-8";
+			else if (marker[0] == 0xff && marker[1] == 0xfe)
+				encoding = "UTF-16LE";
+			else if (marker[0] == 0xfe && marker[1] == 0xff)
+				encoding = "UTF-16BE";
+			else
+				is.reset();
+		} else
+			is.reset();
+
+    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(is, encoding)));
     
     CueParser.logger.exiting(CueParser.class.getCanonicalName(), "parse(InputStream)", result);
     
@@ -228,7 +269,7 @@ final public class CueParser
   {
     CueParser.logger.entering(CueParser.class.getCanonicalName(), "parse(File)", file);
     
-    final CueSheet result = CueParser.parse(new EncodedLineNumberReader(new InputStreamReader(new FileInputStream(file), encoding)));
+    final CueSheet result = CueParser.parse(new FileInputStream(file), encoding);
     CueParser.logger.exiting(CueParser.class.getCanonicalName(), "parse(File)", result);
     return result;
   }
@@ -1474,19 +1515,7 @@ final public class CueParser
     public String readLine()
                 throws IOException {
        String result = super.readLine();
-      if (result != null && result.startsWith("\u00ef\u00bb\u00bf")) { // -- UTF8
-           return new String(result.substring(3).getBytes(), "UTF-8");
-      }
-/*
- // give the author to manage
-
-Bytes 	Encoding Form
-00 00 FE FF 	UTF-32, big-endian
-FF FE 00 00 	UTF-32, little-endian
-FE FF 	UTF-16, big-endian
-FF FE 	UTF-16, little-endian
-EF BB BF 	UTF-8
-*/
+     
       return result;
     }
   }
