@@ -78,7 +78,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 			modelInsert(VV_SONGLENGTH, 0);
 		return super.getTitle() + " - " + DataConv.ifNull(mf, getResourceString("idle", "Idle"));
 	}
-	protected boolean forceMobile() { return true;}
+	//protected boolean forceMobile() { return true;}
 	public static final class CellModel2 {
 		public String path;
 		public String content;

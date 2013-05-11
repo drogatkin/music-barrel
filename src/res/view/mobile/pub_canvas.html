@@ -11,6 +11,7 @@
          body {height:100%}
          P {margin:0.2em 1em 0.1em 1em}
        .play_tag {box-shadow: 10px 10px 5px #999; border-radius:6px; border:2px solid; margin:16px 1em 1em 1em}
+       .overthrow-enabled .overthrow {overflow: auto; -webkit-overflow-scrolling: touch;}
        /* ]]> */-->
   </style>
   <style type="text/css">
@@ -20,6 +21,7 @@
   <script src="@contextpath@/js/common.js" language="Javascript"></script>
   <script src="@contextpath@/js/form.js" language="Javascript"></script>
   <script src="@contextpath@/js/ctrl.js" language="Javascript"></script>
+  <script src="@contextpath@/js/overthrow.js" language="Javascript"></script>
   <script>
       function goto(loc) {
          document.location='@contextpath@@request.getServletPath*()*@/'+loc;

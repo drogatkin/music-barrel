@@ -421,7 +421,9 @@
          <parameter>A image/</parameter>
          <parameter variable="WEBBEE_3RD_EDITOR_GIF"></parameter>     
          <parameter>A js/</parameter>
-         <parameter variable="WEBBEE_3RD_EDITOR_PNG"></parameter>     
+         <parameter variable="WEBBEE_3RD_EDITOR_PNG"></parameter>
+         <parameter>A js/</parameter>
+         <parameter value="3rdparty/Overthrow/overthrow.js"></parameter>        
        </function>
     </block>
   </target>
