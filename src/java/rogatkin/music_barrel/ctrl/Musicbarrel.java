@@ -9,13 +9,16 @@ import org.aldan3.model.DataObject;
 import org.aldan3.util.DataConv;
 import org.aldan3.util.Sql;
 
+import photoorganizer.formats.MediaFormatFactory;
+
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.Name;
+import rogatkin.music_barrel.model.mb_media_item;
 
 import com.beegman.webbee.block.Grid;
 import com.beegman.webbee.block.Grid.CellModelExample;
 import com.beegman.webbee.model.Appearance;
-
+import java.io.File;
 public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implements Name {
 	protected String[] playQueue;
 
@@ -44,7 +47,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 		//log("requested %d,%d from %d", null, col, row, playQueue.length);
 		CellModel2 result = new CellModel2() ;
 		if (row * numCols() + col < playQueue.length)
-			try {
+			try { // TODO read mb_media_item with possible inherited class with album field
 				DataObject dob = getAppModel()
 						.getDOService()
 						.getObjectByQuery(
@@ -52,13 +55,26 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 										"select i.title, performer, track, i.year, genre, s.title album, play_count, path from mb_media_item i left join mb_media_set s on i.set_id=s.id where path='%s'",
 										/*do service get sql*/Sql.escapeQuote(playQueue[row * numCols() + col])), null);
 				if (dob != null) {
-
 					result.title = "" + dob.get("TITLE");
 					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"), DataConv.ifNull(dob.get("ALBUM"), ""),
 							dob.get("YEAR"));
 					result.content = String.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
 							URLEncoder.encode("" + dob.get("PATH"), getCharSet()), appearance == Appearance.mobile?96:260);
 					result.path = "" + dob.get("PATH");
+				} else {
+					///log("No record found for %s %d", null, playQueue[row * numCols() + col], col);
+					// not in library, generate record
+					result.path = playQueue[row * numCols() + col];
+					MediaFormat mf = MediaFormatFactory.createMediaFormat(new File(result.path), getCharSet(), true);
+					if (mf != null) {
+						mb_media_item i = new mb_media_item(getAppModel());
+						MediaInfo mi;
+						MBModel.fillMediaModel(i,  mi = mf.getMediaInfo());
+						result.title = i.title;
+						result.comment = String.format("%s - %s - %d", i.performer, mi.getAttribute(MediaInfo.ALBUM), i.year);
+						result.content = String.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
+								URLEncoder.encode(result.path, getCharSet()), appearance == Appearance.mobile?96:260);
+					}
 				}
 			} catch (Exception e) {
 				log("", e);

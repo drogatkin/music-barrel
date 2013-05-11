@@ -389,6 +389,8 @@
          <parameter>A</parameter>
          <parameter type="path">src/res/html/*.jsp</parameter>
          <!-- images                            -->
+         <parameter>A</parameter>
+         <parameter type="path">src/res/image/*.ico</parameter>
          <parameter>A image</parameter>
          <parameter type="path">src/res/image/*.png</parameter>
          <parameter>A image</parameter>

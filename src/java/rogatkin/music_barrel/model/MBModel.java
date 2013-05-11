@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.aldan3.data.DODelegator;
 import org.aldan3.data.DOService;
+import org.aldan3.model.Log;
 import org.aldan3.model.ProcessException;
 import org.aldan3.util.DataConv;
 
@@ -51,8 +52,7 @@ public class MBModel extends AppModel implements Name {
 		try {
 			saveSettings();
 		} catch (ProcessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.l.error("Save settings", e);
 		}
 		super.deactivateServices();
 		preserve.clear();
@@ -83,8 +83,7 @@ public class MBModel extends AppModel implements Name {
 				}
 			});
 		} catch (ProcessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.l.error("Load settings", e);
 		}
 		register(new PlayerService(this));
 		if (settings.perform_scan)

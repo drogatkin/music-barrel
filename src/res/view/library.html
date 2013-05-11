@@ -1,7 +1,7 @@
 <script>
    var lib = [
               @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@',
-            	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@','play_count':@^element.get*(PLAY_COUNT)*@},)@
+            	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@','play_count':@^element.get*(PLAY_COUNT)*@,'year':@^element.get*(YEAR)*@},)@
               ];
    var current = -1;
    var currentEl = null;
@@ -23,6 +23,7 @@
 		   r.insertCell(2).innerHTML=lib[i].artist;
 		   r.insertCell(3).innerHTML=lib[i].album;
 		   r.insertCell(4).innerHTML=lib[i].genre;
+		   r.insertCell(5).innerHTML=lib[i].year;
 	   }
    }
    function add() {
@@ -130,7 +131,7 @@
 			e = window.event;
 		//console.log('des :'+e.currentTarget.style.backgroundColor);
 		if (!e.currentTarget.getAttribute('selected'))
-		    e.currentTarget.style.backgroundColor = '#fff';
+		    e.currentTarget.style.backgroundColor = '';
 		else
 			e.currentTarget.style.backgroundColor = '#ffa';
 		//e.currentTarget.cells[1].innerHTML = '';
@@ -193,8 +194,8 @@
    </form>
 </div>
 <div style="position:relative" >
-  <table id="lib_content" style="width:82%;margin-left:auto;margin-right:auto" >
-		<tr><th>@label.song@</th><th style="width:56px">&nbsp;</th><th>@label.artist@</th><th>@label.album@</th><th>@label.genre@</th></tr>
+  <table id="lib_content" style="width:82%;margin-left:auto;margin-right:auto" class="bg_theme">
+		<tr class="bg_hd_theme"><th>@label.song@</th><th style="width:56px">&nbsp;</th><th>@label.artist@</th><th>@label.album@</th><th>@label.genre@</th><th>@label.year@</th></tr>
   </table>
 </div>
  <div id="float_ctrl" style="display:none;position:absolute; width:60px;height:20px">
