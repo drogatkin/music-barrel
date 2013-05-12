@@ -93,6 +93,8 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 
 		@Override
 		public String deConvert(output_type value, TimeZone tz, Locale l) {
+			if (value == null)
+				return "";
 			return value.toString();
 		}
 	}

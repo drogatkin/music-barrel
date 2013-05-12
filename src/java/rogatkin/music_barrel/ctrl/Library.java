@@ -25,5 +25,5 @@ public class Library extends SqlTabular<DataObject, MBModel> implements Name {
 		}
 		return null;
 	}
-	
+	//protected boolean forceMobile() { return true;}
 }

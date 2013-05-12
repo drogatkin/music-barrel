@@ -12,15 +12,15 @@
 <script>
    // TODO make it insert
    var lib = [
-              @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@','year':'@^element.get*(YEAR)*@'',
-            	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@','play_count':@^element.get*(PLAY_COUNT)*@},)@
+              @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@','year':'@^element.get*(YEAR)*@',
+            	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@','track':'@^element.get*(TRACK)*@','play_count':@^element.get*(PLAY_COUNT)*@},)@
               ];
    var page = @pageinfo.page@;
    var table=getElement('music_list');
    for (var i=0; lib[i]; i++) {
       var row=table.insertRow(i);
        var cell1=row.insertCell(0);
-       cell1.innerHTML = '<strong>'+lib[i].title+'</strong><br/>'+lib[i].artist+'<br/>'+lib[i].album+'<br/>'+lib[i].year+'&nbsp;<i>'+lib[i].genre+'</i>';
+       cell1.innerHTML = htmlFormat(lib[i]);
        cell1.onclick = clousureAddPlay(i);
        cell1.className = 'play_tag';
    }

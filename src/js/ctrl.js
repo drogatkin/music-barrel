@@ -24,3 +24,10 @@ function messg(s) {
 			mes_tmr = null;
 	}
 }
+
+function htmlFormat(pi) {
+	var s = pi.song?pi.song:pi.title;
+	var t = pi.track?pi.track+'#&nbsp;':'';
+	var y = pi.year && pi.year != 0?pi.year:'';
+	return t+'<strong>'+s+'</strong><br/><span style="color:#555555;font-weight:600">'+pi.artist+'</span><br/>'+pi.album+'<br/>'+y+'&nbsp;<i>'+pi.genre+'</i>';
+}
