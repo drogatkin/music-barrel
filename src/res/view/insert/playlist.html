@@ -1,0 +1,11 @@
+<div id="play_list_div" style="position:absolute;display:none;background-color:#ddf;border:1px solid black;padding-left:1em;padding-right:1em;z-index:99;height:200px;overflow:scroll">
+   <div title="@commonlabels.close@" style="float:right;cursor:pointer;background-color:#aaa" title="@commonlabels.close@" onclick="getElement('play_list_div').style.display='none'">X</div>
+   <div>@label.list_names@</div>
+   <table id="play_list">
+   </table>
+   <form name="new_list" action="Player/ajax/addItem" onsubmit="addToList(); return false;">
+      <div>@label.list_name@<br/> <input type="text" name="listName"></div>
+      <input name="playPath" type="hidden">
+      <div><input type="button" name="submit" value="@label.submit@" onclick="addToList()"></div>   
+   </form>
+</div>

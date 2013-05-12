@@ -7,7 +7,7 @@
    </table>
 </div>
 <script>
-  var pl = [@model({"id":@element.get*(ID)*@,"artist":"@~element.get*(PERFORMER)*@", "song":"@~element.get*(TITLE)*@", "album":"@~element.get*(ALBUM)*@", "list_id":@element.get*(LIST_ID)*@,"year":"@element.get*(YEAR)*@","genre":"@element.get*(GENRE)*@"},)@];
+  var pl = [@model({"id":@element.get*(ID)*@,"artist":"@~element.get*(PERFORMER)*@", "song":"@~element.get*(TITLE)*@", "album":"@~element.get*(ALBUM)*@", "list_id":@element.get*(LIST_ID)*@,"year":"@^element.get*(YEAR)*@","genre":"@element.get*(GENRE)*@"},)@];
 
   var table=getElement('music_list');
   for (var i=0; pl[i]; i++) {

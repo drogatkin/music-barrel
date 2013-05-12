@@ -12,7 +12,7 @@
 <script>
    // TODO make it insert
    var lib = [
-              @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@',
+              @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@','year':'@^element.get*(YEAR)*@'',
             	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@','play_count':@^element.get*(PLAY_COUNT)*@},)@
               ];
    var page = @pageinfo.page@;
