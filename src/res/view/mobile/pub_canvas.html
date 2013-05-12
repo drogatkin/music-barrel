@@ -37,7 +37,7 @@
 &nbsp;&nbsp;&nbsp;<img onclick="playControl(1)" src="@contextpath@/image/play_ctrl.png" border="0" alt="@commonlabels.stop@"></img>
 &nbsp;&nbsp;&nbsp;<img onclick="playControl(2)" src="@contextpath@/image/pause_ctrl.png" border="0" alt="@commonlabels.stop@"></img>
 &nbsp;&nbsp;&nbsp;<img onclick="playControl(0)" src="@contextpath@/image/next_ctrl.png" border="0" alt="@commonlabels.stop@"></img>
-&nbsp;&nbsp;&nbsp;<img onclick="playControl(4)" src="@contextpath@/image/stop_ctrl.png" border="0" alt="@commonlabels.stop@"></img>
+&nbsp;&nbsp;&nbsp;<img onclick="playControl(4, function(){ if (postStop) postStop();})" src="@contextpath@/image/stop_ctrl.png" border="0" alt="@commonlabels.stop@"></img>
 </div>
 <body onload="init()">
 @%request.INNER_VIEW@
