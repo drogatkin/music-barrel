@@ -170,7 +170,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	}
 	
 	public MediaFormat getCurrentMedia() {
-		if (mediaPlayer != null)
+		if (mediaPlayer != null && mediaPlayer.getStatus().equals(Status.playing))
 			return mediaPlayer.getMedia();
 		return null;
 	}

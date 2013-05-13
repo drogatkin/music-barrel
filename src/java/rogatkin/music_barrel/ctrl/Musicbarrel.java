@@ -19,6 +19,7 @@ import com.beegman.webbee.block.Grid;
 import com.beegman.webbee.block.Grid.CellModelExample;
 import com.beegman.webbee.model.Appearance;
 import java.io.File;
+
 public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implements Name {
 	protected String[] playQueue;
 
@@ -35,7 +36,15 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 
 	@Override
 	protected Object getModel() {
-		playQueue = getAppModel().getPlayer().getPlayQueue();
+		MediaFormat cm = getAppModel().getPlayer().getCurrentMedia();
+		if (cm == null)
+			playQueue = getAppModel().getPlayer().getPlayQueue();
+		else {
+			String[] remainQueue = getAppModel().getPlayer().getPlayQueue();
+			playQueue = new String[remainQueue.length+1];
+			System.arraycopy(remainQueue, 0, playQueue, 1, remainQueue.length);
+			playQueue[0] = cm.getFile().getPath();
+		}
 		if (playQueue.length > 0) {
 
 		}
@@ -45,7 +54,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 	@Override
 	protected CellModel2 getCellModel(int col, int row) {
 		//log("requested %d,%d from %d", null, col, row, playQueue.length);
-		CellModel2 result = new CellModel2() ;
+		CellModel2 result = new CellModel2();
 		if (row * numCols() + col < playQueue.length)
 			try { // TODO read mb_media_item with possible inherited class with album field
 				DataObject dob = getAppModel()
@@ -56,10 +65,12 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 										/*do service get sql*/Sql.escapeQuote(playQueue[row * numCols() + col])), null);
 				if (dob != null) {
 					result.title = "" + dob.get("TITLE");
-					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"), DataConv.ifNull(dob.get("ALBUM"), ""),
-							dob.get("YEAR"));
-					result.content = String.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
-							URLEncoder.encode("" + dob.get("PATH"), getCharSet()), appearance == Appearance.mobile?96:260);
+					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"),
+							DataConv.ifNull(dob.get("ALBUM"), ""), dob.get("YEAR"));
+					result.content = String
+							.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
+									URLEncoder.encode("" + dob.get("PATH"), getCharSet()),
+									appearance == Appearance.mobile ? 96 : 260);
 					result.path = "" + dob.get("PATH");
 				} else {
 					///log("No record found for %s %d", null, playQueue[row * numCols() + col], col);
@@ -69,11 +80,14 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 					if (mf != null) {
 						mb_media_item i = new mb_media_item(getAppModel());
 						MediaInfo mi;
-						MBModel.fillMediaModel(i,  mi = mf.getMediaInfo());
+						MBModel.fillMediaModel(i, mi = mf.getMediaInfo());
 						result.title = i.title;
-						result.comment = String.format("%s - %s - %d", i.performer, mi.getAttribute(MediaInfo.ALBUM), i.year);
-						result.content = String.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
-								URLEncoder.encode(result.path, getCharSet()), appearance == Appearance.mobile?96:260);
+						result.comment = String.format("%s - %s - %d", i.performer, mi.getAttribute(MediaInfo.ALBUM),
+								i.year);
+						result.content = String
+								.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
+										URLEncoder.encode(result.path, getCharSet()),
+										appearance == Appearance.mobile ? 96 : 260);
 					}
 				}
 			} catch (Exception e) {
@@ -81,7 +95,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 			}
 		return result;
 	}
-	
+
 	@Override
 	protected String getTitle() {
 		// TODO consider using String format
@@ -94,7 +108,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 			modelInsert(VV_SONGLENGTH, 0);
 		return super.getTitle() + " - " + DataConv.ifNull(mf, getResourceString("idle", "Idle"));
 	}
-	
+
 	public static final class CellModel2 {
 		public String path;
 		public String content;
