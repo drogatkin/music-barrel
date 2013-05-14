@@ -117,18 +117,22 @@
 	
 	function playE(pi) {
 		top.document.title='@label.playing@ ' + pi.title;
-		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
+		makeJSONAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
 				true, function(res) {
-					tk = getElement('track_'+cp);
-					var l =  0;
-					if (tk) {
-						tk.className = 'play_progress';
-						l = tk.getAttribute('timeData');
-					}
-					startProgress(l);
-				}, function(err) {
+			if (res.error == 'closed') {
+				messg('@label.err_play@');
+				return;
+			}
+			tk = getElement('track_'+cp);
+			var l =  0;
+			if (tk) {
+				tk.className = 'play_progress';
+				l = tk.getAttribute('timeData');
+			}
+			startProgress(l);
+		}, function(err) {
 
-				});		
+		});		
 	}
 
 	function songFinished(m) {
