@@ -27,12 +27,15 @@ var prog_tmr;
  function getPlayMode() {
 	 return curr_mod;
  }
- function startProgress(l) {
+ function startProgress(l,p) {
 	 getElement('progres_pusher').width = 1;
 	 pauseProgress();
 	 if (l > 0) {
 	    step = (120-8)/l;
-	    curr_prog = 0;
+	    if (p)
+	    	curr_prog = p*step;
+	    else
+	        curr_prog = 0;
 	    resumeProgress();
 	 }
 	

@@ -14,4 +14,5 @@ public interface Name {
 	//public static final String CFG_AUTO_SCAN = "auto_scan";
 	
 	public static final String VV_SONGLENGTH = "song_len";
+	public static final String VV_PLAYPOSITION = "play_position";
 }

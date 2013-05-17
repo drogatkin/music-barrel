@@ -25,6 +25,7 @@ import photoorganizer.media.MediaPlayer.Status;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.PlayMode;
 
+// TODO all operations around media player have to be synchronized
 public class PlayerService implements ServiceProvider<PlayerService>, ProgressListener, Runnable {
 	public static final String NAME = "MediaPlayer";
 
@@ -170,14 +171,16 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	}
 	
 	public long getPlaybackPosition() {
-		if (mediaPlayer != null && Status.playing.equals(mediaPlayer.getStatus()))
+		//if (mediaPlayer != null)
+			//System.err.println("pos Status:"+mediaPlayer.getStatus());
+		if (Status.playing.equals(getStatus()))
 			return mediaPlayer.getPosition();
 		return 0;
 	}
 	
 	public MediaFormat getCurrentMedia() {
 		//if (mediaPlayer != null)
-			//System.err.println("Status:"+mediaPlayer.getStatus());
+			//System.err.println("curr Status:"+mediaPlayer.getStatus());
 		if (mediaPlayer != null && !Status.stopped.equals(mediaPlayer.getStatus()) && !Status.closed.equals(mediaPlayer.getStatus()))
 			return mediaPlayer.getMedia();
 		return null;
