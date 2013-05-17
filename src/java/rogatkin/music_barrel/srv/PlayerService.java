@@ -1,6 +1,8 @@
 package rogatkin.music_barrel.srv;
 
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -66,7 +68,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		if (mediaPlayer != null) {
 			mediaPlayer.close();
 		}
-		
+
 		mediaPlayer = MediaFormatFactory.getPlayer(MediaFormatFactory.createMediaFormat(media.toFile(),
 				appModel.getCharEncoding(), true));
 		//System.err.printf("Player %s for %s%n", mediaPlayer, media);
@@ -129,10 +131,19 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	}
 
 	public void removePlay(String path) {
-		playQueue.remove(path);
+		if (playQueue.remove(path) == false) {
+			MediaFormat mf = getCurrentMedia();
+			try {
+				if (mf != null && Files.isSameFile(mf.getFile().toPath(), Paths.get(path))) {
+					stop();
+				}
+			} catch (IOException ioe) {
+
+			}
+		}
 	}
-	
-	public String [] getPlayQueue() {
+
+	public String[] getPlayQueue() {
 		// TODO size can be changed, so actual result can be inaccurate
 		return playQueue.toArray(new String[playQueue.size()]);
 	}
@@ -157,7 +168,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		stopAll();
 		listPlayer.interrupt();
 	}
-	
+
 	public void resume() {
 		//System.err.printf("Player %s resume %n", mediaPlayer);
 		if (mediaPlayer != null)
@@ -169,19 +180,20 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			return mediaPlayer.getStatus();
 		return Status.closed;
 	}
-	
+
 	public long getPlaybackPosition() {
 		//if (mediaPlayer != null)
-			//System.err.println("pos Status:"+mediaPlayer.getStatus());
+		//System.err.println("pos Status:"+mediaPlayer.getStatus());
 		if (Status.playing.equals(getStatus()))
 			return mediaPlayer.getPosition();
 		return 0;
 	}
-	
+
 	public MediaFormat getCurrentMedia() {
 		//if (mediaPlayer != null)
-			//System.err.println("curr Status:"+mediaPlayer.getStatus());
-		if (mediaPlayer != null && !Status.stopped.equals(mediaPlayer.getStatus()) && !Status.closed.equals(mediaPlayer.getStatus()))
+		//System.err.println("curr Status:"+mediaPlayer.getStatus());
+		if (mediaPlayer != null && !Status.stopped.equals(mediaPlayer.getStatus())
+				&& !Status.closed.equals(mediaPlayer.getStatus()))
 			return mediaPlayer.getMedia();
 		return null;
 	}
@@ -226,7 +238,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 				play(getNext());
 			} catch (InterruptedException ie) {
 				break;
-			} catch(Exception e) {
+			} catch (Exception e) {
 				Log.l.error(getPreferredServiceName(), e);
 			}
 			if (mediaPlayer != null)
