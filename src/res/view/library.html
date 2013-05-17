@@ -5,6 +5,7 @@
               ];
    var current = -1;
    var currentEl = null;
+   var hiEl;
    
    function initFields() {
 	   fillTable();
@@ -64,9 +65,9 @@
 	   if (current < 0)
 		   return;
 		top.document.title='@label.playing@ ' + lib[current].title;
-		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(lib[current].path),
+		makeJSONAjaxCall('Player', 'playPath=' + encodeURIComponent(lib[current].path),
 				true, function(res) {
-			
+			startProgress(res.length);
 				}, function(err) {
 
 				});
@@ -94,10 +95,11 @@
    function pausePlay() { 
 		top.document.title = '@label.paused@';
 		playControl(2);
+		pauseProgress();
 	}
 	
 	function resumePlay() {
-			playControl(1);
+			playControl(1, function() {resumeProgress()});
 	}
 	
 	function nextPlay() { 
@@ -116,6 +118,7 @@
 		if (currentEl == e.currentTarget)
 			return;
 		currentEl = e.currentTarget;
+		hiEl = currentEl;
 		e.currentTarget.style.backgroundColor = '#bdf';
 		current = e.currentTarget.getAttribute('mb-data'); 
 		//e.currentTarget.cells[1].innerHTML = '<img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" style="cursor:pointer" onclick="play('+current+')">';
@@ -129,16 +132,11 @@
 		//var e = arguments[0];
 		if (! e)
 			e = window.event;
-		//console.log('des :'+e.currentTarget.style.backgroundColor);
 		if (!e.currentTarget.getAttribute('selected'))
 		    e.currentTarget.style.backgroundColor = '';
 		else
 			e.currentTarget.style.backgroundColor = '#ffa';
-		//e.currentTarget.cells[1].innerHTML = '';
-		//current = -1;
 		currentEl = null;
-		//var ctrl = getElement('float_ctrl');
-		//ctrl.style.display='none';
 	}
 	
 	function selectRow(e) {
@@ -198,7 +196,7 @@
 		<tr class="bg_hd_theme"><th>@label.song@</th><th style="width:56px">&nbsp;</th><th>@label.artist@</th><th>@label.album@</th><th>@label.genre@</th><th>@label.year@</th></tr>
   </table>
 </div>
- <div id="float_ctrl" style="display:none;position:absolute; width:60px;height:20px">
+ <div id="float_ctrl" style="display:none;position:absolute; width:60px;height:20px" onmouseover="if(hiEl)hiEl.style.backgroundColor = '#bdf'" onmouseout="if(hiEl)hiEl.style.backgroundColor=''">
     <img src="@contextpath@/image/play_btn.png" alt="@commonlabels.play@" title="@commonlabels.play@" style="cursor:pointer" onclick="play()">
     <img src="@contextpath@/image/add_playlist_btn.png" alt="@commonlabels.addlist@" title="@commonlabels.addlist@" style="cursor:pointer" onclick="add()">
     <img src="@contextpath@/image/add_barrel_btn.png" alt="@commonlabels.barrel@" title="@commonlabels.barrel@" style="cursor:pointer" onclick="barrel()">

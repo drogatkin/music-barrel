@@ -1,1 +1,1 @@
-{'error':'@^model.status@'}
+{'error':'@^model.status@','position':@model.position@,'length':@model.length@}

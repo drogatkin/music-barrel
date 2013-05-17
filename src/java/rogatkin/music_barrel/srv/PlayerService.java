@@ -169,8 +169,14 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		return Status.closed;
 	}
 	
+	public long getPlaybackPosition() {
+		if (mediaPlayer != null && Status.playing.equals(mediaPlayer.getStatus()))
+			return mediaPlayer.getPosition();
+		return 0;
+	}
+	
 	public MediaFormat getCurrentMedia() {
-		if (mediaPlayer != null && mediaPlayer.getStatus().equals(Status.playing))
+		if (mediaPlayer != null /*&& Status.playing.equals(mediaPlayer.getStatus())*/)
 			return mediaPlayer.getMedia();
 		return null;
 	}

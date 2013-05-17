@@ -86,15 +86,6 @@
    var cp = -1;
    var prevTitle = '@label.title@';
    var tk;
-	function play(p) {
-		top.document.title='@label.playing@ ' + p;
-		makeGenericAjaxCall('Player', 'playPath=' + encodeURIComponent(p),
-				true, function(res) {
-
-				}, function(err) {
-
-				});
-	}
 	
 	function playI(i) {
 		var pi = pl[i];
