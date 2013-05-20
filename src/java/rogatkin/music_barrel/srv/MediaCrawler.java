@@ -12,6 +12,7 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.io.IOException;
 
+import org.aldan3.model.Log;
 import org.aldan3.model.ServiceProvider;
 import mediautil.gen.MediaFormat;
 import photoorganizer.formats.MediaFormatFactory;
@@ -63,10 +64,10 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 		Date last = appModel.getSettings().last_scan;
 		if (last == null)
 			return 0;
-		long result = System.currentTimeMillis() - last.getDate() - getInterval()*1000*60*60;
+		long result =  last.getTime() + getInterval()*1000*60*60 - System.currentTimeMillis();
 		if (result < 0)
 			return 0;
-		return result;
+		return result / 1000/ 60 / 60;
 	}
 
 	@Override
@@ -94,11 +95,11 @@ public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvid
 			try {
 				crawl(p);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.l.error("Error in scanning "+p, e);
 			}
 		}
-		// TODO put mark last run
 		appModel.getSettings().last_scan = new Date();
+		Log.l.info("Scan completed on:"+appModel.getSettings().last_scan);
 	}
 
 	protected void crawl(Path path) throws IOException {

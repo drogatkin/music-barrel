@@ -226,15 +226,19 @@ final public class CueParser
 			}
 			is = new ByteArrayInputStream(os.toByteArray());
 		}
-		byte[] marker = new byte[3];
+		byte[] marker = new byte[2];
 		is.mark(4);
 		int l = is.read(marker);
 		if (l == marker.length) {
-			if ((marker[0] & 255) == 0xef && (marker[1] & 255) == 0xbb && (marker[2] & 255) == 0xbf)
-				encoding = "UTF-8";
-			else if (marker[0] == 0xff && marker[1] == 0xfe)
+			if ((marker[0] & 255) == 0xef && (marker[1] & 255) == 0xbb) {
+				l = is.read(marker, 0, 1);
+				if (l == 1 && ((marker[0] & 255) == 0xbf))
+					encoding = "UTF-8";
+				else
+					is.reset();
+			} else if ((marker[0] & 255) == 0xff && (marker[1] & 255) == 0xfe)
 				encoding = "UTF-16LE";
-			else if (marker[0] == 0xfe && marker[1] == 0xff)
+			else if ((marker[0] & 255) == 0xfe && (marker[1] & 255) == 0xff)
 				encoding = "UTF-16BE";
 			else
 				is.reset();

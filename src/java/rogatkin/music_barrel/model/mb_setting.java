@@ -5,6 +5,7 @@ import com.beegman.webbee.util.SimpleCoordinator;
 import org.aldan3.annot.DBField;
 import org.aldan3.annot.DataRelation;
 import org.aldan3.annot.FormField;
+import org.aldan3.annot.FormField.FieldType;
 import org.aldan3.annot.OptionMap;
 import org.aldan3.data.util.DataFiller;
 import org.aldan3.util.DataConv;
@@ -34,6 +35,7 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	public int id;
 
 	@DBField()
+	@FormField(presentType=FieldType.Readonly)
 	public Date last_scan;
 
 	@DBField()
