@@ -64,13 +64,15 @@
    function play() {
 	   if (current < 0)
 		   return;
-		top.document.title='@label.playing@ ' + lib[current].title;
+		
 		makeJSONAjaxCall('Player', 'playPath=' + encodeURIComponent(lib[current].path),
 				true, function(res) {
 			if(res.error == 'inerror')
 				messg('@^label.err_noplayer@');
-			else
+			else {
 			    startProgress(res.length);
+			    top.document.title='@^label.playing@ ' + lib[current].title;
+			}
 				}, function(err) {
 
 				});
