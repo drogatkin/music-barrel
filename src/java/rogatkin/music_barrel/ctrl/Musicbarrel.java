@@ -105,8 +105,10 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 			// TODO make it prorated to the current player position
 			modelInsert(VV_SONGLENGTH, mf.getMediaInfo().getIntAttribute(MediaInfo.LENGTH));
 			modelInsert(VV_PLAYPOSITION, getAppModel().getPlayer().getPlaybackPosition());
-		} else
+		} else {
 			modelInsert(VV_SONGLENGTH, 0);
+			modelInsert(VV_PLAYPOSITION, 0);
+		}
 		return super.getTitle() + " - " + DataConv.ifNull(mf, getResourceString("idle", "Idle"));
 	}
 

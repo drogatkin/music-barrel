@@ -67,7 +67,10 @@
 		top.document.title='@label.playing@ ' + lib[current].title;
 		makeJSONAjaxCall('Player', 'playPath=' + encodeURIComponent(lib[current].path),
 				true, function(res) {
-			startProgress(res.length);
+			if(res.error == 'inerror')
+				messg('@^label.err_noplayer@');
+			else
+			    startProgress(res.length);
 				}, function(err) {
 
 				});
