@@ -109,7 +109,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 			modelInsert(VV_SONGLENGTH, 0);
 			modelInsert(VV_PLAYPOSITION, 0);
 		}
-		return super.getTitle() + " - " + DataConv.ifNull(mf, getResourceString("idle", "Idle"));
+		return DataConv.ifNull(mf, getResourceString("idle", "Idle")) + " " + super.getTitle();
 	}
 
 	public static final class CellModel2 {
