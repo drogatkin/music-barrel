@@ -32,7 +32,7 @@
        <td>
          <div>@element.getAttribute*(Title)*@</div>
          <div id="play_btn" style="display:none;position:relative;left:0"><a href="javascript:void(0)" onclick="playI(@index@)">
-           <img src="../image/play_btn.png" alt="@label.play@" border="0"></a>&nbsp;
+           <img src="../image/play_btn.png" alt="@commonlabels.play@" border="0"></a>&nbsp;
            <a href="javascript:void(0)" onclick="addToPlay('@^element.getAttribute*(MediaPath)*@')">
            <img src="../image/add_playlist_btn.png" alt="@label.add_play@" border="0"></a>
          </div>
@@ -108,7 +108,7 @@
 	}
 	
 	function playE(pi) {
-		top.document.title='@label.playing@ ' + pi.title;
+		top.document.title='@commonlabels.playing@ ' + pi.title;
 		makeJSONAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
 				true, function(res) {
 			if (res.error == 'closed') {
@@ -154,9 +154,9 @@
 	
 	function pausePlay() { 
 		prevTitle = top.document.title;
-		top.document.title = '@label.paused@';
 		playControl(2);
 		pauseProgress();
+		flashTit('@commonlabels.paused@');
 		MediaControls.isPlaying = false;
 	}
 	

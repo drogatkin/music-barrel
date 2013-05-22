@@ -48,5 +48,6 @@ var prog_tmr;
  function resumeProgress() {
 	 if (!prog_tmr)
 	 	prog_tmr = setInterval(function () { curr_prog +=step; if (curr_prog < (120-7)) getElement('progres_pusher').width = curr_prog; else pauseProgress(); }, 1000);
+	 flashTit();
  }
  </script>

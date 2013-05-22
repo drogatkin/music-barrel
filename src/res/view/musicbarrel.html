@@ -26,6 +26,7 @@
     function pausePlay() {
     	playControl(2);
     	pauseProgress();
+    	flashTit('@commonlabels.paused@');
     }
     function resumePlay() {
     	playControl(1, function() {resumeProgress();});

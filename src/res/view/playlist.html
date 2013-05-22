@@ -1,7 +1,7 @@
 @%'insert/playctrl.html'@
 @%'insert/listsdirectory.html'@
 <table id="list_table" style="width:80%;margin:auto"  class="bg_theme">
-  <tr class="bg_hd_theme"><th>&nbsp;<th>@label.title@</th><th>@label.performer@</th>
+  <tr class="bg_hd_theme"><th class="play_btn">&nbsp;<th>@label.title@</th><th>@label.performer@</th>
   <th>@label.genre@</th><th>@label.year@</th><th>&nbsp;</th>
   </tr>
   @model(
@@ -71,12 +71,11 @@
    }
    
    function pausePlay() { 
-		top.document.title = '@label.paused@';
 		playControl(2);
+		flashTit('@commonlabels.paused@');
 	}
 	
-	function resumePlay() {
-		top.document.title = '@label.playing@';
+	function resumePlay() {		
 		if (playState.stopped)
 			playItem(0, '@model[0](@element.get*(LIST_ID)*@)@');
 		else
@@ -90,6 +89,6 @@
 	function stopPlay() { 
 		playControl(4);
 		playState.stopped = true;
-		top.document.title = '@label.stopped@';
+		top.document.title = '@commonlabels.stopped@';
 	}
 </script>
