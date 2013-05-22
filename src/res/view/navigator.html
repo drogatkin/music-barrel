@@ -65,6 +65,7 @@
 		window.onunload = releaseUI;
 		updateUI();
 		updateDirectories();
+		startProgress(@song_len@, @play_position@);
 	}
 	
 	function notifyUnload() {

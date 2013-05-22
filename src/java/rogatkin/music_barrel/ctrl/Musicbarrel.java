@@ -20,7 +20,7 @@ import com.beegman.webbee.block.Grid.CellModelExample;
 import com.beegman.webbee.model.Appearance;
 import java.io.File;
 
-public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implements Name {
+public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel>  {
 	protected String[] playQueue;
 
 	@Override
@@ -94,22 +94,6 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> implement
 				log("", e);
 			}
 		return result;
-	}
-
-	@Override
-	protected String getTitle() {
-		// TODO consider using String format
-		MediaFormat mf = getAppModel().getPlayer().getCurrentMedia();
-		if (mf != null) {
-			// assert mf.getMediaInfo() != null
-			// TODO make it prorated to the current player position
-			modelInsert(VV_SONGLENGTH, mf.getMediaInfo().getIntAttribute(MediaInfo.LENGTH));
-			modelInsert(VV_PLAYPOSITION, getAppModel().getPlayer().getPlaybackPosition());
-		} else {
-			modelInsert(VV_SONGLENGTH, 0);
-			modelInsert(VV_PLAYPOSITION, 0);
-		}
-		return DataConv.ifNull(mf, getResourceString("idle", "Idle")) + " " + super.getTitle();
 	}
 
 	public static final class CellModel2 {
