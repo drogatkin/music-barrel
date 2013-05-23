@@ -13,7 +13,7 @@
 					if (!json[i])
 						break;
 					var cc = dr.insertCell(i); // js fields already encoded as required
-					cc.innerHTML = '<a href="Playlist?list_name='  //@:path@
+					cc.innerHTML = '<a id="link1" href="Playlist?list_name='  //@:path@
 							+ encodeURIComponent(json[i].title_js)
 							+ '"><img border="0" src="@contextpath@/image/playlist.png">'
 							+ json[i].title + '</a>';

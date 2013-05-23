@@ -13,7 +13,7 @@
 					if (!json[i])
 						break;
 					var cc = dr.insertCell(i); // js fields already encoded as required
-					cc.innerHTML = '<a href="Navigator?path='  //@:path@
+					cc.innerHTML = '<a id="link1" href="Navigator?path='  //@:path@
 							+ encodeURIComponent(json[i].path)
 							+ '"><img border="0" src="@contextpath@/image/directory.png">'
 							+ (json[i].name==''?json[i].path:json[i].name) + '</a>';

@@ -14,12 +14,12 @@
 					if (!json[i])
 						break;
 					var cc = dr.insertCell(i); // js fields already encoded as required
-					cc.innerHTML = '<a href="Library?filter_album='  //@:path@
+					cc.innerHTML = '<a id="link1" href="Library?filter_album='  //@:path@
 							+ encodeURIComponent(json[i].title_js)
 							+ '"><img border="0" src="@contextpath@/image/playlist.png">'
 							+ json[i].title + '</a>';
 				}
-				cc = dr.insertCell(i).innerHTML = '<a href="Library"><img border="0" src="@contextpath@/image/playlist.png">@commonlabels.all_albums@</a>';
+				cc = dr.insertCell(i).innerHTML = '<a id="link1" href="Library"><img border="0" src="@contextpath@/image/playlist.png">@commonlabels.all_albums@</a>';
 			}, function(e) {
 			});
   }
