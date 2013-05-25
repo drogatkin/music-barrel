@@ -15,4 +15,6 @@ public interface Name {
 	
 	public static final String VV_SONGLENGTH = "song_len";
 	public static final String VV_PLAYPOSITION = "play_position";
+	
+	public static final String V_PLAY_LIST_NAME = "list_name";
 }

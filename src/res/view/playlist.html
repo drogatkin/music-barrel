@@ -65,6 +65,7 @@
 	   makeGenericAjaxCall('Player', 'playItem=' + i + '&playList='+l+'&playMode='+getPlayMode(),
 		     true, function(res) {
 		    	var tdk = getElement('TR_'+i);
+		    	updateTitPlay();
 			}, function(err) {
 
 				});	
@@ -76,11 +77,19 @@
 	}
 	
 	function resumePlay() {		
-		if (playState.stopped)
+		if (playState.stopped) {
 			playItem(0, '@model[0](@element.get*(LIST_ID)*@)@');
-		else
+			flashTit();
+	     } else
 			playControl(1);
+        
+        updateTitPlay();
 	}
+	
+	function updateTitPlay() {
+		top.document.title = '@commonlabels.playing@ - @list_name@ - @app_name@';		
+	}
+	
 	
 	function nextPlay() { 
 		playControl(0);
@@ -89,6 +98,6 @@
 	function stopPlay() { 
 		playControl(4);
 		playState.stopped = true;
-		top.document.title = '@commonlabels.stopped@';
+		top.document.title = '@commonlabels.stopped@ - @list_name@ - @app_name@';
 	}
 </script>

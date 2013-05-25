@@ -15,8 +15,9 @@ import com.beegman.webbee.block.SqlTabular;
 public class Playlist extends SqlTabular<DataObject, MBModel> implements Name {
 	@Override
 	protected String getTitle() {
-		String t = super.getTitle();
-		return getParameterValue("list_name", t, 0);
+		String listName = getParameterValue(V_PLAY_LIST_NAME, "", 0);
+		modelInsert(V_PLAY_LIST_NAME, listName); 
+		return  listName + super.getTitle();
 	}
 
 	/////////////// Ajax handlers   ///////////////

@@ -27,6 +27,6 @@ public class Behavior extends BaseBehavior<MBModel> implements Name {
 			baseBlock.modelInsert(VV_SONGLENGTH, 0);
 			baseBlock.modelInsert(VV_PLAYPOSITION, 0);
 		}
-		return DataConv.ifNull(mf, baseBlock.getResourceString("idle", "Idle")) + " " + super.getTitle(baseBlock);
+		return DataConv.ifNull(mf, "") + " " + super.getTitle(baseBlock);
 	}
 }
