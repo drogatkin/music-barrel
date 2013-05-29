@@ -20,6 +20,7 @@ import photoorganizer.formats.MediaFormatFactory;
 import mediautil.gen.MediaFormat;
 import mediautil.gen.MediaInfo;
 
+import rogatkin.music_barrel.ctrl.Navigator;
 import rogatkin.music_barrel.srv.MediaCrawler;
 import rogatkin.music_barrel.srv.PlayerService;
 
@@ -82,6 +83,7 @@ public class MBModel extends AppModel implements Name {
 					return fieldName.toUpperCase();
 				}
 			});
+			preserveSate(settings.last_directory, Navigator.class.getName());
 		} catch (ProcessException e) {
 			Log.l.error("Load settings", e);
 		}

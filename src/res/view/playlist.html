@@ -92,10 +92,12 @@
 	
 	
 	function nextPlay() { 
+		startProgress(0);
 		playControl(0);
 	}
 	
 	function stopPlay() { 
+		startProgress(0);
 		playControl(4);
 		playState.stopped = true;
 		top.document.title = '@commonlabels.stopped@ - @list_name@ - @app_name@';

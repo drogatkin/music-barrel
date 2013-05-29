@@ -53,6 +53,10 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	@DBField()
 	@FormField
 	public boolean allow_duplicates;
+	
+	public String last_directory;
+	
+	public float last_volume;
 
 	@FormField
 	public boolean rescan_soon;

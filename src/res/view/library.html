@@ -108,11 +108,13 @@
 		playControl(1, function() {resumeProgress()});
 	}
 	
-	function nextPlay() { 
+	function nextPlay() {
+		startProgress(0); 
 		playControl(0);
 	}
 	
-	function stopPlay() { 
+	function stopPlay() {
+		startProgress(0); // think to hide progress control in control
 		playControl(4);
 		top.document.title = '@commonlabels.stopped@';
 	}
