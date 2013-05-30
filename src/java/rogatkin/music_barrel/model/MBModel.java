@@ -83,6 +83,7 @@ public class MBModel extends AppModel implements Name {
 					return fieldName.toUpperCase();
 				}
 			});
+			settings.last_directory = ""; // temporary until preserved
 			preserveSate(settings.last_directory, Navigator.class.getName());
 		} catch (ProcessException e) {
 			Log.l.error("Load settings", e);
