@@ -15,10 +15,10 @@
 </script>
 @%'insert/playctrl.html'@
 @%'insert/directories.html'@
-<table style="width:900px;margin:auto;" class="bg_theme">
+<table style="width:82%;margin:auto;" class="bg_theme">
   <tr class="bg_hd_theme">
     <th>@label.track@</th>
-    <th>@label.song@</th>
+    <th style="width:300px">@label.song@</th>
     <th>@label.artist@</th>
     <th>@label.album@</th>
     <th>@label.year@</th>
@@ -29,13 +29,13 @@
  @model(
     <tr onmouseover="focusSong(this)" onmouseout="meanSong(this)">
        <td id="track_@index@" timeData="@element.getIntAttribute*(Length)*@">@element.getAttribute*(Track)*@</td>
-       <td>
-         <div>@element.getAttribute*(Title)*@</div>
-         <div id="play_btn" style="display:none;position:relative;left:0"><a href="javascript:void(0)" onclick="playI(@index@)">
+       <td style="width:320px">
+         <span>@element.getAttribute*(Title)*@</span>
+         <span id="play_btn" style="float:right;width-min:00"><span style="display:none;"><a href="javascript:void(0)" onclick="playI(@index@)">
            <img src="../image/play_btn.png" alt="@commonlabels.play@" border="0"></a>&nbsp;
            <a href="javascript:void(0)" onclick="addToPlay('@^element.getAttribute*(MediaPath)*@')">
-           <img src="../image/add_playlist_btn.png" alt="@label.add_play@" border="0"></a>
-         </div>
+           <img src="../image/add_playlist_btn.png" alt="@label.add_play@" border="0"></a></span>
+         </span>
        </td>
        <td>@element.getAttribute*(Artist)*@</td>
        <td>@element.getAttribute*(Album)*@</td>
@@ -78,7 +78,7 @@
 			//	return d;
 			for (var j=0; j<tr.cells[i].childNodes.length; j++)
 				if (tr.cells[i].childNodes[j].id == 'play_btn')
-					return tr.cells[i].childNodes[j];
+					return tr.cells[i].childNodes[j].firstChild;
 		}
 		return null;
 	}
