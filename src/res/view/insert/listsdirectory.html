@@ -2,6 +2,13 @@
 	<table>
 		<tr id="playlists_t"></tr>
 	</table>
+	<div id="crud_menu" class="popup_menu">
+	     <ul style="list-style-type:none;padding:0px;margin:0px">
+	        <li><input type="text" id="list_name" value=""><input type="hidden" id="list_id"></li>
+	        <li style="cursor:pointer" onclick="renameList(getElement('list_id').value,getElement('list_name').value)">@label.rename@</li>
+	        <li style="cursor:pointer" onclick="deleteList(getElement('list_id').value)">@label.delete@</li>
+	     </ul>
+	</div>
 </div>
 
 <script>
@@ -17,8 +24,47 @@
 							+ encodeURIComponent(json[i].title_js)
 							+ '"><img border="0" src="@contextpath@/image/playlist.png">'
 							+ json[i].title + '</a>';
+					cc.onmouseover = triggerPopup;
+					cc.onmouseout = dearm;
+					cc.setAttribute('data', json[i].title);
+					cc.setAttribute('idx', json[i].list_id);
 				}
 			}, function(e) {
 			});
+  }
+  
+  var pu_tmr;
+  function triggerPopup(e) {
+	  if (!pu_tmr) {
+		  if (! e)
+				e = window.event;
+		  getElement('list_name').value= e.currentTarget.getAttribute('data');
+		  getElement('list_id').value= e.currentTarget.getAttribute('idx');
+		  pu_tmr = setTimeout(function() { displayPopup();}, 2000);
+	  }
+  }
+  
+  function displayPopup() {
+	  var popup = getElement('crud_menu');	  
+	  popup.style.display='block';
+  }
+  
+  function dearm() {
+	  if (pu_tmr) {
+	  	clearTimeout(pu_tmr);
+	  	pu_tmr = null;
+	  }
+  }
+  
+  function renameList(l, n) {
+	  makeGenericAjaxCall('Playlist/ajax/renameList', 'playList='+l+'&list_name='+encodeURIComponent(n),
+				true, function(res) {
+		   if (res == 'Ok') {
+		       updatePlaylists();
+		   }
+		}, function(err) {
+
+			}); 
+	  getElement('crud_menu').style.display='none';
   }
 </script>

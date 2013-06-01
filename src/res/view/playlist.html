@@ -6,7 +6,7 @@
   </tr>
   @model(
    <tr id="TR_@element.get*(ID)*@">
-      <td style="width:50px" onmouseover="this.className='play_btn'" onmouseout="this.className=''" onclick="playItem(@element.get*(ID)*@, @element.get*(LIST_ID)*@)">&nbsp;</td>
+      <td style="width:50px" onmouseover="this.className='play_btn'" onmouseout="this.className=''" onclick="playItem(@element.get*(ID)*@, @element.get*(LIST_ID)*@)" title="@commonlabels.play@">&nbsp;</td>
       <td>@element.get*(TITLE)*@</td>
       <td>@element.get*(PERFORMER)*@</td>
       <td>@element.get*(GENRE)*@</td>
@@ -15,8 +15,9 @@
       </tr>
   )@
 </table>
-<div><a id="link1" href="javascript:void(0)" onclick="deleteList(@model[0](@element.get*(LIST_ID)*@)@)">@label.delete_all@</a></div>
+
 <script>
+   var currList='@model[0](@element.get*(LIST_ID)*@)@';
    var playState = new Object();
    
    function initFields() {
@@ -47,17 +48,21 @@
 	   makeGenericAjaxCall('Playlist/ajax/deleteList', 'playList='+l,
 				true, function(res) {
 		   if (res == 'Ok') {
+			   if (currList != l)
+				   return;
 		       var tbl = getElement('list_table');
 		       for(var i = tbl.rows.length - 1; i > 0; i--)
 		           tbl.deleteRow(i);
 		       var dr = getElement('playlists_t');
 		       for(var i = dr.cells.length - 1; i >= 0; i--)
 		           dr.deleteCell(i);
+		       currList = 0;
 		       updatePlaylists();
 		   }
 		}, function(err) {
 
 			}); 
+	   getElement('crud_menu').style.display='none';
    }
    
    function playItem(i, l) {

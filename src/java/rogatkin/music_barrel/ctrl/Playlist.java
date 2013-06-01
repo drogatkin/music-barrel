@@ -54,4 +54,20 @@ public class Playlist extends SqlTabular<DataObject, MBModel> implements Name {
 		return ERROR;
 	}
 	
+	public String processrenameListCall() {
+		mb_play_list list = new mb_play_list(getAppModel());
+		list.id = getParameterValue(V_PLAY_LIST, 0, 0);
+		if (list.id > 0) {
+			list.title = getParameterValue(V_PLAY_LIST_NAME, "", 0);
+			if (list.title.isEmpty() == false)
+				try {
+					getAppModel().getDOService().updateObjectsLike(new DODelegator(list, null, "", "id"),
+							new DODelegator(list, null, mb_play_list.class, "title", ""));
+					return OK;
+				} catch (Exception e) {
+					log("", e);
+				}
+		}
+		return ERROR;
+	}	
 }
