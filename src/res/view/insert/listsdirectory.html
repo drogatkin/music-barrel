@@ -2,7 +2,7 @@
 	<table>
 		<tr id="playlists_t"></tr>
 	</table>
-	<div id="crud_menu" class="popup_menu" onmouseover="cancelClose()" onmouseout="triggerClose()">
+	<div id="crud_menu" style="display:none" class="popup_menu" onmouseover="cancelClose()" onmouseout="triggerClose()">
 	     <ul style="list-style-type:none;padding:1em 0px 1em;margin:0px">
 	        <li><input type="text" id="list_name" value=""><input type="hidden" id="list_id"></li>
 	        <li style="cursor:pointer" onclick="renameList(getElement('list_id').value,getElement('list_name').value)">@label.rename@</li>
@@ -38,6 +38,8 @@
 	  if (!pu_tmr) {
 		  if (! e)
 				e = window.event;
+		  if (!e)
+			  return;
 		  var popup = getElement('crud_menu');
 		  popup.style.left =  getOffsetLeft(e.currentTarget) + 'px';
 		  getElement('list_name').value= e.currentTarget.getAttribute('data');

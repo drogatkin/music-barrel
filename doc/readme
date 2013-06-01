@@ -1,15 +1,24 @@
-Music-Barrel  0.9 alpha
-=======================
+Music-Barrel 1.0 release
+========================
 
-Music Juke box for Raspberry Pi
+Music Jukebox for Raspberry Pi and HTPC
 
 1. Installation
 ---------------
 
-An installation package is coming, however for now just follow
-the guide to install app server on Raspberry Pi
+Music Barrel is packaged as .war and executable .jar file.
+Web package can be deployed under any application server
+as TJWS or Tomcat. It doesn't require any pre/post
+installation steps and can be dropped in auto deploy directory
+of an application server.
+Jar package can be just executed and not requiring a separate
+application server.
+War deployment is preferred for dedicated to home theater machine
+use, when it can be started at a system boot time.
+
+Here is a guide how to install an application server on Raspberry Pi
 http://tjws.sourceforge.net/arch-raspi-java8.html
-And then drop the .war file in webapps deploy directory.
+TJWS auto deploy directory is located under /opt/tjws/webapps.
 
 Point your desktop or mobile browser to http://raspberrypi/music-barrel
 Visit Setting barrel first to initialize database schema.
