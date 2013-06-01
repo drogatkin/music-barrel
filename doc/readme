@@ -21,6 +21,9 @@ http://tjws.sourceforge.net/arch-raspi-java8.html
 TJWS auto deploy directory is located under /opt/tjws/webapps.
 
 Point your desktop or mobile browser to http://raspberrypi/music-barrel
+Use port 8000 in case of .jar launched version, port can be redefined
+from systray menu.
+
 Visit Setting barrel first to initialize database schema.
 
 

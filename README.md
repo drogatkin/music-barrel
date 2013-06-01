@@ -29,3 +29,9 @@ Technologies
 2. WebBee rapid web application building blocks
 3. TJWS
 4. Java 8
+
+Releases
+
+Music - Barrel has released. Download it from
+https://sourceforge.net/projects/musicbarrel/files/music-barrel/1.0/
+in appropriate packaging.
