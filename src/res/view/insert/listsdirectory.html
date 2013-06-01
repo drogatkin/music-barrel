@@ -2,7 +2,7 @@
 	<table>
 		<tr id="playlists_t"></tr>
 	</table>
-	<div id="crud_menu" class="popup_menu">
+	<div id="crud_menu" class="popup_menu" onmouseover="cancelClose()" onmouseout="triggerClose()">
 	     <ul style="list-style-type:none;padding:1em 0px 1em;margin:0px">
 	        <li><input type="text" id="list_name" value=""><input type="hidden" id="list_id"></li>
 	        <li style="cursor:pointer" onclick="renameList(getElement('list_id').value,getElement('list_name').value)">@label.rename@</li>
@@ -38,6 +38,8 @@
 	  if (!pu_tmr) {
 		  if (! e)
 				e = window.event;
+		  var popup = getElement('crud_menu');
+		  popup.style.left =  getOffsetLeft(e.currentTarget) + 'px';
 		  getElement('list_name').value= e.currentTarget.getAttribute('data');
 		  getElement('list_id').value= e.currentTarget.getAttribute('idx');
 		  pu_tmr = setTimeout(function() { displayPopup();}, 2000);
@@ -45,6 +47,7 @@
   }
   
   function displayPopup() {
+	  pu_tmr = null;
 	  var popup = getElement('crud_menu');	  
 	  popup.style.display='block';
   }
@@ -53,7 +56,8 @@
 	  if (pu_tmr) {
 	  	clearTimeout(pu_tmr);
 	  	pu_tmr = null;
-	  }
+	  } else
+		  triggerClose();
   }
   
   function renameList(l, n) {
@@ -69,5 +73,16 @@
 
 			}); 
 	  getElement('crud_menu').style.display='none';
+  }
+  
+  function triggerClose() {
+	  pu_tmr = setTimeout(function() { pu_tmr=null; getElement('crud_menu').style.display='none';}, 2200);
+  }
+  
+  function cancelClose() {
+	  if (pu_tmr) {
+		  	clearTimeout(pu_tmr);
+		  	pu_tmr = null;
+	  }
   }
 </script>
