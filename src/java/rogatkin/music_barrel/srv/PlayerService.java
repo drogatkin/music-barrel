@@ -192,8 +192,10 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	public MediaFormat getCurrentMedia() {
 		//if (mediaPlayer != null)
 		//System.err.println("curr Status:"+mediaPlayer.getStatus());
+		//else
+		//	System.err.println("Current player null");
 		if (mediaPlayer != null && !Status.stopped.equals(mediaPlayer.getStatus())
-				&& !Status.closed.equals(mediaPlayer.getStatus()))
+				&& !Status.closed.equals(mediaPlayer.getStatus()) && !Status.inerror.equals(mediaPlayer.getStatus()))
 			return mediaPlayer.getMedia();
 		return null;
 	}
