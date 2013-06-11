@@ -159,6 +159,7 @@
 	}
 	
 	function resumePlay() {
+		flashTit();
 		playControl(1, function() {resumeProgress();});
 		MediaControls.isPlaying = true;
 	}
@@ -171,6 +172,7 @@
 	function stopPlay() { 
 		cp = -1;
 		startProgress(0);
+		flashTit();
 		playControl(0);
 	}
 	
