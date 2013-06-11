@@ -84,7 +84,6 @@
 	function resumePlay() {		
 		if (playState.stopped) {
 			playItem(0, '@model[0](@element.get*(LIST_ID)*@)@');
-			flashTit();
 	     } else
 			playControl(1);
         
@@ -92,6 +91,7 @@
 	}
 	
 	function updateTitPlay() {
+		flashTit();
 		top.document.title = '@commonlabels.playing@ - @list_name@ - @app_name@';		
 	}
 	
