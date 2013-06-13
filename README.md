@@ -5,7 +5,7 @@ Web interfaced music juke box for Raspberry Pi
 
 Features set
 
-1. auto scan local and remote storage for music file and store them in database with
+1. Auto scan local and remote storage for music file and store them in database with
   separated type, quality, year, genre, album, artist, composer, song, duration, tags,
   and original location
 2. Manually adding directories or songs in the database above
@@ -15,7 +15,7 @@ Features set
 6. Navigate over file system with filtering
 7. Play playlist in modes sequential, random, repeat
 8. Edit song tags with corresponding DB record update
-9. Support formats MP3, WAV, WV(ISO), FLAC, APE, AAC. OGG
+9. Support formats MP3, WAV, WV(ISO), FLAC, APE, AAC. OGG in quality up to 32bits/192,000 (when applied)
 10. Break down album FLAC/APE/WV upon CUE sheet
 11. Support search back, forward, skip in individual or list playback
 12. Displaying playback progress
