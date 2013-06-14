@@ -7,6 +7,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import mediautil.gen.MediaInfo;
 import rogatkin.music_barrel.model.MBModel;
 
 import com.beegman.webbee.block.Tabular;
+import java.util.Comparator;
 
 public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	@Override
@@ -44,6 +46,17 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 					modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
 							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));				
 			}
+			Collections.sort(modelData, new Comparator<MediaInfo>() {
+				@Override
+			    public int compare(MediaInfo o1, MediaInfo o2) {
+					String a1 = (String)o1.getAttribute(MediaInfo.ALBUM);
+					String a2 = (String)o2.getAttribute(MediaInfo.ALBUM);
+					int result = a1 != null?a1.compareTo(a2):a2==null?0:1;
+					if (result == 0)
+						return o1.getIntAttribute(MediaInfo.TRACK) - o2.getIntAttribute(MediaInfo.TRACK);
+					return result;
+			    }
+			});
 			modelInsert("path", p);
 		} catch (IOException ioe) {
 			modelInsert("error", ioe);
