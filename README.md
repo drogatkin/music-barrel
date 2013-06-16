@@ -22,6 +22,7 @@ Features set
 13. Show song/album artwork
 14. Research on net for song, album, artist details
 15. Adding new songs by uploading and other ways
+16. Collaborative editing dynamic party playlist (no one software provides the feature yet)
 
 Technologies
 
