@@ -12,7 +12,7 @@
 package wavpack;
 class RiffChunkHeader
 {
-    char ckID[] = new char[4];
+    static char ckID[] = new char[4];
     long ckSize;		// was uint32_t in C
-    char formType[] = new char[4];
+    static char formType[] = new char[4];
 }

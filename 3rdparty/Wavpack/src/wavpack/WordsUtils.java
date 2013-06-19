@@ -109,6 +109,7 @@ class WordsUtils
     };
 
 
+        static int [] b_array = new int[12];
 
     ///////////////////////////// executable code ////////////////////////////////
 
@@ -120,7 +121,6 @@ class WordsUtils
     static int read_entropy_vars(WavpackStream wps, WavpackMetadata wpmd)
     {
         byte byteptr [] = wpmd.data; //byteptr needs to be unsigned chars, so convert to int array
-        int [] b_array = new int[12];
         int i = 0;
         words_data w = new words_data();
 

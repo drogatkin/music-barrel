@@ -13,7 +13,7 @@ package wavpack;
 public class WavpackHeader
 {
 
-    char ckID[] = new char[4];
+    static char ckID[] = new char[4];
     long ckSize;	// was uint32_t in C
     short version;
     short track_no, index_no;	// was uchar in C

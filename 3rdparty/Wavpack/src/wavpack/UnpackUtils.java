@@ -135,6 +135,8 @@ class UnpackUtils
         return Defines.TRUE;
     }
 
+static        decorr_pass dpp = new decorr_pass();
+ 
 
     // Read decorrelation weights from specified metadata block into the
     // decorr_passes array. The weights range +/-1024, but are rounded and
@@ -146,7 +148,6 @@ class UnpackUtils
     {
         int termcnt = wpmd.byte_length, tcount;
         byte byteptr [] = wpmd.data;
-        decorr_pass dpp = new decorr_pass();
         int counter = 0;
         int dpp_idx;
         int myiterator = 0;
@@ -199,7 +200,7 @@ class UnpackUtils
     static int read_decorr_samples(WavpackStream wps, WavpackMetadata wpmd)
     {
         byte byteptr [] = wpmd.data;
-        decorr_pass dpp = new decorr_pass();
+        //decorr_pass dpp = new decorr_pass();
         int tcount;
         int counter = 0;
         int dpp_index = 0;
@@ -637,6 +638,8 @@ class UnpackUtils
         return i;
     }
 
+    static int [] temp_samples = new int[Defines.MAX_TERM];
+
     static void decorr_stereo_pass(decorr_pass dpp, int [] buffer, long sample_count, int buf_idx)
     {
         int delta = dpp.delta;
@@ -999,7 +1002,6 @@ class UnpackUtils
 
                 if (m != 0)
                 {
-                    int [] temp_samples = new int[Defines.MAX_TERM];
 
                     for (int t = 0; t < dpp.samples_A.length; t++)
                     {
@@ -1425,7 +1427,6 @@ class UnpackUtils
 
                 if (m != 0)
                 {
-                    int [] temp_samples = new int[Defines.MAX_TERM];
 
                     System.arraycopy(dpp.samples_A, 0, temp_samples, 0, dpp.samples_A.length);
 

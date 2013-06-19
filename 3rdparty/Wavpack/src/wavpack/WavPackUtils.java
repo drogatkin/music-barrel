@@ -131,6 +131,8 @@ public class WavPackUtils
         return wpc;
     }
 
+      static int [] temp_buffer = new int[Defines.SAMPLE_BUFFER_SIZE];
+ 
     // This function obtains general information about an open file and returns
     // a mask with the following bit values:
 
@@ -188,7 +190,6 @@ public class WavPackUtils
 
         int buf_idx = 0;
         int bytes_returned = 0;
-        int [] temp_buffer = new int[Defines.SAMPLE_BUFFER_SIZE];
         
         while (samples > 0)
         {
@@ -426,16 +427,18 @@ public class WavPackUtils
         }
     }
 
+
+static        byte buffer [] = new byte[32]; // 32 is the size of a WavPack Header
+static        byte temp [] = new byte[32];
+
+
     // Read from current file position until a valid 32-byte WavPack 4.0 header is
     // found and read into the specified pointer. If no WavPack header is found within 1 meg,
     // then an error is returned. No additional bytes are read past the header. 
 
     public static WavpackHeader read_next_header(java.io.DataInputStream infile, WavpackHeader wphdr)
     {
-        byte buffer [] = new byte[32]; // 32 is the size of a WavPack Header
-        byte temp [] = new byte[32];
-
-        long bytes_skipped = 0;
+         long bytes_skipped = 0;
         int bleft = 0; // bytes left in buffer
         int counter = 0;
         int i = 0;

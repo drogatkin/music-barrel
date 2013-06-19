@@ -16,6 +16,6 @@ class Bitstream
     int error, bc;
     java.io.DataInputStream file;
     int bitval = 0;
-    byte[] buf = new byte[1024];
+    byte[] buf ;
     int buf_index = 0;
 }

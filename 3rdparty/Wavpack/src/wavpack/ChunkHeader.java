@@ -11,6 +11,6 @@
 package wavpack;
 class ChunkHeader
 {
-    char ckID[] = new char[4];
+    static char ckID[] = new char[4];
     long ckSize;	// was uint32_t in C
 }
