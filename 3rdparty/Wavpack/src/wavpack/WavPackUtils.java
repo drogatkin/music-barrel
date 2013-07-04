@@ -14,7 +14,7 @@ package wavpack;
 import java.io.IOException;
 
 import java.io.RandomAccessFile;
-import java.io.DataInputStream;
+import java.io.DataInput;
 import java.lang.reflect.InvocationTargetException;
 
 public class WavPackUtils
@@ -43,7 +43,7 @@ public class WavPackUtils
     // large integer or floating point files (but always provides at least 24 bits
     // of resolution).
 
-    public static WavpackContext WavpackOpenFileInput(DataInputStream infile)
+    public static WavpackContext WavpackOpenFileInput(DataInput infile)
     {
         WavpackContext wpc = new WavpackContext();
         WavpackStream wps = wpc.stream;
@@ -437,12 +437,11 @@ public class WavPackUtils
 static        byte buffer [] = new byte[32]; // 32 is the size of a WavPack Header
 static        byte temp [] = new byte[32];
 
-
     // Read from current file position until a valid 32-byte WavPack 4.0 header is
     // found and read into the specified pointer. If no WavPack header is found within 1 meg,
     // then an error is returned. No additional bytes are read past the header. 
 
-    public static WavpackHeader read_next_header(java.io.DataInputStream infile, WavpackHeader wphdr)
+    public static WavpackHeader read_next_header(java.io.DataInput infile, WavpackHeader wphdr)
     {
          long bytes_skipped = 0;
         int bleft = 0; // bytes left in buffer
@@ -460,11 +459,7 @@ static        byte temp [] = new byte[32];
 
             try
             {
-                if (infile.read(temp, 0, 32 - bleft) != (int) 32 - bleft)
-                {
-                    wphdr.status = 1;
-                    return wphdr;
-                }
+                infile.readFully(temp, 0, 32 - bleft);
             }
             catch (Exception e)
             {

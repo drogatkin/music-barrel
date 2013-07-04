@@ -20,7 +20,7 @@ public class WavpackContext
     String error_message = "";
     boolean error;
 
-    java.io.DataInputStream infile;
+    java.io.DataInput infile;
     long total_samples, crc_errors, first_flags;		// was uint32_t in C
     int open_flags, norm_offset;
     int reduced_channels = 0;

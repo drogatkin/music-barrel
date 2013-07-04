@@ -84,7 +84,7 @@ class BitsUtils
         return (value);
     }
 
-    static Bitstream bs_open_read(byte [] stream, short buffer_start, short buffer_end, java.io.DataInputStream file,
+    static Bitstream bs_open_read(byte [] stream, short buffer_start, short buffer_end, java.io.DataInput file,
         long file_bytes, int passed)
     {
         //   CLEAR (*bs);
@@ -125,8 +125,9 @@ class BitsUtils
 
             try
             {                
-                bytes_read = bs.file.read(bs.buf, 0, (int) bytes_to_read);
+                bs.file.readFully(bs.buf, 0, (int) bytes_to_read);
                 bs.buf_index = 0;
+                bytes_read = (int) bytes_to_read;
             }
             catch (Exception e)
             {

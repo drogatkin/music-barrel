@@ -86,18 +86,13 @@ class MetadataUtils
 
         if (bytes_to_read > wpc.read_buffer.length)
         {
-	    int bytes_read;
             wpmd.hasdata = Defines.FALSE;
 
             while (bytes_to_read > wpc.read_buffer.length)
             {
                 try
                 {
-                    bytes_read = wpc.infile.read(wpc.read_buffer, 0, wpc.read_buffer.length);
-                    if(bytes_read != wpc.read_buffer.length)
-                    {
-                        return Defines.FALSE;
-                    }
+                    wpc.infile.readFully(wpc.read_buffer, 0, wpc.read_buffer.length);
                 }
                 catch (Exception e)
                 {
@@ -114,16 +109,10 @@ class MetadataUtils
 
         if (bytes_to_read != 0)
         {
-            int bytes_read;
 
             try
             {
-                bytes_read = wpc.infile.read(wpc.read_buffer, 0, (int) bytes_to_read);
-                if(bytes_read != (int) bytes_to_read)
-                {
-                    wpmd.hasdata = Defines.FALSE;
-                    return Defines.FALSE;
-                }
+                wpc.infile.readFully(wpc.read_buffer, 0, (int) bytes_to_read);
             }
             catch (Exception e)
             {

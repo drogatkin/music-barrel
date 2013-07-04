@@ -14,7 +14,7 @@ class Bitstream
     short end, ptr;	// was uchar in c
     long file_bytes, sr;	// was uint32_t in C
     int error, bc;
-    java.io.DataInputStream file;
+    java.io.DataInput file;
     int bitval = 0;
     byte[] buf ;
     int buf_index = 0;
