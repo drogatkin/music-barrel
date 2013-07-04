@@ -107,7 +107,7 @@
 	}
 	
 	function playE(pi) {
-		top.document.title='@commonlabels.playing@ ' + pi.title + ' - @app_name@';
+		document.title='@commonlabels.playing@ ' + pi.title + ' - @app_name@';
 		makeJSONAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
 				true, function(res) {
 			if (res.error == 'closed') {

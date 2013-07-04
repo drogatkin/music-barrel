@@ -10,9 +10,15 @@
 */
 
 package wavpack;
+
+import java.io.IOException;
+
+import java.io.RandomAccessFile;
+import java.io.DataInputStream;
+import java.lang.reflect.InvocationTargetException;
+
 public class WavPackUtils
 {
-
 
     ///////////////////////////// local table storage ////////////////////////////
 
@@ -37,7 +43,7 @@ public class WavPackUtils
     // large integer or floating point files (but always provides at least 24 bits
     // of resolution).
 
-    public static WavpackContext WavpackOpenFileInput(java.io.DataInputStream infile)
+    public static WavpackContext WavpackOpenFileInput(DataInputStream infile)
     {
         WavpackContext wpc = new WavpackContext();
         WavpackStream wps = wpc.stream;
@@ -544,4 +550,102 @@ static        byte temp [] = new byte[32];
             }
         }
     }
+    
+    // Find the WavPack block that contains the specified sample. If "header_pos"
+    // is zero, then no information is assumed except the total number of samples
+    // in the file and its size in bytes. If "header_pos" is non-zero then we
+    // assume that it is the file position of the valid header image contained in
+    // the first stream and we can limit our search to either the portion above
+    // or below that point. If a .wvc file is being used, then this must be called
+    // for that file also.
+    public  static void seek(WavpackContext wpc, long totalSize, long headerPos, long targetSample) throws IOException {
+        try {
+            WavpackStream wps = wpc.stream;
+            long file_pos1 = 0, file_pos2 = totalSize;
+            long sample_pos1 = 0, sample_pos2 = wpc.total_samples;
+            double ratio = 0.96;
+            int file_skip = 0;
+
+            if (targetSample >= wpc.total_samples)
+                return;
+
+            if (headerPos > 0 && wps.wphdr.block_samples > 0) {
+                if (wps.wphdr.block_index > targetSample) {
+                    sample_pos2 = wps.wphdr.block_index;
+                    file_pos2 = headerPos;
+                } else if (wps.wphdr.block_index + wps.wphdr.block_samples <= targetSample) {
+                    sample_pos1 = wps.wphdr.block_index;
+                    file_pos1 = headerPos;
+                } else
+                    return;
+            }
+
+            while (true) {
+                long bytes_per_sample;
+                long seek_pos;
+
+                bytes_per_sample = file_pos2 - file_pos1;
+                bytes_per_sample /= sample_pos2 - sample_pos1;
+                seek_pos = file_pos1 + (file_skip > 0 ? 32 : 0);
+                seek_pos += (long) (bytes_per_sample * (targetSample - sample_pos1) * ratio);
+                long temppos = seek(seek_pos, wpc.infile);
+                wps.wphdr = read_next_header(wpc.infile, wps.wphdr);
+
+                //todo check this
+//                if (ret != 1)
+//                    wps.wphdr.block_index -= wpc.initial_index;
+
+                if (wps.wphdr.status == 1 || seek_pos >= file_pos2) {
+                    if (ratio > 0.0) {
+                        if ((ratio -= 0.24) < 0.0)
+                            ratio = 0.0;
+                    } else
+                        return;
+                } else if (wps.wphdr.block_index > targetSample) {
+                    sample_pos2 = wps.wphdr.block_index;
+                    file_pos2 = seek_pos;
+                } else if (wps.wphdr.block_index + wps.wphdr.block_samples <= targetSample) {
+                    if (seek_pos == file_pos1)
+                        file_skip = 1;
+                    else {
+                        sample_pos1 = wps.wphdr.block_index;
+                        file_pos1 = seek_pos;
+                    }
+                } else {
+                    int index = (int) (targetSample - wps.wphdr.block_index);
+                    seek(temppos, wpc.infile);                    
+                    wpc.stream = WavpackOpenFileInput(wpc.infile).stream;
+
+                    int[] temp_buf = new int[Defines.SAMPLE_BUFFER_SIZE];
+                    while (index > 0) {
+                        int toUnpack = Math.min(index, Defines.SAMPLE_BUFFER_SIZE / WavpackGetReducedChannels(wpc));
+                        WavpackUnpackSamples(wpc, temp_buf, toUnpack);
+                        index -= toUnpack;
+                    }
+                    return;
+                }
+            }
+        } finally {
+           
+        }
+    }
+
+	static long seek(long pos, Object infile) throws IOException {
+		if (infile instanceof RandomAccessFile) {
+			((RandomAccessFile) infile).seek(pos);
+			return ((RandomAccessFile) infile).getFilePointer();
+		}
+		try {
+			return (Long) infile.getClass().getMethod("seek", long.class).invoke(infile, pos);
+		} catch (Exception e) {
+			Throwable t = e;
+			if (e instanceof InvocationTargetException) {
+				t = ((InvocationTargetException) e).getTargetException();
+				if (t instanceof IOException)
+					throw (IOException) t;
+			}
+			throw new IllegalArgumentException("Seek operation sin't supported by underline stream:" + infile, t);
+		}
+	}
+
 }

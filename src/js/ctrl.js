@@ -42,6 +42,8 @@ function flashTit(mes) {
 	if (mes) {
 		cur_tit = document.title;
 		tit_tmr = setInterval(function() { if(document.title==cur_tit) document.title=mes; else document.title=cur_tit; }, 1200);
-	} else if (cur_tit)
+	} else if (cur_tit) {
 		document.title=cur_tit;
+		cur_tit = null;
+	}	
 }
