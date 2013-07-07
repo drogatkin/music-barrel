@@ -462,7 +462,7 @@ static        byte temp [] = new byte[32];
                 infile.readFully(temp, 0, 32 - bleft);
             }
             catch (Exception e)
-            {
+            { 
                 wphdr.status = 1;
                 return wphdr;
             }
@@ -576,7 +576,7 @@ static        byte temp [] = new byte[32];
             }
 
             while (true) {
-                long bytes_per_sample;
+                double bytes_per_sample;
                 long seek_pos;
 
                 bytes_per_sample = file_pos2 - file_pos1;
@@ -585,7 +585,7 @@ static        byte temp [] = new byte[32];
                 seek_pos += (long) (bytes_per_sample * (targetSample - sample_pos1) * ratio);
                 long temppos = seek(seek_pos, wpc.infile);
                 wps.wphdr = read_next_header(wpc.infile, wps.wphdr);
-
+                //System.err.println("seek "+seek_pos+" to "+temppos + " satus "+wps.wphdr.status); // !!
                 //todo check this
 //                if (ret != 1)
 //                    wps.wphdr.block_index -= wpc.initial_index;
@@ -608,6 +608,7 @@ static        byte temp [] = new byte[32];
                     }
                 } else {
                     int index = (int) (targetSample - wps.wphdr.block_index);
+                    //System.err.println("seek "+temppos);
                     seek(temppos, wpc.infile);                    
                     wpc.stream = WavpackOpenFileInput(wpc.infile).stream;
 
@@ -639,7 +640,7 @@ static        byte temp [] = new byte[32];
 				if (t instanceof IOException)
 					throw (IOException) t;
 			}
-			throw new IllegalArgumentException("Seek operation sin't supported by underline stream:" + infile, t);
+			throw new IllegalArgumentException("Seek operation isn't supported by underline stream:" + infile, t);
 		}
 	}
 
