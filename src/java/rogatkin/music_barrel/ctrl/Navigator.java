@@ -26,6 +26,7 @@ import com.beegman.webbee.block.Tabular;
 import java.util.Comparator;
 
 public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
+
 	@Override
 	protected List<MediaInfo> getTabularData(long pos, int size) {
 		List<MediaInfo> modelData = new ArrayList<>();
@@ -53,7 +54,11 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 					String a2 = (String)o2.getAttribute(MediaInfo.ALBUM);
 					int result = a1 != null?a1.compareTo(a2):a2==null?0:1;
 					if (result == 0)
-						return o1.getIntAttribute(MediaInfo.TRACK) - o2.getIntAttribute(MediaInfo.TRACK);
+						try {
+							return o1.getIntAttribute(MediaInfo.TRACK) - o2.getIntAttribute(MediaInfo.TRACK);
+						} catch(Exception e) {
+							log("%s vs %s",e, o1, o2);
+						}
 					return result;
 			    }
 			});
