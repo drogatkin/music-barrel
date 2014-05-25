@@ -3,8 +3,6 @@
 
 <h2>Web interfaced music juke box for Raspberry Pi</h2>
 
-<a target="_blank" href="https://play.google.com/store/apps/details?id=rogatkin.mobile.app.lialichka"><img src="https://github.com/drogatkin/music-barrel/blob/master/mockups/appgoogleplay.png?raw=true"></a>
-
 Features set
 
 1. Auto scan local and remote storage for music file and store them in database with
@@ -38,3 +36,5 @@ Features set
 Music - Barrel has released. Download it from
 https://sourceforge.net/projects/musicbarrel/files/music-barrel/1.01/
 in appropriate packaging.
+
+It is also available as a paid app at <a target="_blank" href="https://play.google.com/store/apps/details?id=rogatkin.mobile.app.lialichka"><img src="https://github.com/drogatkin/music-barrel/blob/master/mockups/appgoogleplay.png?raw=true"></a>
