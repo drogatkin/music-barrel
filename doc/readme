@@ -1,4 +1,4 @@
-Music-Barrel 1.0 release
+Music-Barrel 1.01 release
 ========================
 
 Music Jukebox for Raspberry Pi and HTPC
@@ -31,3 +31,10 @@ Visit Setting barrel first to initialize database schema.
 -----------------
 
 Visit https://github.com/drogatkin/music-barrel
+
+3. What is new
+--------------
+
+- bundled with TJWS 1.106
+- updated codecs for supporting DSD
+
