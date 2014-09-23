@@ -1,6 +1,7 @@
 <div style="width:100%;overflow:auto">
 @%'insert/directories.html'@
 </div>
+<div id="toast" style="position: fixed; top:0;right:0;visibility:hidden; background-color:#CD7F32; color: white;border: 1px solid #666;padding:3px">@label.added@</div>
 <div id="music_holder" style="width:100%">
    <table id="music_list" style="margin:auto">
    
@@ -30,11 +31,16 @@
 	  return function() {
 		  makeGenericAjaxCall('Player/ajax/addPlay', 'playPath=' + encodeURIComponent(dl[i].path),
 					true, function(res) {
-						
+			            getElement('toast').style.visibility="visible";
+			            setTimeout (hidit, 500);
 					}, function(err) {
 
 					});
 		  //alert('Play '+dl[i].path);
 	  }
+  }
+  
+  function hidit() {
+	  getElement('toast').style.visibility="hidden";
   }
 </script>
