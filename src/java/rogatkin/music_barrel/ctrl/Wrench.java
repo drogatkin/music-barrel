@@ -14,7 +14,7 @@ public class Wrench extends Form<mb_setting, MBModel> {
 	protected Object storeModel(mb_setting model) {
 		navigation = "Navigator";
 		try {
-			if (model.rescan_soon){
+			if (model.rescan_soon) {
 				getAppModel().getSettings().last_scan = null;
 			}
 			getAppModel().saveSettings();
@@ -39,15 +39,15 @@ public class Wrench extends Form<mb_setting, MBModel> {
 		}
 
 	}
-	
+
 	@Override
 	protected boolean needFillBeforeLoad() {
 		return false;
 	}
 
 	@Override
-	protected void loadModel(mb_setting model) {
-
+	protected mb_setting loadModel(mb_setting model) {
+		return model;
 	}
 
 	void setOutType(int type) throws IOException {

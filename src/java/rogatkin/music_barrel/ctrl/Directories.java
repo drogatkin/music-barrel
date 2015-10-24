@@ -5,11 +5,13 @@ import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
 import rogatkin.music_barrel.model.MBModel;
+import rogatkin.smb.SmbPath;
 
 import com.beegman.webbee.block.Gadget;
 
@@ -40,6 +42,12 @@ public class Directories extends Gadget<Collection<Path>, MBModel> {
 			}
 		else
 			result.add(cp);
+		if (cp == null)
+			try {
+				result.add(new SmbPath());
+			} catch (Exception e) {
+				log("Can't add samba path %s", null, e);
+			}
 		return result;
 	}
 }
