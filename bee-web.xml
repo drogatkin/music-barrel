@@ -10,7 +10,7 @@
       <!ENTITY manifestf ""> 
       <!ENTITY main_class "&domain;.&project;.Main">
       <!ENTITY webapp_file "&project;.war"> 
-      <!ENTITY projects_root "E:\projects">
+      <!ENTITY projects_root "..">
       ]>
 <!-- 
    Music-Barrel - web interfaced juke box
