@@ -21,7 +21,7 @@ import rogatkin.music_barrel.model.MBModel;
 
 import com.beegman.webbee.util.Cron;
 
-public class MediaCrawler extends Cron<Object, MBModel> implements ServiceProvider<MediaCrawler>, Runnable {
+public class MediaCrawler extends Cron<Object, MBModel> implements  Runnable {
 	public final static String NAME = "Media-Crawler";
 
 	String[] skip_directories = { "Windows", "Program Files", "dell", "Program Files (x86)", "Drivers", "$RECYCLE.BIN",
