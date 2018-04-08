@@ -14,7 +14,7 @@
       ]>
 <!-- 
    Music-Barrel - web interfaced juke box
-   Copyright (c) 2013 Dmitriy Rogatkin    -->
+   Copyright (c) 2018 Dmitriy Rogatkin    -->
 
 <bee name="&project;" type="project">
   &env;
