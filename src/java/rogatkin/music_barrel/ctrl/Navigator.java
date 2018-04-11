@@ -26,6 +26,8 @@ import com.beegman.webbee.block.Tabular;
 import java.util.Comparator;
 
 public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
+	
+	static final String MEDIA_PATH = "MediaPath";
 
 	@Override
 	protected List<MediaInfo> getTabularData(long pos, int size) {
@@ -63,7 +65,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 						}
 					if (result == 0)
 						try {
-							return ((String)o1.getAttribute(MediaInfo.TITLE)).compareTo((String)o2.getAttribute(MediaInfo.TITLE));
+							return ((Path)o1.getAttribute(MEDIA_PATH)).getFileName().compareTo(((Path)o2.getAttribute(MEDIA_PATH)).getFileName());
 						} catch (Exception e) {
 							log("%s vs %s",e, o1, o2);
 						}
@@ -94,7 +96,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 			if (method.getName().equals("getAttribute")) {
 				if (args.length == 1) {
-					if ("MediaPath".equals(args[0]))
+					if (MEDIA_PATH.equals(args[0]))
 						return mediaPath;
 					else if (MediaInfo.TITLE.equals(args[0])) {
 						String title = (String) method.invoke(mediaInfo, args);
