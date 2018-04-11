@@ -55,8 +55,16 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 					int result = a1 != null?a1.compareTo(a2):a2==null?0:1;
 					if (result == 0)
 						try {
-							return o1.getIntAttribute(MediaInfo.TRACK) - o2.getIntAttribute(MediaInfo.TRACK);
+							result = o1.getIntAttribute(MediaInfo.TRACK) - o2.getIntAttribute(MediaInfo.TRACK);
+							if (result != 0)
+								return result;
 						} catch(Exception e) {
+							log("%s vs %s",e, o1, o2);
+						}
+					if (result == 0)
+						try {
+							return ((String)o1.getAttribute(MediaInfo.TITLE)).compareTo((String)o2.getAttribute(MediaInfo.TITLE));
+						} catch (Exception e) {
 							log("%s vs %s",e, o1, o2);
 						}
 					return result;
