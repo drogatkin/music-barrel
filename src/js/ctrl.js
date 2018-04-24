@@ -47,3 +47,26 @@ function flashTit(mes) {
 		cur_tit = null;
 	}	
 }
+
+function addAllFiles() {
+	/*let songs = document.querySelectorAll('')
+	for (let song of songs) {
+		
+	}*/
+	
+	if (dl) {
+		//for (let title1 of dl) {
+		for (var i=0; dl[i]; i++) {	
+			if (dl[i].path.endsWith('.cue'))
+				continue
+			makeGenericAjaxCall('Player/ajax/addPlay', 'playPath=' + encodeURIComponent(dl[i].path),
+					true, function(res) {
+			         
+					}, function(err) {
+
+					});
+		}
+		 getElement('toast').style.visibility="visible";
+         setTimeout (hidit, 500);
+	}
+}

@@ -26,6 +26,9 @@
       cell1.onclick = clousurePlaymenu(i);
       cell1.className = 'play_tag';
   }
+  if (dl.length) {
+	 getElement('addall').style.display = 'inline'
+  }
   
   function clousurePlaymenu(i) {
 	  return function() {
