@@ -54,7 +54,8 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 			    public int compare(MediaInfo o1, MediaInfo o2) {
 					String a1 = (String)o1.getAttribute(MediaInfo.ALBUM);
 					String a2 = (String)o2.getAttribute(MediaInfo.ALBUM);
-					int result = a1 != null?a1.compareTo(a2):a2==null?0:1;
+					try {
+					int result = a1 != null?a1.compareTo(a2):a2==null?0:1; // can be a bug https://netbeans.org/bugzilla/show_bug.cgi?id=270401
 					if (result == 0)
 						try {
 							result = o1.getIntAttribute(MediaInfo.TRACK) - o2.getIntAttribute(MediaInfo.TRACK);
@@ -70,7 +71,11 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 							log("%s vs %s",e, o1, o2);
 						}
 					return result;
-			    }
+					
+					} catch (NullPointerException npe ) {
+						return 0;
+						}
+					}
 			});
 			modelInsert("path", p);
 		} catch (IOException ioe) {
