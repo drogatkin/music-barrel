@@ -72,7 +72,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 							    	if (sp > 0)
 								    	a2 = a2.substring(0, sp);
 							    	int ap2 =  Integer.parseInt(a2);
-							    	return ap1 - ap2;
+							    	result =  ap1 - ap2;
 							    }
 							}
 						} catch(Exception e) {
