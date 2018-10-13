@@ -1,4 +1,8 @@
-<div style="border:1px solid black;width:312px;background-color:#EEE;position:fixed;top:1em;left:26px;background-color:#ddd;z-index:999">
+<table border="0" style="position:fixed;top:1em;left:26px;z-index:999">
+   <tr>
+      <td> 
+<!-- -->
+<div style="border:1px solid black;width:312px;background-color:#EEE;background-color:#ddd;">
 <table>
     <tr>
       <td style="margin-left:1em"><a href="javascript:void(0)" onclick="pausePlay()"><img src="../image/pause_ctrl.png" title="@commonlabels.pause@" alt="@commonlabels.pause@" border="0"></a></td>
@@ -11,6 +15,10 @@
       </tr>
 </table>
 </div>
+     </td>
+           <td> <span style="width:200px; overflow:hidden; white-space:nowrap;text-overflow:ellipsis;">@path.getFileName*()*@</span></td>
+   </tr>
+</table>
 <script>
 var curr_mod = 0;
 var mod_img = ['../image/once_ctrl.png', '../image/cycle_ctrl.png', '../image/shuffle_ctrl.png'];
