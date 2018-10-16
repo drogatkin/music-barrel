@@ -39,9 +39,9 @@
        </td>
        <td>@element.getAttribute*(Artist)*@</td>
        <td>@element.getAttribute*(Album)*@</td>
-       <td>@element.getAttribute*(Year)*@</td>
-       <td>@element.getAttribute*(Genre)*@</td>
-       <td>@element.getAttribute*(Length)*@</td>
+       <td style="text-align:right">@rogatkin.music_barrel.util.Display.textIfZeroOrLess*(@element.getAttribute*(Year)*@)*@</td>
+       <td style="text-align:center">@element.getAttribute*(Genre)*@</td>
+       <td style="text-align:right">@element.getAttribute*(Length)*@</td>
        <td style="text-align:right">@element.getAttribute*(Samplerate)*@</td>
     </tr>
  )@
