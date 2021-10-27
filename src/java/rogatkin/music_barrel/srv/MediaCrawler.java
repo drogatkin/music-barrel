@@ -128,9 +128,10 @@ public class MediaCrawler extends Cron<Object, MBModel> implements  Runnable {
 					try {
 						appModel.addToLibrary(mf);
 					} catch (Exception e) {
-						e.printStackTrace();
+						Log.l.error("Error adding to a library "+mf, e);
 					}
 				}
+				
 				return FileVisitResult.CONTINUE;
 			}
 

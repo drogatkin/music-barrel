@@ -21,6 +21,7 @@ import mediautil.gen.MediaFormat;
 import mediautil.gen.MediaInfo;
 
 import rogatkin.music_barrel.model.MBModel;
+import rogatkin.music_barrel.util.MusicPath;
 
 import com.beegman.webbee.block.Tabular;
 import java.util.Comparator;
@@ -98,7 +99,8 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 					
 					}
 			});
-			modelInsert("path", p);
+			modelInsert("path", new MusicPath(p));
+			//modelInsert("pathName", p.getFileName());
 		} catch (IOException ioe) {
 			modelInsert("error", ioe);
 		}

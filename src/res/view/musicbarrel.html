@@ -9,7 +9,7 @@
      </div>
   )@
 </div>
-<script src="@contextpath@/js/ui.js" language="Javascript"></script>
+<script src="@contextpath@/js/ui.js"></script>
 <script>
     function initFields() {
     	handlerUrl = 'Navigator/ajax/Asyncupdate';
@@ -44,7 +44,8 @@
 		makeGenericAjaxCall('Player/ajax/removePlay', 'playPath='+encodeURIComponent(p),
 				true, function(res) {
 		   if (res == 'Ok') {
-			   window.location.reload();
+			   songFinished()
+			   //window.location.reload();
 		   }
 		   });
 	}

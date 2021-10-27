@@ -3,5 +3,3 @@
 /out
 /3rdparty
 .temp_repo/
-*.jar
-*.war

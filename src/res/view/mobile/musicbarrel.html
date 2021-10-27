@@ -14,7 +14,8 @@
 	makeGenericAjaxCall('Player/ajax/removePlay', 'playPath='+encodeURIComponent(p),
 			true, function(res) {
 	   if (res == 'Ok') {
-		   window.location.reload();
+		   // window.location.reload();
+		   postStop()
 	   }
 	   });
   }

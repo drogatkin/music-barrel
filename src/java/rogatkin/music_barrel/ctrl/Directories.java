@@ -11,15 +11,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 import rogatkin.music_barrel.model.MBModel;
+import rogatkin.music_barrel.util.MusicPath;
 import rogatkin.smb.SmbPath;
 
 import com.beegman.webbee.block.Gadget;
 
-public class Directories extends Gadget<Collection<Path>, MBModel> {
+public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 
 	@Override
-	protected Collection<Path> getGadgetData() {
-		ArrayList<Path> result = new ArrayList<>();
+	protected Collection<MusicPath> getGadgetData() {
+		ArrayList<MusicPath> result = new ArrayList<>();
 		FileSystem fs = FileSystems.getDefault();
 		String ps = getParameterValue("path", "", 0);
 		Path cp = null;
@@ -28,7 +29,7 @@ public class Directories extends Gadget<Collection<Path>, MBModel> {
 			try {
 				for (Path p : Files.newDirectoryStream(cp)) {
 					if (Files.isDirectory(p))
-						result.add(p);
+						result.add(new MusicPath(p));
 				}
 			} catch (Exception e) {
 				log("", e);
@@ -38,13 +39,13 @@ public class Directories extends Gadget<Collection<Path>, MBModel> {
 		}
 		if (cp == null)
 			for (Path p : fs.getRootDirectories()) {
-				result.add(p);
+				result.add(new MusicPath(p));
 			}
 		else
-			result.add(cp);
+			result.add(new MusicPath(cp));
 		if (cp == null)
 			try {
-				result.add(new SmbPath());
+				result.add(new MusicPath(new SmbPath()));
 			} catch (Exception e) {
 				log("Can't add samba path %s", null, e);
 			}
