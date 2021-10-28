@@ -8,7 +8,8 @@ public class MusicPath implements Comparable {
 		path = p;
 	}
 	public String getFileName() {
-
+		if (path.getFileName() == null)
+			return null;
 		return path.getFileName().toString();
 	}
 
