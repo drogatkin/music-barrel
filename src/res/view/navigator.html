@@ -48,17 +48,18 @@
 </table>
 @%'insert/playlist.html'@
 <script src="@contextpath@/js/ui.js" language="Javascript"></script>
-<script>   
+<script>
+    var MediaControls
 	function initFields() {
 		try {
-			var MediaControls = Windows.Media.MediaControl;
-
+			MediaControls = Windows.Media.MediaControl
 			// Add event listeners for the buttons
-			MediaControls.addEventListener('playpressed', resumePlay, false);
-			MediaControls.addEventListener('pausepressed', pausePlay, false);
+			MediaControls.addEventListener('playpressed', resumePlay, false)
+			MediaControls.addEventListener('pausepressed', pausePlay, false)
 			MediaControls.addEventListener('playpausetogglepressed',
-					togglePlay, false);
+					togglePlay, false)
 		} catch (e) {
+			console.log('Media controls supported only on Windows')
 		}		
 		handlerUrl = 'Navigator/ajax/Asyncupdate';
 		// run it async
@@ -152,33 +153,34 @@
 	}
 	
 	function pausePlay() { 
-		playControl(2);
-		pauseProgress();
-		flashTit('@commonlabels.paused@');
-		MediaControls.isPlaying = false;
+		playControl(2)
+		pauseProgress()
+		flashTit('@commonlabels.paused@')
+		if (MediaControls) MediaControls.isPlaying = false
 	}
 	
 	function resumePlay() {
-		playControl(1, function() {resumeProgress();});
-		MediaControls.isPlaying = true;
+		playControl(1, function() {resumeProgress()})
+		if (MediaControls) MediaControls.isPlaying = true
 	}
 	
 	
 	function nextPlay() { 
-		playControl(0);
+		playControl(0)
 	}
 	
 	function stopPlay() { 
-		cp = -1;
-		startProgress(0);
-		flashTit();
-		playControl(0);
+		cp = -1
+		startProgress(0)
+		flashTit()
+		playControl(0)
 	}
 	
 	function togglePlay() {
-		if (MediaControls.isPlaying)
-			pausePlay();
-		else
-			resumePlay();
+		if (MediaControls) 
+			if (MediaControls.isPlaying)
+				pausePlay()
+			else
+				resumePlay()
 	}
 </script>
