@@ -6,20 +6,31 @@
 
 <script>
   function updateDirectories() {
+	  var preUrl = document.referrer
+	  if (preUrl) {
+		  preUrl = new URL(preUrl).search.substring(6)
+	  }	    
 	makeJSONAjaxCall('@contextpath@@servletpath@/Directories', 'path=@:path@',
 			true, function(json) {
-				var dr = getElement('directories_t');
+				var dr = getElement('directories_t')
+				var scrollCc
 				for ( var i = 0; i < json.length; i++) {
 					if (!json[i])
-						break;
+						break
 					var cc = dr.insertCell(i); // js fields already encoded as required
 					cc.style='white-space: pre-wrap';
 					cc.innerHTML = '<a id="link1" href="Navigator?path='  //@:path@
 							+ encodeURIComponent(json[i].path)
 							+ '"><img border="0" src="@contextpath@/image/directory.png">'
-							+ (json[i].name==''?json[i].path:json[i].name) + '</a>';
+							+ (json[i].name==''?json[i].path:json[i].name) + '</a>'
+					if (preUrl && encodeURIComponent(json[i].path) == preUrl) {
+						scrollCc = cc
+					}
 				}
+				if (scrollCc)
+					scrollCc.scrollIntoView(true)
 			}, function(e) {
 			});
   }
+
 </script>
