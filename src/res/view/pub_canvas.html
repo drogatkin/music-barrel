@@ -6,14 +6,19 @@
      #error {background-color:#fdd;}
      .play_progress {background-image:url('@contextpath@/image/playing.gif');background-repeat:no-repeat}
      .play_btn {background-image:url('@contextpath@/image/play_btn.png');background-repeat:no-repeat;cursor:pointer}
-     .bg_theme {background-color:#E0FFDD}
-     .bg_hd_theme {background-color:#262;color:#eee}
-     .overthrow {overflow: auto;}
+     .bg_theme {background-color:#ACECA2D7}
+     .bg_hd_theme {background-color:#1F591699;color:#eee}
+     .overthrow {overflow: auto; background-color:#E2F9DED3; padding:0 1em 0 1em; border-radius: 8px;border: 1px solid #73AD21;}
      .popup_menu {position:absolute;display:none;background-color:#ddf;border:1px solid black;padding-left:1em;padding-right:1em;z-index:99}
      a#link1 {color:#555}
      input[type="image"]:hover { filter: brightness(85%);}
      input[type="image"]:active { transform: translate(10%,10%);
             box-shadow: -3px -3px #ccc;}
+     body {@artwork(background-image: url(@contextpath@@servletpath@/Artwork?path=@:artwork@);
+                     background-position: center; /* Center the image */
+                     background-repeat: no-repeat; /* Do not repeat the image */
+                     background-size: cover;)@}
+     form[name=wrench] > div {margin=0.5em;}
   </style>
   <script src="@contextpath@/js/ajaxhelper.js" language="Javascript"></script>
   <script src="@contextpath@/js/common.js" language="Javascript"></script>

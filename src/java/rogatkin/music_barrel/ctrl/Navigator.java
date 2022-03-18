@@ -22,6 +22,7 @@ import mediautil.gen.MediaInfo;
 
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.util.MusicPath;
+import rogatkin.music_barrel.model.Artwork;
 
 import com.beegman.webbee.block.Tabular;
 import java.util.Comparator;
@@ -33,6 +34,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	@Override
 	protected List<MediaInfo> getTabularData(long pos, int size) {
 		List<MediaInfo> modelData = new ArrayList<>();
+		List<Artwork> artworkData = new ArrayList<>();
 		try {
 			String ps = getParameterValue("path", getAppModel().getState(getClass().getName(), ""), 0);
 			if (ps.isEmpty()) 
@@ -50,7 +52,12 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 				MediaFormat mf = MediaFormatFactory.createMediaFormat(entry.toFile(), enc, true);
 				if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0)  // and can play music
 					modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
-							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));				
+							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));	
+				else { // maybe it is an artwork?
+					Artwork aw = Artwork.create(entry);
+					if (aw != null)
+						artworkData.add(aw);
+				}
 			}
 			Collections.sort(modelData, new Comparator<MediaInfo>() {
 				@Override
@@ -79,7 +86,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 							    }
 							}
 						} catch(Exception e) {
-							log("%s vs %s",e, o1, o2);
+							log("%s vs %s", e, o1, o2);
 						}
 					}
 					
@@ -89,19 +96,20 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 							if (result != 0)
 								return result;
 						} catch(Exception e) {
-							log("%s vs %s",e, o1, o2);
+							log("%s vs %s", e, o1, o2);
 						}
 					if (result == 0)
 						try {
 							return ((Path)o1.getAttribute(MEDIA_PATH)).getFileName().compareTo(((Path)o2.getAttribute(MEDIA_PATH)).getFileName());
 						} catch (Exception e) {
-							log("%s vs %s",e, o1, o2);
+							log("%s vs %s", e, o1, o2);
 						}
 					return result;
 					
 					}
 			});
 			modelInsert("path", new MusicPath(p));
+			modelInsert("artwork", artworkData.size() == 0?null:artworkData.get(0));
 			//modelInsert("path", p);
 		} catch (IOException ioe) {
 			modelInsert("error", ioe);

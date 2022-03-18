@@ -54,6 +54,10 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	@FormField
 	public boolean allow_duplicates;
 	
+	@DBField()
+	@FormField
+	public String music_dir;
+	
 	public String last_directory;
 	
 	public float last_volume;
