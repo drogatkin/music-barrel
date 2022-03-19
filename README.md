@@ -33,8 +33,6 @@ Features set
 
 <h2>Releases</h2>
 
-Music - Barrel has released. Download it from
-https://sourceforge.net/projects/musicbarrel/files/music-barrel/1.01/
-in appropriate packaging.
+Music - Barrel, latest release 1.4. You can download .war file from the Releases section.
 
 It is also available as a paid app at <a target="_blank" href="https://play.google.com/store/apps/details?id=rogatkin.mobile.app.lialichka"><img src="https://github.com/drogatkin/music-barrel/blob/master/mockups/appgoogleplay.png?raw=true"></a>

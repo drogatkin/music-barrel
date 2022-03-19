@@ -61,7 +61,7 @@ public class MBModel extends AppModel implements Name {
 
 	public void saveSettings() throws ProcessException {
 		//System.err.printf("--->Object: %s%n", new DODelegator(settings, null, "", "id").get("output_type").getClass());
-		getDOService().addObject(new DODelegator(settings, null, "", "id"), null,
+		getDOService().addObject(new DODelegator(settings, null, "id", ""), null,
 				new DODelegator(settings, null, "", "id"));
 	}
 

@@ -1,4 +1,4 @@
-Music-Barrel 1.01 release
+Music-Barrel 1.4 release
 ========================
 
 Music Jukebox for Raspberry Pi and HTPC
@@ -8,13 +8,13 @@ Music Jukebox for Raspberry Pi and HTPC
 
 Music Barrel is packaged as .war and executable .jar file.
 Web package can be deployed under any application server
-as TJWS or Tomcat. It doesn't require any pre/post
-installation steps and can be dropped in auto deploy directory
+as TJWS, Tomcat or any other servlet container. It doesn't require any pre/post
+installation steps and can be dropped in an auto deploy directory
 of an application server.
 Jar package can be just executed and not requiring a separate
 application server.
-War deployment is preferred for dedicated to home theater machine
-use, when it can be started at a system boot time.
+War deployment is preferred for a dedicated home theater machine,
+when it can be started at a system boot time.
 
 Here is a guide how to install an application server on Raspberry Pi
 http://tjws.sourceforge.net/arch-raspi-java8.html
@@ -35,6 +35,5 @@ Visit https://github.com/drogatkin/music-barrel
 3. What is new
 --------------
 
-- bundled with TJWS 1.106
-- updated codecs for supporting DSD
+. returning to a previous directory, scroll to a position where the last visited is visible.
 

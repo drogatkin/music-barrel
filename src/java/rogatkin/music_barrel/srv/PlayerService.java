@@ -43,9 +43,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		appModel = am;
 		playMode = PlayMode.once; // TODO take from config
 		playQueue = new LinkedBlockingQueue<>(1024);
-		listPlayer = new Thread(this, getPreferredServiceName());
-		listPlayer.setDaemon(true);
-		listPlayer.start();
+		assureServiceThread();
 	}
 
 	@Override
@@ -58,6 +56,14 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		return this;
 	}
 
+	private void assureServiceThread() {
+		if (listPlayer == null || !listPlayer.isAlive()) {
+			listPlayer = new Thread(this, getPreferredServiceName());
+			listPlayer.setDaemon(true);
+			listPlayer.start();
+		}
+	}
+	
 	public synchronized PlayerService play(URL media) {
 		// do head call to get content type
 		// resolve player
@@ -106,6 +112,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 					playQueue.add(shuffle.remove(random.nextInt(shuffle.size())));
 				}
 			}
+			assureServiceThread();
 		} catch (Exception e) {
 			Log.l.error(getPreferredServiceName(), e);
 		}
@@ -127,6 +134,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			}
 		}
 		playQueue.add(path);
+		assureServiceThread();
 		return getServiceProvider();
 	}
 
