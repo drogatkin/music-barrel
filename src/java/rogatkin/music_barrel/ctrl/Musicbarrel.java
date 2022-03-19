@@ -20,7 +20,7 @@ import com.beegman.webbee.block.Grid.CellModelExample;
 import com.beegman.webbee.model.Appearance;
 import java.io.File;
 
-public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel>  {
+public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 	protected String[] playQueue;
 
 	@Override
@@ -41,7 +41,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel>  {
 			playQueue = getAppModel().getPlayer().getPlayQueue();
 		else {
 			String[] remainQueue = getAppModel().getPlayer().getPlayQueue();
-			playQueue = new String[remainQueue.length+1];
+			playQueue = new String[remainQueue.length + 1];
 			System.arraycopy(remainQueue, 0, playQueue, 1, remainQueue.length);
 			playQueue[0] = cm.getFile().getPath();
 		}
@@ -53,27 +53,31 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel>  {
 
 	@Override
 	protected CellModel2 getCellModel(int col, int row) {
-		//log("requested %d,%d from %d", null, col, row, playQueue.length);
+		// log("requested %d,%d from %d", null, col, row, playQueue.length);
 		CellModel2 result = new CellModel2();
-		if (row * numCols() + col < playQueue.length)
+		if (row * numCols() + col < playQueue.length) {
 			try { // TODO read mb_media_item with possible inherited class with album field
-				DataObject dob = getAppModel()
-						.getDOService()
-						.getObjectByQuery(
-								String.format(
-										"select i.title, performer, track, i.year, genre, s.title album, play_count, path from mb_media_item i left join mb_media_set s on i.set_id=s.id where path='%s'",
-										/*do service get sql*/Sql.escapeQuote(playQueue[row * numCols() + col])), null);
+				DataObject dob = getAppModel().getDOService().getObjectByQuery(String.format(
+						"select i.title, performer, track, i.year, genre, s.title album, play_count, path from mb_media_item i left join mb_media_set s on i.set_id=s.id where path='%s'",
+						/* do service get sql */Sql.escapeQuote(playQueue[row * numCols() + col])), null);
 				if (dob != null) {
 					result.title = "" + dob.get("TITLE");
 					result.comment = String.format("%s - %s - %d", dob.get("PERFORMER"),
 							DataConv.ifNull(dob.get("ALBUM"), ""), dob.get("YEAR"));
-					result.content = String
-							.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
-									URLEncoder.encode("" + dob.get("PATH"), getCharSet()),
-									appearance == Appearance.mobile ? 96 : 260);
+					result.content = String.format(
+							"<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
+							URLEncoder.encode("" + dob.get("PATH"), getCharSet()),
+							appearance == Appearance.mobile ? 96 : 260);
 					result.path = "" + dob.get("PATH");
-				} else {
-					///log("No record found for %s %d", null, playQueue[row * numCols() + col], col);
+				}
+			} catch (Exception e) {
+				log("Can't get a description from DB", e);
+			}
+
+			if (result.title == null) {
+				try {
+					/// log("No record found for %s %d", null, playQueue[row * numCols() + col],
+					/// col);
 					// not in library, generate record
 					result.path = playQueue[row * numCols() + col];
 					MediaFormat mf = MediaFormatFactory.createMediaFormat(new File(result.path), getCharSet(), true);
@@ -84,15 +88,17 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel>  {
 						result.title = i.title;
 						result.comment = String.format("%s - %s - %d", i.performer, mi.getAttribute(MediaInfo.ALBUM),
 								i.year);
-						result.content = String
-								.format("<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
-										URLEncoder.encode(result.path, getCharSet()),
-										appearance == Appearance.mobile ? 96 : 260);
+						result.content = String.format(
+								"<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
+								URLEncoder.encode(result.path, getCharSet()),
+								appearance == Appearance.mobile ? 96 : 260);
 					}
+				} catch (Exception e) {
+					log("Can't get a description from the media", e);
 				}
-			} catch (Exception e) {
-				log("", e);
 			}
+
+		}
 		return result;
 	}
 
