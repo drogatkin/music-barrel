@@ -14,7 +14,7 @@ of an application server.
 Jar package can be just executed and not requiring a separate
 application server.
 War deployment is preferred for a dedicated home theater machine,
-when it can be started at a system boot time.
+because it can be started at a system boot time.
 
 Here is a guide how to install an application server on Raspberry Pi
 http://tjws.sourceforge.net/arch-raspi-java8.html
@@ -22,9 +22,9 @@ TJWS auto deploy directory is located under /opt/tjws/webapps.
 
 Point your desktop or mobile browser to http://raspberrypi/music-barrel
 Use port 8000 in case of .jar launched version, port can be redefined
-from systray menu.
+from systray menu (not working with latest versions of Linux tho).
 
-Visit Setting barrel first to initialize database schema.
+Visit the Setting barrel first to initialize a database schema.
 
 
 2. Sources access
@@ -35,5 +35,7 @@ Visit https://github.com/drogatkin/music-barrel
 3. What is new
 --------------
 
-. returning to a previous directory, scroll to a position where the last visited is visible.
+* auto scrolling to the position where a directory was selected to play
+   at returning back after a play or an inspection
+* display an album artwork as a background image
 

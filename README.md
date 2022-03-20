@@ -26,13 +26,13 @@ Features set
 
 <h2>Technologies</h2>
 
-1. <a href="http://megiachest.sf.net"><strong>MediaChest/MediaUtil</strong></a> media format library
-2. <a href="http://webbee.sourceforge.net/"><strong>WebBee</strong></a> rapid web application building blocks
-3. <a href="http://tjws.sf.net"><strong>TJWS</strong></a>
-4. Java 8
+1. <a href="https://github.com/drogatkin/mediautil"><strong>MediaChest/MediaUtil</strong></a> media format library
+2. <a href="https://github.com/drogatkin/Webbee"><strong>WebBee</strong></a> rapid web application building blocks
+3. <a href="http://tjws.sf.net"><strong>TJWS</strong></a> at [GitHub](https://github.com/drogatkin/Webbee)
+4. Java 8 or later
 
 <h2>Releases</h2>
 
-Music - Barrel, latest release 1.4. You can download .war file from the Releases section.
+Music - Barrel, the latest release is 1.4. You can download .war file from the Releases section.
 
 It is also available as a paid app at <a target="_blank" href="https://play.google.com/store/apps/details?id=rogatkin.mobile.app.lialichka"><img src="https://github.com/drogatkin/music-barrel/blob/master/mockups/appgoogleplay.png?raw=true"></a>
