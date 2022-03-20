@@ -110,6 +110,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 			});
 			modelInsert("path", new MusicPath(p));
 			modelInsert("artwork", artworkData.size() == 0?null:artworkData.get(0));
+			modelInsert("artworks", artworkData);
 			//modelInsert("path", p);
 		} catch (IOException ioe) {
 			modelInsert("error", ioe);

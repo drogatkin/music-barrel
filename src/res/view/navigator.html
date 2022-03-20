@@ -1,17 +1,25 @@
 <script>
+  // TODO make it pure CSS
   var pl = [
             @model({'path':'@^element.getAttribute*(MediaPath)*@', 'title':'@~element.getAttribute*(Title)*@'},)@
-            ];
+            ]
+ // var artworks = [@artworks('@~element@',)@]
+  var artworks = [@artworks[0]('@~element@')@@artworks[1..](,'@~element@')@]
+  
   function focusSong(tr) {
-		tr.style.backgroundColor = '#def';
-		var cdiv = getPlayCtrlDiv(tr);
-		cdiv.style.display = '';
+		tr.style.backgroundColor = '#def'
+		var cdiv = getPlayCtrlDiv(tr)
+		cdiv.style.display = ''
   }
   function meanSong(tr) {
-		tr.style.backgroundColor = '';
-		var cdiv = getPlayCtrlDiv(tr);
-		cdiv.style.display = 'none';
+		tr.style.backgroundColor = ''
+		var cdiv = getPlayCtrlDiv(tr)
+		cdiv.style.display = 'none'
   }
+  function artwork(i) {
+	  document.body.style.backgroundImage = "url('@contextpath@@servletpath@/Artwork?path="+artworks[i]+"')"
+  }
+  
 </script>
 @%'insert/playctrl.html'@
 @%'insert/directories.html'@
@@ -46,6 +54,7 @@
  )@
 </table>
 @%'insert/playlist.html'@
+<section style="text-align:center;margin:2em;">@artworks( <span class="dot" onclick="artwork(@index@)"></span>)@</section>
 <script src="@contextpath@/js/ui.js" language="Javascript"></script>
 <script>
     var MediaControls

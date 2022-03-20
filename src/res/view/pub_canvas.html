@@ -20,6 +20,20 @@
                      background-size: cover;)@}
      form[name=wrench] > div {margin:0.5em;}
      div[id="grid_holder"] {margin:1.5em;}
+      .dot {
+        cursor: pointer;
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #999999;
+        border-radius: 50%;
+        display: inline-block;
+        transition: background-color 0.6s ease;
+      }
+       .active,
+      .dot:hover {
+        background-color: #111111;
+      }
   </style>
   <script src="@contextpath@/js/ajaxhelper.js" language="Javascript"></script>
   <script src="@contextpath@/js/common.js" language="Javascript"></script>
