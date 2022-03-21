@@ -99,7 +99,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 					log("Can't get a description from the media", e);
 				}
 			}
-			if (result.title == null || result.title.isBlank()) {
+			if (result.title == null || result.title.isEmpty()) {
 				result.title = MusicPath.getJustName(FileSystems.getDefault().getPath(result.path));
 			}
 		}
