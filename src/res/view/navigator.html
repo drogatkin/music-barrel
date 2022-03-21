@@ -3,8 +3,7 @@
   var pl = [
             @model({'path':'@^element.getAttribute*(MediaPath)*@', 'title':'@~element.getAttribute*(Title)*@'},)@
             ]
- // var artworks = [@artworks('@~element@',)@]
-  var artworks = [@artworks[0]('@~element@')@@artworks[1..](,'@~element@')@]
+  var artworks = [@artworks[0]('@:element@')@@artworks[1..](,'@:element@')@]
   
   function focusSong(tr) {
 		tr.style.backgroundColor = '#def'
