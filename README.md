@@ -31,6 +31,8 @@ Features set
 3. <a href="http://tjws.sf.net"><strong>TJWS</strong></a> at [GitHub](https://github.com/drogatkin/Webbee)
 4. Java 8 or later
 
+![Music Barrel look](https://raw.githubusercontent.com/drogatkin/music-barrel/master/doc/music-barrel-screenshot.png?raw=true)
+
 <h2>Releases</h2>
 
 Music - Barrel, the latest release is 1.4. You can download .war file from the Releases section.
