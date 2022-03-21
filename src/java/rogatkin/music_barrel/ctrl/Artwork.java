@@ -31,6 +31,7 @@ public class Artwork extends Stream<MBModel> {
 			return;
 		}
 		MediaFormat mf = MediaFormatFactory.createMediaFormat(p.toFile(), getAppModel().getCharEncoding(), true);
+		//frontController.log("media for path: "+p+" is "+mf);
 		if (mf != null && mf.isValid()) {
 			os.write(mf.getThumbnailData(null));
 		} else {

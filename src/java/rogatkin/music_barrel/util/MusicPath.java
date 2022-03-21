@@ -18,6 +18,15 @@ public class MusicPath implements Comparable {
 		return new MusicPath(path.getParent());
 	}
 	
+	public static String getJustName(Path path) {
+		String name = path.getFileName().toString();
+		int pos = name.lastIndexOf(".");
+		if (pos > 0 && pos < (name.length() - 1)) { // If '.' is not the first or last character.
+		    name = name.substring(0, pos);
+		}
+		return name;
+	}
+	
 	public Path getParentPath() {
 		return path.getParent();
 	}

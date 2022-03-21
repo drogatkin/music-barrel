@@ -112,7 +112,6 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 					playQueue.add(shuffle.remove(random.nextInt(shuffle.size())));
 				}
 			}
-			assureServiceThread();
 		} catch (Exception e) {
 			Log.l.error(getPreferredServiceName(), e);
 		}
@@ -134,7 +133,6 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			}
 		}
 		playQueue.add(path);
-		assureServiceThread();
 		return getServiceProvider();
 	}
 

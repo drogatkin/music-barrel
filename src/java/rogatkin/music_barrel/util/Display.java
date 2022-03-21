@@ -12,4 +12,7 @@ public class Display {
 		return textIfZeroOrLess(val, " ");
 	}
 
+	public static String textIfZeroOrLess(Object val) {
+		return textIfZeroOrLess(0);
+	}
 }

@@ -1,6 +1,7 @@
 package rogatkin.music_barrel.ctrl;
 
 import java.net.URLEncoder;
+import java.nio.file.FileSystems;
 
 import mediautil.gen.MediaFormat;
 import mediautil.gen.MediaInfo;
@@ -14,6 +15,7 @@ import photoorganizer.formats.MediaFormatFactory;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.Name;
 import rogatkin.music_barrel.model.mb_media_item;
+import rogatkin.music_barrel.util.MusicPath;
 
 import com.beegman.webbee.block.Grid;
 import com.beegman.webbee.block.Grid.CellModelExample;
@@ -97,7 +99,9 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 					log("Can't get a description from the media", e);
 				}
 			}
-
+			if (result.title == null || result.title.isBlank()) {
+				result.title = MusicPath.getJustName(FileSystems.getDefault().getPath(result.path));
+			}
 		}
 		return result;
 	}
