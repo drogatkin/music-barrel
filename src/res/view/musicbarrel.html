@@ -29,7 +29,7 @@
     	flashTit('@commonlabels.paused@')
     }
     function resumePlay() {
-    	playControl(1, function() {resumeProgress()})
+    	playControl(1, resumeProgress)
     }
     function nextPlay() { 
 		playControl(0,songFinished)

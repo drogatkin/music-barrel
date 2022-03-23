@@ -170,4 +170,9 @@ public class SmbPath implements Path {
 		return 0;
 	}
 
+	@Override
+	public String toString() {
+		return "Smb:";
+	}
+
 }

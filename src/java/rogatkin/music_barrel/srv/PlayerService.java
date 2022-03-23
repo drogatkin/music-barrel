@@ -138,10 +138,11 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 
 	public void removePlay(String path) {
 		if (playQueue.remove(path) == false) {
-			MediaFormat mf = getCurrentMedia();
+			MediaFormat mf = mediaPlayer == null?null:mediaPlayer.getMedia();
 			try {
 				if (mf != null && Files.isSameFile(mf.getFile().toPath(), Paths.get(path))) {
 					stop();
+					mediaPlayer = null;
 				}
 			} catch (IOException ioe) {
 
@@ -252,6 +253,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			if (mediaPlayer != null)
 				mediaPlayer.waitPlayEnds();
 		} while (true);
+		listPlayer = null;
 		//System.err.println("Exited===========play thread");
 	}
 }
