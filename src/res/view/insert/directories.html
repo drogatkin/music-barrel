@@ -9,7 +9,8 @@
 	  var preUrl = document.referrer
 	  if (preUrl) {
 		  preUrl = new URL(preUrl).search.substring(6)
-	  }	    
+		  preUrl = decodeURIComponent(preUrl)
+	  }	     
 	makeJSONAjaxCall('@contextpath@@servletpath@/Directories', 'path=@:path@',
 			true, function(json) {
 				var dr = getElement('directories_t')
@@ -23,7 +24,8 @@
 							+ encodeURIComponent(json[i].path)
 							+ '"><img border="0" src="@contextpath@/image/directory.png">'
 							+ (json[i].name==''?json[i].path:json[i].name) + '</a>'
-					if (preUrl && encodeURIComponent(json[i].path) == preUrl) {
+							//console.log('comp '+preUrl+' vs '+json[i].path)
+					if (preUrl && json[i].path == preUrl) {
 						scrollCc = cc
 					}
 				}
