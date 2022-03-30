@@ -8,7 +8,7 @@ import org.aldan3.annot.NotNull;
 import org.aldan3.model.Log;
 
 public class Artwork {
-	static PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.{jpg,jpeg,png}");
+	static PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**.{jpg,jpeg,png,JPG,JPEG,PNG}");
 	
 	Path image;
 	
