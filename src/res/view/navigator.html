@@ -1,7 +1,7 @@
 <script>
   // TODO make it pure CSS
   var pl = [
-            @model({'path':'@^element.getAttribute*(MediaPath)*@', 'title':'@~element.getAttribute*(Title)*@'},)@
+            @model({'path':'@^element.getAttribute*(MediaPath)*@', 'title':'@^element.getAttribute*(Title)*@'},)@
             ]
   var artworks = [@artworks[0]('@:element@')@@artworks[1..](,'@:element@')@]
   
@@ -115,7 +115,7 @@
 	}
 	
 	function playE(pi) {
-		document.title='@commonlabels.playing@ ' + pi.title + ' - @app_name@';
+		document.title='@commonlabels.playing@ ' + pi.title + ' - @app_name@';  // figure why decode htmlDecode() ???? a browser shuldnt inject JS code
 		makeJSONAjaxCall('Player', 'playPath=' + encodeURIComponent(pi.path),
 				true, function(res) {
 			if (res.error == 'closed') {
