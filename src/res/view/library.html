@@ -1,6 +1,6 @@
 <script>
    var lib = [
-              @model({'artist':'@~element.get*(PERFORMER)*@','title':'@~element.get*(TITLE)*@',
+              @model({'artist':'@~element.get*(PERFORMER)*@','title':'@^element.get*(TITLE)*@',
             	  'genre':'@~element.get*(GENRE)*@', 'album':'@~element.get*(ALBUM)*@','path':'@^element.get*(PATH)*@','play_count':@^element.get*(PLAY_COUNT)*@,'year':@^element.get*(YEAR)*@},)@
               ];
    var current = -1;
@@ -116,7 +116,7 @@
 	function stopPlay() {
 		startProgress(0); // think to hide progress control in control
 		playControl(4);
-		top.document.title = '@commonlabels.stopped@';
+		top.document.title = '@commonlabels.sym_stop@';
 	}
 	
 	function activateRow(e) {
