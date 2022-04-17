@@ -3,24 +3,28 @@ package rogatkin.music_barrel.srv;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.PropertyResourceBundle;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import mediautil.gen.MediaFormat;
+
 import org.aldan3.model.DataObject;
+import org.aldan3.model.Log;
 import org.aldan3.model.ServiceProvider;
-import org.w3c.dom.events.UIEvent;
 
 import com.beegman.webbee.util.AsyncUpdater;
+import com.beegman.webbee.model.UIEvent;
 
-import mediautil.gen.MediaFormat;
 import photoorganizer.formats.MediaFormatFactory;
 import photoorganizer.media.MediaPlayer;
 import photoorganizer.media.MediaPlayer.ProgressListener;
+import photoorganizer.media.MediaPlayer.Status;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.PlayMode;
 
