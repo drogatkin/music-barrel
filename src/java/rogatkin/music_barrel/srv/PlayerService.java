@@ -3,27 +3,24 @@ package rogatkin.music_barrel.srv;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.PropertyResourceBundle;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import mediautil.gen.MediaFormat;
-
 import org.aldan3.model.DataObject;
-import org.aldan3.model.Log;
 import org.aldan3.model.ServiceProvider;
+import org.w3c.dom.events.UIEvent;
 
 import com.beegman.webbee.util.AsyncUpdater;
-import com.beegman.webbee.model.UIEvent;
 
+import mediautil.gen.MediaFormat;
 import photoorganizer.formats.MediaFormatFactory;
 import photoorganizer.media.MediaPlayer;
 import photoorganizer.media.MediaPlayer.ProgressListener;
-import photoorganizer.media.MediaPlayer.Status;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.PlayMode;
 
@@ -187,6 +184,21 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			return mediaPlayer.getStatus();
 		return Status.closed;
 	}
+	
+	protected String stringStatus(Status st) {
+		if (st == null)
+			return "";
+		PropertyResourceBundle rb = appModel.getTextResource("commonlabels", this);
+		switch(st) {
+		case stopped:
+			return rb.getString("sym_stop");
+		case playing:
+			return rb.getString("sym_play");
+		case paused:
+			return rb.getString("sym_pause");
+		}
+		return "";
+	}
 
 	public long getPlaybackPosition() {
 		//if (mediaPlayer != null)
@@ -214,7 +226,7 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		AsyncUpdater updater = (AsyncUpdater) appModel.getService(AsyncUpdater.NAME);
 		UIEvent uie = new UIEvent();
 		uie.eventHandler = "songFinished";
-		uie.parameters = new Object[] { getStatus() }; // TODO convert status to sym_xxxx
+		uie.parameters = new Object[] { stringStatus(getStatus()) }; // TODO convert status to sym_xxxx
 		updater.addEvent(appModel.getAppName(), uie);
 		//System.err.printf("event %s dropped for %s%n", uie, mediaPlayer);
 	}
