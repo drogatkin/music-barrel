@@ -1,9 +1,9 @@
-<h1>Music-Barrel</h1>
+# Music-Barrel
 
 
-<h2>Web interfaced music juke box for Raspberry Pi</h2>
+## A web interfaced jukebox for Raspberry Pi
 
-Features set
+### Features set
 
 1. Auto scan local and remote storage for music file and store them in database with
   separated type, quality, year, genre, album, artist, composer, song, duration, tags,
@@ -24,7 +24,7 @@ Features set
 15. Adding new songs by uploading and other ways
 16. Collaborative editing dynamic party playlist (no one software provides the feature yet)
 
-<h2>Technologies</h2>
+### Technologies
 
 1. <a href="https://github.com/drogatkin/mediautil"><strong>MediaChest/MediaUtil</strong></a> media format library
 2. <a href="https://github.com/drogatkin/Webbee"><strong>WebBee</strong></a> rapid web application building blocks
@@ -33,7 +33,7 @@ Features set
 
 ![Music Barrel look](https://raw.githubusercontent.com/drogatkin/music-barrel/master/doc/music-barrel-screenshot.png?raw=true)
 
-<h2>Releases</h2>
+### Releases
 
 Music - Barrel, the latest release is 1.4. You can download .war file from the Releases section.
 
