@@ -24,7 +24,7 @@ import org.aldan3.data.util.FieldConverter;
 @DataRelation
 public class mb_setting extends SimpleCoordinator<MBModel> {
 	public enum output_type {
-		ANALOG, HDMI, SPDIF, AUTO
+		ANALOG, HDMI, SPDIF, AUTO, USB
 	};
 
 	public mb_setting(MBModel arg0) {

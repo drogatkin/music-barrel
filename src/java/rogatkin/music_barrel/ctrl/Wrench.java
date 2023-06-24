@@ -6,6 +6,7 @@ import rogatkin.music_barrel.model.mb_setting;
 import com.beegman.webbee.block.Form;
 
 public class Wrench extends Form<mb_setting, MBModel> {
+	
 	protected mb_setting getFormModel() {
 		return getAppModel().getSettings();
 	}
@@ -19,17 +20,7 @@ public class Wrench extends Form<mb_setting, MBModel> {
 			}
 			getAppModel().saveSettings();
 			if (model.output_type != null)
-				switch (model.output_type) {
-				case ANALOG:
-					setOutType(1);
-					break;
-				case HDMI:
-					setOutType(2);
-					break;
-				case AUTO:
-					setOutType(0);
-					break;
-				}
+				setOutType(model.output_type);
 			else
 				return getResourceString("error_no_audio", "Audio output type is required");
 			return "";
@@ -50,14 +41,30 @@ public class Wrench extends Form<mb_setting, MBModel> {
 		return model;
 	}
 
-	void setOutType(int type) throws IOException {
-		log("Setting out %d", null, type);
-		// TODO check if not root, then add sudo
-		Process p = Runtime.getRuntime().exec("amixer cset numid=3 " + type);
-		try {
-			p.waitFor();
-		} catch (Exception e) {
-
+	void setOutType(mb_setting.output_type type) throws IOException {
+		log("Setting out %s", null, type.toString());
+		Process p = null;
+		switch (type) {
+		case AUTO:
+			// p = Runtime.getRuntime().exec("amixer cset numid=3 " + type);
+			break;
+		case ANALOG:
+			// p = Runtime.getRuntime().exec("amixer cset numid=3 " + type);
+			break;
+		case HDMI:
+			// p = Runtime.getRuntime().exec("amixer cset numid=3 " + type);
+			break;
+		case USB:
+		case SPDIF:
+			// p = Runtime.getRuntime().exec("amixer cset numid=3 " + type);
+			break;
 		}
+		 
+		if (p != null)
+			try {
+				p.waitFor();
+			} catch (Exception e) {
+				log("Error: %s", e, e.toString());
+			}
 	}
 }
