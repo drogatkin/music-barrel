@@ -9,6 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+
+import org.aldan3.servlet.Constant;
+
 import java.util.ArrayList;
 import java.io.IOException;
 import java.net.URI;
@@ -86,7 +89,8 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 							    }
 							}
 						} catch(Exception e) {
-							log("%s vs %s", e, o1, o2);
+							if (isDebug())
+								log("%s vs %s", e, o1, o2);
 						}
 					}
 					
@@ -96,13 +100,15 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 							if (result != 0)
 								return result;
 						} catch(Exception e) {
-							log("%s vs %s", e, o1, o2);
+							if (isDebug())
+								log("%s vs %s", e, o1, o2);
 						}
 					if (result == 0)
 						try {
 							return ((Path)o1.getAttribute(MEDIA_PATH)).getFileName().compareTo(((Path)o2.getAttribute(MEDIA_PATH)).getFileName());
 						} catch (Exception e) {
-							log("%s vs %s", e, o1, o2);
+							if (isDebug())
+								log("%s vs %s", e, o1, o2);
 						}
 					return result;
 					
@@ -121,6 +127,10 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	@Override
 	protected String getUIID() {
 		return getAppModel().getAppName();
+	}
+	
+	boolean isDebug() {
+		return "1".equals(getProperties().getProperty(Constant.Property.DEBUG));
 	}
 
 	static class MediaInfoProxyHandler implements InvocationHandler {
