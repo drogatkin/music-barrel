@@ -2,6 +2,8 @@
 
 
 ## A web interfaced jukebox for Raspberry Pi
+This is a web front end to MediaChest (aka Photoorganizer). 
+Therefore, if you notice any bug in it, it can be a problem of MediaChest and you need to updated its jar.
 
 ### Features set
 
@@ -16,7 +18,7 @@
 7. Play playlist in modes sequential, random, repeat
 8. Edit song tags with corresponding DB record update
 9. Support formats MP3, WAV, WV(ISO), FLAC, APE, AAC, DSD, OGG in quality up to 32bits/192,000 (when applied) and DSDx64, DSDx128
-10. Break down album FLAC/APE/WV upon CUE sheet
+10. Break down album FLAC/APE/WV/DSF/DFF upon CUE sheet
 11. Support search back, forward, skip in individual or list playback
 12. Displaying playback progress
 13. Show song/album artwork
