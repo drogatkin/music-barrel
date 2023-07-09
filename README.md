@@ -28,7 +28,7 @@ Therefore, if you notice any bug in it, it can be a problem of MediaChest and yo
 
 ### Technologies
 
-1. <a href="https://github.com/drogatkin/mediautil"><strong>MediaChest/MediaUtil</strong></a> media format library
+1. [MediaChest](https://github.com/drogatkin/MediaChest)/[MediaUtil](https://github.com/drogatkin/mediautil) media format library
 2. <a href="https://github.com/drogatkin/Webbee"><strong>WebBee</strong></a> rapid web application building blocks
 3. <a href="http://tjws.sf.net"><strong>TJWS</strong></a> at [GitHub](https://github.com/drogatkin/Webbee)
 4. Java 8 or later
