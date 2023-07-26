@@ -179,7 +179,19 @@
       </function>
     </block>
   </target>
+  
+  <target name="smbtest" dir="PROJECT_HOME">
+      <dependency target="jar"/>
+      <dependency value="true"/>
+         <echo>Testing samba shares...</echo>
+         
+	    <task name="main" code="rogatkin.smb.Smb" path="class path">
+	       <parameter variable="~#args#~"/>
+	    </task>
 
+  </target>
+  
+  
   <target name="deploy" dir="PROJECT_HOME">
       <dependency target="war"/>
       <dependency>
