@@ -1,48 +1,75 @@
 package rogatkin.music_barrel.util;
 
+import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import jcifs.smb.SmbFile;
+import rogatkin.music_barrel.ctrl.Directories;
 
 public class MusicPath implements Comparable {
 	Path path;
+	SmbFile smbPath; // it should be enum path or string
+
 	public MusicPath(Path p) {
 		path = p;
 	}
+
+	public MusicPath(String p) throws IOException {
+		if (p.startsWith(Directories.SAMBA_PROT))
+			smbPath = new SmbFile(p);
+		else
+			path = Paths.get(p);
+	}
+
+	public MusicPath(SmbFile p) {
+		smbPath = p;
+	}
+
 	public String getFileName() {
-		if (path.getFileName() == null)
+		if (smbPath != null) {
+			String name = smbPath.getName();
+			System.out.printf("name for  %s is %s%n", smbPath, name);
+			if (name.equals(Directories.SAMBA_PROT))
+				return null;
+			return name;
+		} else if (path.getFileName() == null)
 			return null;
 		return path.getFileName().toString();
 	}
 
-	
 	public MusicPath getParent() {
 		return new MusicPath(path.getParent());
 	}
-	
+
 	public static String getJustName(Path path) {
 		String name = path.getFileName().toString();
 		int pos = name.lastIndexOf(".");
 		if (pos > 0 && pos < (name.length() - 1)) { // If '.' is not the first or last character.
-		    name = name.substring(0, pos);
+			name = name.substring(0, pos);
 		}
 		return name;
 	}
-	
+
 	public Path getParentPath() {
 		return path.getParent();
 	}
-	
+
 	@Override
 	public String toString() {
-		if (path == null)
+		if (smbPath != null) {
+			System.out.printf("samba %s%n", smbPath);
+			return Directories.SAMBA_PREF + smbPath.toString().substring(Directories.SAMBA_PROT.length());
+		} else if (path == null)
 			return "/";
 		return path.toString();
-		
+
 	}
-	
+
 	@Override
 	public int compareTo(Object path2) {
 		if (path2 instanceof MusicPath)
-			return path.compareTo(((MusicPath)path2).path);
+			return path.compareTo(((MusicPath) path2).path);
 		return 0;
 	}
 }

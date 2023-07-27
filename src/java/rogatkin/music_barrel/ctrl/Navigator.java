@@ -28,6 +28,9 @@ import rogatkin.music_barrel.util.MusicPath;
 import rogatkin.music_barrel.model.Artwork;
 
 import com.beegman.webbee.block.Tabular;
+
+import jcifs.smb.SmbFile;
+
 import java.util.Comparator;
 
 public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
@@ -40,9 +43,24 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 		List<Artwork> artworkData = new ArrayList<>();
 		try {
 			String ps = getParameterValue("path", getAppModel().getState(getClass().getName(), ""), 0);
+			
 			if (ps.isEmpty()) 
 				return modelData;
-			
+			if (ps.startsWith(Directories.SAMBA_PREF)) {
+				try {
+					SmbFile dir = new SmbFile(Directories.SAMBA_PROT + ps.substring(Directories.SAMBA_PREF.length()));
+					modelInsert("path", new MusicPath(dir));
+					SmbFile[] files = dir.listFiles();
+					if (files != null)
+						for (SmbFile smb : files) {
+							
+						}
+				} catch (Exception bad) {
+					log("Can't process samba path %s", bad, ps);
+				}
+				
+				return modelData;
+			}
 			Path p = Paths.get(ps);
 			if (Files.isDirectory(p) == false && p.getParent() != null)
 				p = p.getParent();
