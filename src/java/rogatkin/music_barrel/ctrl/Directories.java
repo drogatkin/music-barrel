@@ -11,7 +11,9 @@ import java.util.Collection;
 import java.util.Collections;
 
 import rogatkin.music_barrel.model.MBModel;
+import rogatkin.music_barrel.model.mb_accnt;
 import rogatkin.music_barrel.util.MusicPath;
+import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
 
 import com.beegman.webbee.block.Gadget;
@@ -29,16 +31,31 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 		Path cp = null;
 		if (ps.startsWith(SAMBA_PREF)) {
 			try {
-				SmbFile dir = new SmbFile(SAMBA_PROT + ps.substring(SAMBA_PREF.length()));
+				String smbPath = SAMBA_PROT + ps.substring(SAMBA_PREF.length());
+				NtlmPasswordAuthentication auth = null;
+				mb_accnt accnt = getAppModel().getShareAccnt(smbPath);
+				if (accnt != null) {
+					auth = new NtlmPasswordAuthentication("workgroup", accnt.name, accnt.password);
+				}
+				SmbFile dir = new SmbFile(smbPath, auth);
 				SmbFile[] files = dir.listFiles();
 				if (files != null)
 					for (SmbFile smb : files) {
 						if (smb.isDirectory())
 							result.add(new MusicPath(smb));
 					}
+				ps = dir.getParent();
+				if (SAMBA_PROT.equals(ps)) {
+					for (Path p : fs.getRootDirectories()) {
+						result.add(new MusicPath(p));
+					}
+				} else
+					result.add(new MusicPath(ps));
+				return result;
 			} catch (Exception bad) {
 				log("Can't process samba path %s", bad, ps);
 			}
+			 
 		} else {
 			if (ps.isEmpty() == false) {
 
@@ -54,18 +71,19 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 				Collections.sort(result);
 				cp = cp.getParent();
 			}
-			if (cp == null) {
-				for (Path p : fs.getRootDirectories()) {
-					result.add(new MusicPath(p));
-				}
-				try {
-					result.add(new MusicPath(SAMBA_PROT));
-				} catch (Exception e) {
-					log("Can't add samba path  %s", e, SAMBA_PROT);
-				}
-			} else
-				result.add(new MusicPath(cp));
+			
 		}
+		if (cp == null) {
+			for (Path p : fs.getRootDirectories()) {
+				result.add(new MusicPath(p));
+			}
+			try {
+				result.add(new MusicPath(SAMBA_PROT));
+			} catch (Exception e) {
+				log("Can't add samba path  %s", e, SAMBA_PROT);
+			}
+		} else
+			result.add(new MusicPath(cp));
 		return result;
 	}
 }

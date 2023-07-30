@@ -3,6 +3,7 @@ package rogatkin.music_barrel.model;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -30,6 +31,8 @@ public class MBModel extends AppModel implements Name {
 
 	private mb_setting settings;
 	private HashMap<String, Object> preserve;
+	
+	private ArrayList<mb_accnt> accounts;
 
 	@Override
 	public String getAppName() {
@@ -91,6 +94,8 @@ public class MBModel extends AppModel implements Name {
 		register(new PlayerService(this));
 		if (settings.perform_scan)
 			register(new MediaCrawler(this));
+		
+		accounts = new ArrayList<>(6);
 	}
 
 	@Override
@@ -118,6 +123,33 @@ public class MBModel extends AppModel implements Name {
 
 	public mb_setting getSettings() {
 		return settings;
+	}
+	
+	public mb_accnt getShareAccnt(String path) {
+		for (mb_accnt a: accounts) {
+			if (path.startsWith(a.share_path))
+				return a;
+		}
+		return null;
+	}
+	
+	public void addAccnt(mb_accnt accnt) {
+		for (mb_accnt a: accounts) {
+			if (a.matches(accnt)) {
+				a.password = accnt.password;
+				return;
+			}
+		}
+		accounts.add(accnt);
+	}
+	
+	public void updateAccnt(mb_accnt accnt) {
+		for (mb_accnt a: accounts) {
+			if (a.matches(accnt)) {
+				a.password = accnt.password;
+				return;
+			}
+		}
 	}
 	
 	synchronized public <T> T preserveSate(T state, String name) {

@@ -26,6 +26,7 @@ import mediautil.gen.MediaInfo;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.util.MusicPath;
 import rogatkin.music_barrel.model.Artwork;
+import rogatkin.music_barrel.model.mb_accnt;
 
 import com.beegman.webbee.block.Tabular;
 
@@ -145,6 +146,17 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	@Override
 	protected String getUIID() {
 		return getAppModel().getAppName();
+	}
+	
+	public String processNTLMCall() {
+		mb_accnt accnt = new mb_accnt(getAppModel());
+		accnt.name = getParameterValue("user", null, 0);
+		accnt.password = getParameterValue("password", null, 0);
+		accnt.share_path = getParameterValue("path", null, 0);
+		accnt.share_path = Directories.SAMBA_PROT + accnt.share_path.substring(Directories.SAMBA_PREF.length());
+		getAppModel().addAccnt(accnt);
+		System.out.printf("Add: %s%n", accnt);
+		return "Ok";
 	}
 	
 	boolean isDebug() {

@@ -21,6 +21,14 @@
   
 </script>
 @%'insert/playctrl.html'@
+
+<div>
+<form>
+<input type="text" placeholder="username" name="username"/>
+<input type="password" placeholder="password" name="password"/>
+<button type="button" onclick="submitCred()">use</button>
+</form>
+</div>
 @%'insert/directories.html'@
 <table style="width:84%;margin:auto;" class="bg_theme">
   <tr class="bg_hd_theme">
@@ -89,6 +97,22 @@
 					return tr.cells[i].childNodes[j].firstChild;
 		}
 		return null;
+	}
+	function submitCred() {
+	     const form = document.forms[0]
+	     const name = form.querySelector('input[name="username"]').value
+	     const password = form.querySelector('input[name="password"]').value
+	     const path = '@^path@'
+	     makeGenericAjaxCall('Navigator/ajax/NTLM', 'user=' + encodeURIComponent(name) + '&password=' + encodeURIComponent(password) +
+	            '&path=' + encodeURIComponent(path),
+				true, function(res) { 
+			if(res == 'Ok') {
+				
+			}
+			
+		}, function(err) {
+
+		})
 	}
 </script>
 <script>
