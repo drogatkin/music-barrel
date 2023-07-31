@@ -1,5 +1,9 @@
 package rogatkin.music_barrel.model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +21,7 @@ import org.aldan3.util.DataConv;
 
 import photoorganizer.formats.MP3;
 import photoorganizer.formats.MediaFormatFactory;
+import photoorganizer.formats.InputStreamFactory;
 
 import mediautil.gen.MediaFormat;
 import mediautil.gen.MediaInfo;
@@ -24,14 +29,17 @@ import mediautil.gen.MediaInfo;
 import rogatkin.music_barrel.ctrl.Navigator;
 import rogatkin.music_barrel.srv.MediaCrawler;
 import rogatkin.music_barrel.srv.PlayerService;
+import rogatkin.music_barrel.util.RemoteFile;
 
 import com.beegman.webbee.model.AppModel;
+
+import jcifs.smb.SmbFileInputStream;
 
 public class MBModel extends AppModel implements Name {
 
 	private mb_setting settings;
 	private HashMap<String, Object> preserve;
-	
+
 	private ArrayList<mb_accnt> accounts;
 
 	@Override
@@ -49,7 +57,7 @@ public class MBModel extends AppModel implements Name {
 	protected void deactivateServices() {
 		PlayerService ps = (PlayerService) unregister(PlayerService.NAME);
 		ps.terminate();
-		
+
 		MediaCrawler mc = (MediaCrawler) unregister(MediaCrawler.NAME);
 		if (mc != null)
 			mc.shutdown();
@@ -63,7 +71,8 @@ public class MBModel extends AppModel implements Name {
 	}
 
 	public void saveSettings() throws ProcessException {
-		//System.err.printf("--->Object: %s%n", new DODelegator(settings, null, "", "id").get("output_type").getClass());
+		// System.err.printf("--->Object: %s%n", new DODelegator(settings, null, "",
+		// "id").get("output_type").getClass());
 		getDOService().addObject(new DODelegator(settings, null, "id", ""), null,
 				new DODelegator(settings, null, "", "id"));
 	}
@@ -91,10 +100,11 @@ public class MBModel extends AppModel implements Name {
 		} catch (ProcessException e) {
 			Log.l.error("Load settings", e);
 		}
+		MediaFormatFactory.setInputStreamFactory(new StreamFactoryWithRemote());
 		register(new PlayerService(this));
 		if (settings.perform_scan)
 			register(new MediaCrawler(this));
-		
+
 		accounts = new ArrayList<>(6);
 	}
 
@@ -105,6 +115,7 @@ public class MBModel extends AppModel implements Name {
 			protected int getInsertUpdateVariant() {
 				return 2;
 			}
+
 			@Override
 			protected boolean isCreateIndex() {
 				return true;
@@ -124,17 +135,17 @@ public class MBModel extends AppModel implements Name {
 	public mb_setting getSettings() {
 		return settings;
 	}
-	
+
 	public mb_accnt getShareAccnt(String path) {
-		for (mb_accnt a: accounts) {
+		for (mb_accnt a : accounts) {
 			if (path.startsWith(a.share_path))
 				return a;
 		}
 		return null;
 	}
-	
+
 	public void addAccnt(mb_accnt accnt) {
-		for (mb_accnt a: accounts) {
+		for (mb_accnt a : accounts) {
 			if (a.matches(accnt)) {
 				a.password = accnt.password;
 				return;
@@ -142,16 +153,16 @@ public class MBModel extends AppModel implements Name {
 		}
 		accounts.add(accnt);
 	}
-	
+
 	public void updateAccnt(mb_accnt accnt) {
-		for (mb_accnt a: accounts) {
+		for (mb_accnt a : accounts) {
 			if (a.matches(accnt)) {
 				a.password = accnt.password;
 				return;
 			}
 		}
 	}
-	
+
 	synchronized public <T> T preserveSate(T state, String name) {
 		T oldState = null;
 		// TODO generally can be stored on session level but since no sessions
@@ -161,11 +172,11 @@ public class MBModel extends AppModel implements Name {
 		preserve.put(name, state);
 		return oldState;
 	}
-	
-	synchronized public <T>  T  getState(String name, T defVal) {
-		if (preserve.containsKey(name)) 
-		return (T) preserve.get(name);
-		return defVal;	
+
+	synchronized public <T> T getState(String name, T defVal) {
+		if (preserve.containsKey(name))
+			return (T) preserve.get(name);
+		return defVal;
 	}
 
 	public void addToPlayList(mb_media_item item, String listName) throws MBError {
@@ -193,9 +204,9 @@ public class MBModel extends AppModel implements Name {
 				dos.addObject(new DODelegator(pl, null, "", "id"), "id");
 			}
 			item = addToLibrary(mf);
-			//log("Object %s for path %s", null, oo, li.path);
+			// log("Object %s for path %s", null, oo, li.path);
 			if (item.id <= 0) {
-				throw new MBError("Can't add item "+mf +" to library");
+				throw new MBError("Can't add item " + mf + " to library");
 			}
 			mb_play_list_map plm = new mb_play_list_map(this);
 			plm.item_id = item.id;
@@ -204,7 +215,8 @@ public class MBModel extends AppModel implements Name {
 			if (getSettings().allow_duplicates)
 				dos.addObject(new DODelegator(plm));
 			else
-				dos.addObject(new DODelegator(plm, null, "item_id,list_id", "id"), null, new DODelegator(plm, null, "", "item_id,list_id"));
+				dos.addObject(new DODelegator(plm, null, "item_id,list_id", "id"), null,
+						new DODelegator(plm, null, "", "item_id,list_id"));
 		} catch (Exception e) {
 			throw new MBError("Add item to list error", e);
 		}
@@ -219,37 +231,40 @@ public class MBModel extends AppModel implements Name {
 		DODelegator dod;
 		try {
 			if (set.title != null && set.title.isEmpty() == false) {
-				getDOService().addObject(dod = new DODelegator(set, null, "", "id,title,subset_num"), "id", new DODelegator(set, null, "id", "title,subset_num"));
+				getDOService().addObject(dod = new DODelegator(set, null, "", "id,title,subset_num"), "id",
+						new DODelegator(set, null, "id", "title,subset_num"));
 				if (set.id == 0) {
-					getDOService().getObjectLike(dod = new DODelegator(set, null, "num_subsets,studio,year", "title,subset_num") {
-						@Override
-						protected String normilizeFieldName(String fieldName) {
-							return fieldName.toUpperCase();
-						}			
-					});
+					getDOService().getObjectLike(
+							dod = new DODelegator(set, null, "num_subsets,studio,year", "title,subset_num") {
+								@Override
+								protected String normilizeFieldName(String fieldName) {
+									return fieldName.toUpperCase();
+								}
+							});
 				}
 				item.set_id = set.id;
 			}
 		} catch (ProcessException e) {
 			throw new MBError("Add set to library error: " + mf, e);
-		};
+		}
+		;
 		try {
-			getDOService().addObject(new DODelegator(item, null, "path", "id"), "id", dod = new DODelegator(item, null, "", "path") {
-				@Override
-				protected String normilizeFieldName(String fieldName) {
-					return fieldName.toUpperCase();
-				}
-			});
+			getDOService().addObject(new DODelegator(item, null, "path", "id"), "id",
+					dod = new DODelegator(item, null, "", "path") {
+						@Override
+						protected String normilizeFieldName(String fieldName) {
+							return fieldName.toUpperCase();
+						}
+					});
 			if (item.id <= 0) {
 				if (getDOService().getObjectLike(dod) == null)
-					throw new MBError("Can't resolve item at "+item.path); 
+					throw new MBError("Can't resolve item at " + item.path);
 			}
 		} catch (Exception e) {
 			throw new MBError("Add item to library error: " + mf, e);
 		}
 		return item;
 	}
-	
 
 	public static void fillMediaModel(mb_media_item mi, MediaInfo info) {
 		fillMediaModel(mi, null, info);
@@ -292,8 +307,16 @@ public class MBModel extends AppModel implements Name {
 			try {
 				return Integer.valueOf((String) o).intValue();
 			} catch (NumberFormatException e) {
-		
+
 			}
 		return 0;
+	}
+
+	public static class StreamFactoryWithRemote extends InputStreamFactory {
+		public InputStream getInputStream(File file) throws IOException {
+			if (file instanceof RemoteFile)
+				return new SmbFileInputStream(((RemoteFile) file).getSmbFile());
+			return new FileInputStream(file);
+		}
 	}
 }

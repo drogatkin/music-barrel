@@ -13,6 +13,7 @@ import java.util.List;
 import org.aldan3.servlet.Constant;
 
 import java.util.ArrayList;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,11 +26,13 @@ import mediautil.gen.MediaInfo;
 
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.util.MusicPath;
+import rogatkin.music_barrel.util.RemoteFile;
 import rogatkin.music_barrel.model.Artwork;
 import rogatkin.music_barrel.model.mb_accnt;
 
 import com.beegman.webbee.block.Tabular;
 
+import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
 
 import java.util.Comparator;
@@ -42,6 +45,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	protected List<MediaInfo> getTabularData(long pos, int size) {
 		List<MediaInfo> modelData = new ArrayList<>();
 		List<Artwork> artworkData = new ArrayList<>();
+		String enc = getAppModel().getCharEncoding();
 		try {
 			String ps = getParameterValue("path", getAppModel().getState(getClass().getName(), ""), 0);
 			
@@ -49,12 +53,21 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 				return modelData;
 			if (ps.startsWith(Directories.SAMBA_PREF)) {
 				try {
-					SmbFile dir = new SmbFile(Directories.SAMBA_PROT + ps.substring(Directories.SAMBA_PREF.length()));
+					String smbPath = Directories.SAMBA_PROT + ps.substring(Directories.SAMBA_PREF.length());
+					NtlmPasswordAuthentication auth = null;
+					mb_accnt accnt = getAppModel().getShareAccnt(smbPath);
+					if (accnt != null) {
+						auth = new NtlmPasswordAuthentication("workgroup", accnt.name, accnt.password);
+					}
+					SmbFile dir = new SmbFile(smbPath, auth);
 					modelInsert("path", new MusicPath(dir));
-					SmbFile[] files = dir.listFiles();
+					RemoteFile file = new RemoteFile(dir);
+					File[] files = file.listFiles();
 					if (files != null)
-						for (SmbFile smb : files) {
-							
+						for (File smb : files) {
+							MediaFormat mf = MediaFormatFactory.createMediaFormat(smb, enc, true);
+							if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0)  // and can play music
+								modelData.add(mf.getMediaInfo());	
 						}
 				} catch (Exception bad) {
 					log("Can't process samba path %s", bad, ps);
@@ -67,7 +80,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 				p = p.getParent();
 			getAppModel().preserveSate(p.toString(), getClass().getName());
 			DirectoryStream<Path> stream = Files.newDirectoryStream(p);
-			String enc = getAppModel().getCharEncoding();
+			
 			//log("use encoding %s", null, enc);
 			//System.out.printf("use encoding %s\n", enc);
 			for (Path entry : stream) {

@@ -109,11 +109,18 @@
 			if(res == 'Ok') {
 				
 			}
-			
+			clearCred()
 		}, function(err) {
-
+             clearCred()
 		})
 	}
+	
+	function clearCred() {
+	    const form = document.forms[0]
+	    form.querySelector('input[name="password"]').value = ''
+	    form.querySelector('input[name="username"]').value = ''
+	}
+	    
 </script>
 <script>
    var cp = -1;
