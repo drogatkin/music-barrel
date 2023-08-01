@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import jcifs.smb.SmbFile;
-import rogatkin.music_barrel.ctrl.Directories;
 
 public class MusicPath implements Comparable {
 	Path path;
@@ -16,7 +15,7 @@ public class MusicPath implements Comparable {
 	}
 
 	public MusicPath(String p) throws IOException {
-		if (p.startsWith(Directories.SAMBA_PROT))
+		if (p.startsWith(RemoteFile.SAMBA_PROT))
 			smbPath = new SmbFile(p);
 		else
 			path = Paths.get(p);
@@ -30,7 +29,7 @@ public class MusicPath implements Comparable {
 		if (smbPath != null) {
 			String name = smbPath.getName();
 			System.out.printf("name for  %s is %s%n", smbPath, name);
-			if (name.equals(Directories.SAMBA_PROT))
+			if (name.equals(RemoteFile.SAMBA_PROT))
 				return null;
 			return name;
 		} else if (path.getFileName() == null)
@@ -59,7 +58,7 @@ public class MusicPath implements Comparable {
 	public String toString() {
 		if (smbPath != null) {
 			System.out.printf("samba %s%n", smbPath);
-			return Directories.SAMBA_PREF + smbPath.toString().substring(Directories.SAMBA_PROT.length());
+			return RemoteFile.SAMBA_PREF + smbPath.toString().substring(RemoteFile.SAMBA_PROT.length());
 		} else if (path == null)
 			return "/";
 		return path.toString();

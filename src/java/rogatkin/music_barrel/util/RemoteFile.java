@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbAuthException;
@@ -15,6 +17,9 @@ import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFilenameFilter;
 
 public class RemoteFile extends File {
+        public static final String SAMBA_PREF = "smb::";
+	public static final String SAMBA_PROT = "smb://";
+
 	SmbFile principal;
 
 	SmbException lastError;
@@ -298,6 +303,10 @@ public class RemoteFile extends File {
 
 	public SmbFile getSmbFile() {
 		return principal;
+	}
+	
+	public Path asPath() {
+		return Paths.get(SAMBA_PREF + getPath().substring(SAMBA_PROT.length()));
 	}
 	
 	private void loge(String scope, String message, Exception e, Object ... args) {

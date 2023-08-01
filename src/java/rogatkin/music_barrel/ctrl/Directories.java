@@ -13,14 +13,14 @@ import java.util.Collections;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.mb_accnt;
 import rogatkin.music_barrel.util.MusicPath;
+import rogatkin.music_barrel.util.RemoteFile;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
 
 import com.beegman.webbee.block.Gadget;
 
 public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
-	public static final String SAMBA_PREF = "smb::";
-	public static final String SAMBA_PROT = "smb://";
+	
 
 	@Override
 	protected Collection<MusicPath> getGadgetData() {
@@ -29,9 +29,9 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 		String ps = getParameterValue("path", "", 0);
 		System.out.printf("path %S%n",  ps);
 		Path cp = null;
-		if (ps.startsWith(SAMBA_PREF)) {
+		if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
 			try {
-				String smbPath = SAMBA_PROT + ps.substring(SAMBA_PREF.length());
+				String smbPath = RemoteFile.SAMBA_PROT + ps.substring(RemoteFile.SAMBA_PREF.length());
 				NtlmPasswordAuthentication auth = null;
 				mb_accnt accnt = getAppModel().getShareAccnt(smbPath);
 				if (accnt != null) {
@@ -45,7 +45,7 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 							result.add(new MusicPath(smb));
 					}
 				ps = dir.getParent();
-				if (SAMBA_PROT.equals(ps)) {
+				if (RemoteFile.SAMBA_PROT.equals(ps)) {
 					for (Path p : fs.getRootDirectories()) {
 						result.add(new MusicPath(p));
 					}
@@ -78,9 +78,9 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 				result.add(new MusicPath(p));
 			}
 			try {
-				result.add(new MusicPath(SAMBA_PROT));
+				result.add(new MusicPath(RemoteFile.SAMBA_PROT));
 			} catch (Exception e) {
-				log("Can't add samba path  %s", e, SAMBA_PROT);
+				log("Can't add samba path  %s", e, RemoteFile.SAMBA_PROT);
 			}
 		} else
 			result.add(new MusicPath(cp));

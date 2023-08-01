@@ -51,9 +51,9 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 			
 			if (ps.isEmpty()) 
 				return modelData;
-			if (ps.startsWith(Directories.SAMBA_PREF)) {
+			if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
 				try {
-					String smbPath = Directories.SAMBA_PROT + ps.substring(Directories.SAMBA_PREF.length());
+					String smbPath = RemoteFile.SAMBA_PROT + ps.substring(RemoteFile.SAMBA_PREF.length());
 					NtlmPasswordAuthentication auth = null;
 					mb_accnt accnt = getAppModel().getShareAccnt(smbPath);
 					if (accnt != null) {
@@ -66,8 +66,10 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 					if (files != null)
 						for (File smb : files) {
 							MediaFormat mf = MediaFormatFactory.createMediaFormat(smb, enc, true);
+							Path entry = ((RemoteFile)smb).asPath();
 							if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0)  // and can play music
-								modelData.add(mf.getMediaInfo());	
+								modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
+										new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));	
 						}
 				} catch (Exception bad) {
 					log("Can't process samba path %s", bad, ps);
@@ -166,7 +168,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 		accnt.name = getParameterValue("user", null, 0);
 		accnt.password = getParameterValue("password", null, 0);
 		accnt.share_path = getParameterValue("path", null, 0);
-		accnt.share_path = Directories.SAMBA_PROT + accnt.share_path.substring(Directories.SAMBA_PREF.length());
+		accnt.share_path = RemoteFile.SAMBA_PROT + accnt.share_path.substring(RemoteFile.SAMBA_PREF.length());
 		getAppModel().addAccnt(accnt);
 		System.out.printf("Add: %s%n", accnt);
 		return "Ok";

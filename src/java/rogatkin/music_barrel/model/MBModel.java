@@ -294,7 +294,7 @@ public class MBModel extends AppModel implements Name {
 	public static Path getItemPath(String path) {
 		if (path != null) {
 			Path result = Paths.get(path);
-			if (Files.isRegularFile(result) && Files.isReadable(result))
+			if (path.startsWith(RemoteFile.SAMBA_PREF) || Files.isRegularFile(result) && Files.isReadable(result))
 				return result;
 		}
 		return null;

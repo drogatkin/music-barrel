@@ -1,5 +1,6 @@
 package rogatkin.music_barrel.srv;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -19,6 +20,10 @@ import org.aldan3.model.Log;
 import org.aldan3.model.ServiceProvider;
 
 import com.beegman.webbee.util.AsyncUpdater;
+
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbFile;
+
 import com.beegman.webbee.model.UIEvent;
 
 import photoorganizer.formats.MediaFormatFactory;
@@ -27,6 +32,8 @@ import photoorganizer.media.MediaPlayer.ProgressListener;
 import photoorganizer.media.MediaPlayer.Status;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.PlayMode;
+import rogatkin.music_barrel.model.mb_accnt;
+import rogatkin.music_barrel.util.RemoteFile;
 
 // TODO all operations around media player have to be synchronized
 public class PlayerService implements ServiceProvider<PlayerService>, ProgressListener, Runnable {
@@ -75,8 +82,24 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		if (mediaPlayer != null) {
 			mediaPlayer.close();
 		}
-
-		mediaPlayer = MediaFormatFactory.getPlayer(MediaFormatFactory.createMediaFormat(media.toFile(),
+		SmbFile playFile = null;
+        String url = media.toString();
+        if (url.startsWith(RemoteFile.SAMBA_PREF)) {
+        	String smbPath = RemoteFile.SAMBA_PROT + url.substring(RemoteFile.SAMBA_PREF.length());
+			NtlmPasswordAuthentication auth = null;
+			mb_accnt accnt = appModel.getShareAccnt(smbPath);
+			if (accnt != null) {
+				auth = new NtlmPasswordAuthentication("workgroup", accnt.name, accnt.password);
+			}
+			try {
+		       playFile = new SmbFile(smbPath, auth);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+        File file = playFile != null? new RemoteFile(playFile) : media.toFile();
+        if (url.startsWith(url))
+		mediaPlayer = MediaFormatFactory.getPlayer(MediaFormatFactory.createMediaFormat(file,
 				appModel.getCharEncoding(), true));
 		//System.err.printf("Player %s for %s%n", mediaPlayer, media);
 		if (mediaPlayer == null)
