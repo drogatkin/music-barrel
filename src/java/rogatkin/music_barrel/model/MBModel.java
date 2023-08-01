@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,6 +35,8 @@ import rogatkin.music_barrel.util.RemoteFile;
 import com.beegman.webbee.model.AppModel;
 
 import jcifs.smb.SmbFileInputStream;
+import jcifs.smb.SmbRandomAccessFile;
+import net.didion.loopy.AccessStream;
 
 public class MBModel extends AppModel implements Name {
 
@@ -318,5 +321,18 @@ public class MBModel extends AppModel implements Name {
 				return new SmbFileInputStream(((RemoteFile) file).getSmbFile());
 			return new FileInputStream(file);
 		}
+		
+		public AccessStream getRandomAccessStream(File file)throws IOException {
+			if (file instanceof RemoteFile)
+				return new SmbAccessStream(file, "r");
+			return super.getRandomAccessStream(file);
+		}
+	}
+	
+	static class SmbAccessStream extends SmbRandomAccessFile implements AccessStream  {
+		public SmbAccessStream(File file, String mode) throws IOException {
+			super(((RemoteFile) file).getSmbFile(), mode);
+		}
+		
 	}
 }
