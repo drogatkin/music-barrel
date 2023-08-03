@@ -28,7 +28,7 @@ public class MusicPath implements Comparable {
 	public String getFileName() {
 		if (smbPath != null) {
 			String name = smbPath.getName();
-			System.out.printf("name for  %s is %s%n", smbPath, name);
+			//System.out.printf("name for  %s is %s%n", smbPath, name);
 			if (name.equals(RemoteFile.SAMBA_PROT))
 				return null;
 			return name;
@@ -57,7 +57,7 @@ public class MusicPath implements Comparable {
 	@Override
 	public String toString() {
 		if (smbPath != null) {
-			System.out.printf("samba %s%n", smbPath);
+			//System.out.printf("samba %s%n", smbPath);
 			return RemoteFile.SAMBA_PREF + smbPath.toString().substring(RemoteFile.SAMBA_PROT.length());
 		} else if (path == null)
 			return "/";

@@ -2,6 +2,7 @@ package rogatkin.music_barrel.model;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -31,12 +32,14 @@ import rogatkin.music_barrel.ctrl.Navigator;
 import rogatkin.music_barrel.srv.MediaCrawler;
 import rogatkin.music_barrel.srv.PlayerService;
 import rogatkin.music_barrel.util.RemoteFile;
+import rogatkin.music_barrel.util.ApeFile;
 
 import com.beegman.webbee.model.AppModel;
 
 import jcifs.smb.SmbFileInputStream;
 import jcifs.smb.SmbRandomAccessFile;
 import net.didion.loopy.AccessStream;
+import org.justcodecs.dsd.DSDStream;
 
 public class MBModel extends AppModel implements Name {
 
@@ -254,6 +257,7 @@ public class MBModel extends AppModel implements Name {
 		try {
 			getDOService().addObject(new DODelegator(item, null, "path", "id"), "id",
 					dod = new DODelegator(item, null, "", "path") {
+
 						@Override
 						protected String normilizeFieldName(String fieldName) {
 							return fieldName.toUpperCase();
@@ -263,7 +267,9 @@ public class MBModel extends AppModel implements Name {
 				if (getDOService().getObjectLike(dod) == null)
 					throw new MBError("Can't resolve item at " + item.path);
 			}
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 			throw new MBError("Add item to library error: " + mf, e);
 		}
 		return item;
@@ -316,23 +322,99 @@ public class MBModel extends AppModel implements Name {
 	}
 
 	public static class StreamFactoryWithRemote extends InputStreamFactory {
+		@Override
 		public InputStream getInputStream(File file) throws IOException {
 			if (file instanceof RemoteFile)
 				return new SmbFileInputStream(((RemoteFile) file).getSmbFile());
 			return new FileInputStream(file);
 		}
-		
-		public AccessStream getRandomAccessStream(File file)throws IOException {
+
+		@Override
+		public AccessStream getRandomAccessStream(File file) throws IOException {
 			if (file instanceof RemoteFile)
 				return new SmbAccessStream(file, "r");
 			return super.getRandomAccessStream(file);
 		}
+
+		@Override
+		public DSDStream getDSDStream(File file) throws IOException {
+			if (file instanceof RemoteFile) {
+				return new SmbDSDStream(file);
+			}
+			return super.getDSDStream(file);
+		}
+
+		@Override
+		public davaguine.jmac.tools.File createApeFile(File file) throws IOException {
+			if (file instanceof RemoteFile) {
+				return new ApeFile(file);
+			}
+			return davaguine.jmac.tools.File.createFile(file.getPath(), "r");
+		}
 	}
-	
-	static class SmbAccessStream extends SmbRandomAccessFile implements AccessStream  {
+
+	static class SmbAccessStream extends SmbRandomAccessFile implements AccessStream {
 		public SmbAccessStream(File file, String mode) throws IOException {
 			super(((RemoteFile) file).getSmbFile(), mode);
 		}
-		
+
 	}
+
+	static class SmbDSDStream extends SmbRandomAccessFile implements DSDStream {
+
+		protected byte[] buf = new byte[8];
+
+		public SmbDSDStream(File f) throws IOException {
+			super(((RemoteFile) f).getSmbFile(), "r");
+		}
+
+		@Override
+		public boolean canSeek() {
+			return true;
+		}
+
+		@Override
+		public long readLong(boolean lsb) throws IOException {
+			readFully(buf, 0, 8);
+			if (lsb)
+				return (((long) (buf[0] & 0xff) << 56) | ((long) (buf[1] & 0xff) << 48) | ((long) (buf[2] & 0xff) << 40)
+						| ((long) (buf[3] & 0xff) << 32) | ((long) (buf[4] & 0xff) << 24)
+						| ((long) (buf[5] & 0xff) << 16) | ((long) (buf[6] & 0xff) << 8) | ((long) (buf[7] & 0xff)));
+			// System.out.printf("Buf 7 %d 0 - %d %n", buf[7], buf[0]);
+			return ((long) (buf[7] & 255) << 56) + ((long) (buf[6] & 255) << 48) + ((long) (buf[5] & 255) << 40)
+					+ ((long) (buf[4] & 255) << 32) + ((long) (buf[3] & 255) << 24) + ((long) (buf[2] & 255) << 16)
+					+ ((long) (buf[1] & 255) << 8) + (buf[0] & 255);
+		}
+
+		@Override
+		public int readInt(boolean lsb) throws IOException {
+			readFully(buf, 0, 4);
+			if (lsb)
+				return (((buf[0] & 0xff) << 24) | ((buf[1] & 0xff) << 16) | ((buf[2] & 0xff) << 8) | (buf[3] & 0xff));
+			return ((int) (buf[3] & 255) << 24) + ((int) (buf[2] & 255) << 16) + ((int) (buf[1] & 255) << 8)
+					+ (buf[0] & 255);
+		}
+
+		@Override
+		public long readIntUnsigned(boolean lsb) throws IOException {
+			readFully(buf, 0, 4);
+			long result = 0;
+			if (lsb) {
+				result += ((buf[0] & 255) << 24) + ((buf[1] & 255) << 16) + ((buf[2] & 255) << 8) + (buf[3] & 255);
+			} else {
+				result += ((buf[3] & 255) << 24) + ((buf[2] & 255) << 16) + ((buf[1] & 255) << 8) + (buf[0] & 255);
+			}
+			return result;
+		}
+
+		@Override
+		public short readShort(boolean lsb) throws IOException {
+			readFully(buf, 0, 2);
+			if (lsb)
+				return (short) ((buf[0] << 8) | (buf[1] & 0xff));
+			return (short) (((short) (buf[1] & 255) << 8) + (buf[0] & 255));
+		}
+
+	}
+
 }

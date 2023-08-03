@@ -27,7 +27,7 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 		ArrayList<MusicPath> result = new ArrayList<>();
 		FileSystem fs = FileSystems.getDefault();
 		String ps = getParameterValue("path", "", 0);
-		System.out.printf("path %S%n",  ps);
+		//System.out.printf("path %S%n",  ps);
 		Path cp = null;
 		if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
 			try {
