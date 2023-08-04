@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +34,7 @@ import rogatkin.music_barrel.srv.MediaCrawler;
 import rogatkin.music_barrel.srv.PlayerService;
 import rogatkin.music_barrel.util.RemoteFile;
 import rogatkin.music_barrel.util.ApeFile;
+import rogatkin.music_barrel.util.RemoteChannel;
 
 import com.beegman.webbee.model.AppModel;
 
@@ -351,6 +353,13 @@ public class MBModel extends AppModel implements Name {
 			}
 			return davaguine.jmac.tools.File.createFile(file.getPath(), "r");
 		}
+		
+		public FileChannel getInputChannel(File file) throws IOException {
+			if (file instanceof RemoteFile) {
+				return new RemoteChannel(file);
+			}
+			   return super.getInputChannel(file);
+		   }
 	}
 
 	static class SmbAccessStream extends SmbRandomAccessFile implements AccessStream {
