@@ -49,9 +49,9 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 		String enc = getAppModel().getCharEncoding();
 		try {
 			String ps = getParameterValue("path", getAppModel().getState(getClass().getName(), ""), 0);
-
 			if (ps.isEmpty())
 				return modelData;
+			
 			if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
 				try {
 					String smbPath = RemoteFile.SAMBA_PROT + ps.substring(RemoteFile.SAMBA_PREF.length());
@@ -83,14 +83,8 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 				} catch (Exception bad) {
 					log("Can't process samba path %s", bad, ps);
 				}
-
-				return modelData;
-			}
-			Path p = Paths.get(ps);
-
-			if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
-				// already added
-			} else {
+			} else {	
+				Path p = Paths.get(ps);
 				if (Files.isDirectory(p) == false && p.getParent() != null)
 					p = p.getParent();
 				getAppModel().preserveSate(p.toString(), getClass().getName());
@@ -109,6 +103,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 							artworkData.add(aw);
 					}
 				}
+				modelInsert("path", new MusicPath(p));
 			}
 			Collections.sort(modelData, new Comparator<MediaInfo>() {
 				@Override
@@ -163,7 +158,6 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 
 				}
 			});
-			modelInsert("path", new MusicPath(p));
 			modelInsert("artwork", artworkData.size() == 0 ? null : artworkData.get(0));
 			modelInsert("artworks", artworkData);
 			// modelInsert("path", p);
