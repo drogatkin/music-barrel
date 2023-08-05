@@ -11,9 +11,14 @@ import mediautil.gen.MediaFormat;
 import photoorganizer.formats.MediaFormatFactory;
 
 import rogatkin.music_barrel.model.MBModel;
+import rogatkin.music_barrel.model.mb_accnt;
+import rogatkin.music_barrel.util.RemoteFile;
 
 import com.beegman.webbee.block.Stream;
 
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileInputStream;
 
 
 public class Artwork extends Stream<MBModel> {
@@ -25,8 +30,9 @@ public class Artwork extends Stream<MBModel> {
 			os.close();
 			return;
 		}
-		Path p = Paths.get(sp).normalize();
-		if (Files.isRegularFile(p) == false) {
+		System.out.printf("Pic %s%n",  sp);
+		Path p = MBModel.getItemPath(sp); //.normalize();
+		if (p == null) {
 			os.close();
 			return;
 		}
@@ -36,8 +42,27 @@ public class Artwork extends Stream<MBModel> {
 			os.write(mf.getThumbnailData(null));
 		} else {
 			rogatkin.music_barrel.model.Artwork aw = rogatkin.music_barrel.model.Artwork.create(p);
-			if (aw != null)
-				Files.copy(p, os);
+			if (aw != null) {
+				if (sp.startsWith(RemoteFile.SAMBA_PREF)) {
+					try {
+						String smbPath = RemoteFile.SAMBA_PROT + sp.substring(RemoteFile.SAMBA_PREF.length());
+						NtlmPasswordAuthentication auth = null;
+						mb_accnt accnt = getAppModel().getShareAccnt(smbPath);
+						if (accnt != null) {
+							auth = new NtlmPasswordAuthentication("workgroup", accnt.name, accnt.password);
+						}
+						SmbFile pic = new SmbFile(smbPath, auth);
+						SmbFileInputStream is = new SmbFileInputStream(pic);
+						org.aldan3.util.Stream.copyStream(is, os);
+						is.close(); // TODO move to finally
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						
+					}
+				} else
+				   Files.copy(p, os);
+			}
 		}
 		
 		os.close();

@@ -34,11 +34,12 @@ import com.beegman.webbee.block.Tabular;
 
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileInputStream;
 
 import java.util.Comparator;
 
 public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
-	
+
 	static final String MEDIA_PATH = "MediaPath";
 
 	@Override
@@ -48,8 +49,8 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 		String enc = getAppModel().getCharEncoding();
 		try {
 			String ps = getParameterValue("path", getAppModel().getState(getClass().getName(), ""), 0);
-			
-			if (ps.isEmpty()) 
+
+			if (ps.isEmpty())
 				return modelData;
 			if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
 				try {
@@ -66,92 +67,106 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 					if (files != null)
 						for (File smb : files) {
 							MediaFormat mf = MediaFormatFactory.createMediaFormat(smb, enc, true);
-							Path entry = ((RemoteFile)smb).asPath();
-							if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0)  // and can play music
+							Path entry = ((RemoteFile) smb).asPath();
+							if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0) // and can play
+																										// music
 								modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
-										new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));	
+										new Class[] { MediaInfo.class },
+										new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));
+							else { // try to add as image
+								//System.out.printf("Adding pic %s%n", entry);
+								Artwork aw = Artwork.create(entry);
+								if (aw != null)
+									artworkData.add(aw);
+							}
 						}
 				} catch (Exception bad) {
 					log("Can't process samba path %s", bad, ps);
 				}
-				
+
 				return modelData;
 			}
 			Path p = Paths.get(ps);
-			if (Files.isDirectory(p) == false && p.getParent() != null)
-				p = p.getParent();
-			getAppModel().preserveSate(p.toString(), getClass().getName());
-			DirectoryStream<Path> stream = Files.newDirectoryStream(p);
-			
-			//log("use encoding %s", null, enc);
-			//System.out.printf("use encoding %s\n", enc);
-			for (Path entry : stream) {
-				MediaFormat mf = MediaFormatFactory.createMediaFormat(entry.toFile(), enc, true);
-				if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0)  // and can play music
-					modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
-							new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));	
-				else { // maybe it is an artwork?
-					Artwork aw = Artwork.create(entry);
-					if (aw != null)
-						artworkData.add(aw);
+
+			if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
+				// already added
+			} else {
+				if (Files.isDirectory(p) == false && p.getParent() != null)
+					p = p.getParent();
+				getAppModel().preserveSate(p.toString(), getClass().getName());
+				DirectoryStream<Path> stream = Files.newDirectoryStream(p);
+
+				// log("use encoding %s", null, enc);
+				// System.out.printf("use encoding %s\n", enc);
+				for (Path entry : stream) {
+					MediaFormat mf = MediaFormatFactory.createMediaFormat(entry.toFile(), enc, true);
+					if (mf != null && mf.isValid() && (mf.getType() & MediaFormat.AUDIO) > 0) // and can play music
+						modelData.add((MediaInfo) Proxy.newProxyInstance(this.getClass().getClassLoader(),
+								new Class[] { MediaInfo.class }, new MediaInfoProxyHandler(mf.getMediaInfo(), entry)));
+					else { // maybe it is an artwork?
+						Artwork aw = Artwork.create(entry);
+						if (aw != null)
+							artworkData.add(aw);
+					}
 				}
 			}
 			Collections.sort(modelData, new Comparator<MediaInfo>() {
 				@Override
-			    public int compare(MediaInfo o1, MediaInfo o2) {
-					String a1 = (String)o1.getAttribute(MediaInfo.ALBUM);
-					String a2 = (String)o2.getAttribute(MediaInfo.ALBUM);
-					int result = a1 != null?a2 != null?a1.compareTo(a2):-1:a2==null?0:1; 
-					
+				public int compare(MediaInfo o1, MediaInfo o2) {
+					String a1 = (String) o1.getAttribute(MediaInfo.ALBUM);
+					String a2 = (String) o2.getAttribute(MediaInfo.ALBUM);
+					int result = a1 != null ? a2 != null ? a1.compareTo(a2) : -1 : a2 == null ? 0 : 1;
+
 					if (result == 0) {
 						try {
-							//result  = o1.getIntAttribute(MediaInfo.PARTOFSET)	;
-							a1 = (String)o1.getAttribute(MediaInfo.PARTOFSET);
+							// result = o1.getIntAttribute(MediaInfo.PARTOFSET) ;
+							a1 = (String) o1.getAttribute(MediaInfo.PARTOFSET);
 							if (a1 != null) {
-								int sp= a1.indexOf("/");
+								int sp = a1.indexOf("/");
 								if (sp > 0)
 									a1 = a1.substring(0, sp);
-								int ap1 =  Integer.parseInt(a1);
-								a2 = (String)o2.getAttribute(MediaInfo.PARTOFSET);
-				
-						    	if (a2 != null) {
-							    	sp= a2.indexOf("/");
-							    	if (sp > 0)
-								    	a2 = a2.substring(0, sp);
-							    	int ap2 =  Integer.parseInt(a2);
-							    	result =  ap1 - ap2;
-							    }
+								int ap1 = Integer.parseInt(a1);
+								a2 = (String) o2.getAttribute(MediaInfo.PARTOFSET);
+
+								if (a2 != null) {
+									sp = a2.indexOf("/");
+									if (sp > 0)
+										a2 = a2.substring(0, sp);
+									int ap2 = Integer.parseInt(a2);
+									result = ap1 - ap2;
+								}
 							}
-						} catch(Exception e) {
+						} catch (Exception e) {
 							if (isDebug())
 								log("%s vs %s", e, o1, o2);
 						}
 					}
-					
+
 					if (result == 0)
 						try {
 							result = o1.getIntAttribute(MediaInfo.TRACK) - o2.getIntAttribute(MediaInfo.TRACK);
 							if (result != 0)
 								return result;
-						} catch(Exception e) {
+						} catch (Exception e) {
 							if (isDebug())
 								log("%s vs %s", e, o1, o2);
 						}
 					if (result == 0)
 						try {
-							return ((Path)o1.getAttribute(MEDIA_PATH)).getFileName().compareTo(((Path)o2.getAttribute(MEDIA_PATH)).getFileName());
+							return ((Path) o1.getAttribute(MEDIA_PATH)).getFileName()
+									.compareTo(((Path) o2.getAttribute(MEDIA_PATH)).getFileName());
 						} catch (Exception e) {
 							if (isDebug())
 								log("%s vs %s", e, o1, o2);
 						}
 					return result;
-					
-					}
+
+				}
 			});
 			modelInsert("path", new MusicPath(p));
-			modelInsert("artwork", artworkData.size() == 0?null:artworkData.get(0));
+			modelInsert("artwork", artworkData.size() == 0 ? null : artworkData.get(0));
 			modelInsert("artworks", artworkData);
-			//modelInsert("path", p);
+			// modelInsert("path", p);
 		} catch (IOException ioe) {
 			modelInsert("error", ioe);
 		}
@@ -162,7 +177,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 	protected String getUIID() {
 		return getAppModel().getAppName();
 	}
-	
+
 	public String processNTLMCall() {
 		mb_accnt accnt = new mb_accnt(getAppModel());
 		accnt.name = getParameterValue("user", null, 0);
@@ -173,7 +188,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 		System.out.printf("Add: %s%n", accnt);
 		return "Ok";
 	}
-	
+
 	boolean isDebug() {
 		return "1".equals(getProperties().getProperty(Constant.Property.DEBUG));
 	}
@@ -201,7 +216,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 					} else if (MediaInfo.GENRE.equals(args[0])) {
 						return MP3.findGenre(mediaInfo);
 					}
-				} 
+				}
 			}
 			return method.invoke(mediaInfo, args);
 		}
