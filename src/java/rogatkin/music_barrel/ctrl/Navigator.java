@@ -53,7 +53,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 				return modelData;
 			
 			if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
-				try {
+				//try {
 					String smbPath = RemoteFile.SAMBA_PROT + ps.substring(RemoteFile.SAMBA_PREF.length());
 					NtlmPasswordAuthentication auth = null;
 					mb_accnt accnt = getAppModel().getShareAccnt(smbPath);
@@ -80,9 +80,9 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 									artworkData.add(aw);
 							}
 						}
-				} catch (Exception bad) {
-					log("Can't process samba path %s", bad, ps);
-				}
+				//} catch (Exception bad) {
+				//	log("Can't process samba path %s", bad, ps);
+			//	}
 			} else {	
 				Path p = Paths.get(ps);
 				if (Files.isDirectory(p) == false && p.getParent() != null)
@@ -160,9 +160,15 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 			});
 			modelInsert("artwork", artworkData.size() == 0 ? null : artworkData.get(0));
 			modelInsert("artworks", artworkData);
+			//modelInsert("auth", Boolean.FALSE);
 			// modelInsert("path", p);
 		} catch (IOException ioe) {
+			//System.out.printf("catchi ng %s\n", ioe);
+			//ioe.printStackTrace();
 			modelInsert("error", ioe);
+			
+		} catch(SecurityException se) {
+			modelInsert("auth", Boolean.TRUE);
 		}
 		return modelData;
 	}

@@ -51,6 +51,8 @@ public class RemoteFile extends File {
 			lastError = e;
 			if (RemoteFile.IS_DEBUG)
 				loge("remote-file", "error", e);
+			if (e instanceof SmbAuthException)
+				throw new SecurityException ("Authentication error", e);
 		}
 		return null;
 	}
