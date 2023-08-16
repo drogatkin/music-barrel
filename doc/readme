@@ -1,4 +1,4 @@
-Music-Barrel 1.4 release
+Music-Barrel 1.6 release
 ========================
 
 Music Jukebox for Raspberry Pi and HTPC
@@ -35,7 +35,6 @@ Visit https://github.com/drogatkin/music-barrel
 3. What is new
 --------------
 
-* auto scrolling to the position where a directory was selected to play
-   at returning back after a play or an inspection
-* display an album artwork as a background image
+* playback of samba version 1 shared music
+
 

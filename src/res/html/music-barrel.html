@@ -17,13 +17,25 @@
 		    }
   }
 </style>
+<script src="./js/common.js" language="Javascript"></script>
 <script>
    function load(url) {
 	   window.location.href = url;
    }
+   function updateVer() {
+    	ajax.get({
+           url:'http://dmitriy-desktop:8080/music-barrel/webapp/Musicbarrel/ajax/version',
+           respType: 'html',
+           success: function (val) {
+              if (val) {
+                document.querySelector('span').innerHTML = val
+              }
+           }
+         }) 
+    }
 </script>
 </head>
-<body>
+<body onload="updateVer()">
 <div style="width:100%">
   <table style="width:296px;margin:0 auto">
      <tr>
@@ -41,5 +53,7 @@
      </tr>
   </table>
 </div>
-<div style="position:fixed;bottom:0;text-align:right;width:96%">v1.6 &copy; 2023 Dmitriy Rogatkin (<a style="color:#667" href="license.html">Licenses</a>)</div>
+<div style="position:fixed;bottom:0;text-align:right;width:96%">
+  <span>&nbsp;vx.x</span>
+     &copy; 2023 Dmitriy Rogatkin (<a style="color:#667" href="license.html">Licenses</a>)</div>
 </body></html>

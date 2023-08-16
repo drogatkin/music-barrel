@@ -45,12 +45,18 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 							result.add(new MusicPath(smb));
 					}
 				ps = dir.getParent();
+				System.out.printf("parent: %s%n", ps);
 				if (RemoteFile.SAMBA_PROT.equals(ps)) {
+					MusicPath mp = new MusicPath("");
+					mp.setCustom();
+					result.add(mp);
 					for (Path p : fs.getRootDirectories()) {
 						result.add(new MusicPath(p));
 					}
-				} else
+				} else {
 					result.add(new MusicPath(ps));
+				}
+					
 				return result;
 			} catch (Exception bad) {
 				log("Can't process samba path %s", bad, ps);

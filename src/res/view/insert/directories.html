@@ -19,12 +19,17 @@
 					if (!json[i])
 						break
 					var cc = dr.insertCell(i); // js fields already encoded as required
-					cc.style='white-space: pre-wrap';
-					cc.innerHTML = '<a id="link1" href="Navigator?path='  //@:path@
+					if (json[i].custom == 'true') {
+						cc. style='vertical-align:bottom;'
+					   cc.innerHTML = '<input type="text" placeholder="host" name="host"><span style="cursor:pointer" onclick="goon()">&rarr;</span>'
+					} else {
+						cc.style='white-space: pre-wrap'
+						cc.innerHTML = '<a id="link1" href="Navigator?path='  //@:path@
 							+ encodeURIComponent(json[i].path)
 							+ '"><img border="0" src="@contextpath@/image/directory.png">'
 							+ (json[i].name==''?json[i].path:json[i].name) + '</a>'
 							//console.log('comp '+preUrl+' vs '+json[i].path)
+					}
 					if (preUrl && json[i].path == preUrl) {
 						scrollCc = cc
 					}
@@ -32,7 +37,10 @@
 				if (scrollCc)
 					scrollCc.scrollIntoView(true)
 			}, function(e) {
-			});
+			})
   }
-
+  function goon() {
+  	 const hostt = document.querySelector('input[name="host"]').value
+  	window.location.href = 'Navigator?path=smb::'+encodeURIComponent(hostt)
+  }
 </script>

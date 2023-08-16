@@ -9,6 +9,7 @@ import jcifs.smb.SmbFile;
 public class MusicPath implements Comparable {
 	Path path;
 	SmbFile smbPath; // it should be enum path or string
+	boolean custom;
 
 	public MusicPath(Path p) {
 		path = p;
@@ -35,6 +36,14 @@ public class MusicPath implements Comparable {
 		} else if (path.getFileName() == null)
 			return null;
 		return path.getFileName().toString();
+	}
+	
+	public String getCustom() {
+		return ""+custom;
+	}
+	
+	public void setCustom() {
+		custom = true;
 	}
 
 	public MusicPath getParent() {

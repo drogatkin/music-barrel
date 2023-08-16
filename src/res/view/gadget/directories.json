@@ -1,1 +1,1 @@
-[@model({'path':'@^element@', 'name':'@~element.getFileName*()*@'},)@]
+[@model({'path':'@^element@', 'name':'@~element.getFileName*()*@', 'custom':'@~element.getCustom*()*@'},)@]

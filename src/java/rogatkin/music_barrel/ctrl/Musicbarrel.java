@@ -105,6 +105,11 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 		}
 		return result;
 	}
+	
+	public String processversionCall() {
+		resp.setContentType("text/plain");
+		return "v1.6";
+	}
 
 	public static final class CellModel2 {
 		public String path;
