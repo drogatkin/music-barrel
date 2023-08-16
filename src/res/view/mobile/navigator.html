@@ -1,3 +1,11 @@
+@auth(
+<div>
+<form>
+<input type="text" placeholder="username" name="username"/>
+<input type="password" placeholder="password" name="password"/>
+<button type="button" onclick="submitCred()">use</button>
+</form>
+</div>)@
 <div style="width:100%;overflow:auto">
 @%'insert/directories.html'@
 </div>
@@ -47,4 +55,27 @@
   function hidit() {
 	  getElement('toast').style.visibility="hidden";
   }
+
+   function submitCred() {
+	     const form = document.forms[0]
+	     const name = form.querySelector('input[name="username"]').value
+	     const password = form.querySelector('input[name="password"]').value
+	     const path = '@^path@'
+	     makeGenericAjaxCall('Navigator/ajax/NTLM', 'user=' + encodeURIComponent(name) + '&password=' + encodeURIComponent(password) +
+	            '&path=' + encodeURIComponent(path),
+				true, function(res) { 
+			if(res == 'Ok') {
+				
+			}
+			clearCred()
+		}, function(err) {
+             clearCred()
+		})
+    }
+
+   function clearCred() {
+	    const form = document.forms[0]
+	    form.querySelector('input[name="password"]').value = ''
+	    form.querySelector('input[name="username"]').value = ''
+   }
 </script>
