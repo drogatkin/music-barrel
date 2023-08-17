@@ -38,6 +38,8 @@ import rogatkin.music_barrel.util.RemoteChannel;
 
 import com.beegman.webbee.model.AppModel;
 
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileInputStream;
 import jcifs.smb.SmbRandomAccessFile;
 import net.didion.loopy.AccessStream;
@@ -275,6 +277,33 @@ public class MBModel extends AppModel implements Name {
 			throw new MBError("Add item to library error: " + mf, e);
 		}
 		return item;
+	}
+	
+	public File fromWebPath(String path) {
+		if (path.startsWith(RemoteFile.SAMBA_PREF)) {
+			path = RemoteFile.SAMBA_PROT + path.substring(RemoteFile.SAMBA_PREF.length());
+		}
+		if (path.startsWith(RemoteFile.SAMBA_PROT)) {
+			try {
+				
+				NtlmPasswordAuthentication auth = null;
+				mb_accnt accnt = getShareAccnt(path);
+				if (accnt != null) {
+					auth = new NtlmPasswordAuthentication("workgroup", accnt.name, accnt.password);
+				}
+				return new RemoteFile(new SmbFile(path, auth));
+			} catch (Exception e) {
+				Log.l.error("Problem in file", e);
+			} finally {
+				
+			}
+		} else {
+			Path p = getItemPath(path);
+			if (p != null)
+				return p.toFile();
+		}
+		//	System.out.printf("File null for %s%n", path);
+		return null;
 	}
 
 	public static void fillMediaModel(mb_media_item mi, MediaInfo info) {

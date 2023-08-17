@@ -31,7 +31,6 @@ public class RemoteFile extends File {
 	
 	public RemoteFile(URI uri) {
 		super(uri);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public RemoteFile(SmbFile file) {

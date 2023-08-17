@@ -1,5 +1,6 @@
 package rogatkin.music_barrel.ctrl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -30,13 +31,14 @@ public class Artwork extends Stream<MBModel> {
 			os.close();
 			return;
 		}
-		System.out.printf("Pic %s%n",  sp);
+		//System.out.printf("Pic %s%n",  sp);
 		Path p = MBModel.getItemPath(sp); //.normalize();
 		if (p == null) {
 			os.close();
 			return;
 		}
-		MediaFormat mf = MediaFormatFactory.createMediaFormat(p.toFile(), getAppModel().getCharEncoding(), true);
+		
+		MediaFormat mf = MediaFormatFactory.createMediaFormat(getAppModel().fromWebPath(sp), getAppModel().getCharEncoding(), true);
 		//frontController.log("media for path: "+p+" is "+mf);
 		if (mf != null && mf.isValid()) {
 			os.write(mf.getThumbnailData(null));
@@ -56,7 +58,7 @@ public class Artwork extends Stream<MBModel> {
 						org.aldan3.util.Stream.copyStream(is, os);
 						is.close(); // TODO move to finally
 					} catch (Exception e) {
-						e.printStackTrace();
+						log("Problem in %s", e, sp);
 					} finally {
 						
 					}

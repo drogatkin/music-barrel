@@ -19,7 +19,7 @@ public class Artwork {
 	public static Artwork create(Path path) {
 		//System.out.printf("testing: %s%n", path);
 		if (matcher.matches(path)) {
-			System.out.printf("art: %s%n", path);
+			//System.out.printf("art: %s%n", path);
 			return new Artwork(path);
 		}
 		return null;

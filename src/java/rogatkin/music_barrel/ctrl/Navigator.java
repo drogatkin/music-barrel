@@ -83,6 +83,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 				//} catch (Exception bad) {
 				//	log("Can't process samba path %s", bad, ps);
 			//	}
+					getAppModel().preserveSate(ps, getClass().getName());
 			} else {	
 				Path p = Paths.get(ps);
 				if (Files.isDirectory(p) == false && p.getParent() != null)
@@ -185,7 +186,7 @@ public class Navigator extends Tabular<List<MediaInfo>, MBModel> {
 		accnt.share_path = getParameterValue("path", null, 0);
 		accnt.share_path = RemoteFile.SAMBA_PROT + accnt.share_path.substring(RemoteFile.SAMBA_PREF.length());
 		getAppModel().addAccnt(accnt);
-		System.out.printf("Add: %s%n", accnt);
+		//System.out.printf("Add: %s%n", accnt);
 		return "Ok";
 	}
 

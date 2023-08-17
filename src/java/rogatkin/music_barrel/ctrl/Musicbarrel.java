@@ -68,7 +68,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 							DataConv.ifNull(dob.get("ALBUM"), ""), dob.get("YEAR"));
 					result.content = String.format(
 							"<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
-							URLEncoder.encode("" + dob.get("PATH"), getCharSet()),
+							URLEncoder.encode(new MusicPath("" + dob.get("PATH")).toString(), getCharSet()),
 							appearance == Appearance.mobile ? 96 : 260);
 					result.path = "" + dob.get("PATH");
 				}
@@ -82,7 +82,9 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 					/// col);
 					// not in library, generate record
 					result.path = playQueue[row * numCols() + col];
-					MediaFormat mf = MediaFormatFactory.createMediaFormat(new File(result.path), getCharSet(), true);
+					//System.out.printf("Play path %s%n", result.path);
+					
+					MediaFormat mf = MediaFormatFactory.createMediaFormat(getAppModel().fromWebPath(result.path), getCharSet(), true);
 					if (mf != null) {
 						mb_media_item i = new mb_media_item(getAppModel());
 						MediaInfo mi;
@@ -92,7 +94,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 								i.year);
 						result.content = String.format(
 								"<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
-								URLEncoder.encode(result.path, getCharSet()),
+								URLEncoder.encode(new MusicPath(result.path).toString(), getCharSet()),
 								appearance == Appearance.mobile ? 96 : 260);
 					}
 				} catch (Exception e) {
