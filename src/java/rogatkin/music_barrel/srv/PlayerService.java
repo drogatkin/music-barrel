@@ -35,6 +35,11 @@ import rogatkin.music_barrel.model.PlayMode;
 import rogatkin.music_barrel.model.mb_accnt;
 import rogatkin.music_barrel.util.RemoteFile;
 
+import com.beegman.buzzbee.NotificationService;
+import org.aldan3.annot.Inject;
+import com.beegman.buzzbee.WebEvent;
+import com.beegman.buzzbee.NotificationService.NotifException;
+
 // TODO all operations around media player have to be synchronized
 public class PlayerService implements ServiceProvider<PlayerService>, ProgressListener, Runnable {
 	public static final String NAME = "MediaPlayer";
@@ -46,6 +51,8 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 	Thread listPlayer;
 	LinkedBlockingQueue<String> playQueue;
 	PlayMode playMode;
+	@Inject
+    NotificationService ns;
 
 	public PlayerService(MBModel am) {
 		appModel = am;
@@ -157,11 +164,16 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			}
 		}
 		playQueue.add(path);
+		try {
+			ns.publish(new WebEvent().setAction("add").setId("updatePlayList").setAttributes(path));
+		} catch(Exception e) {
+			
+		}
 		return getServiceProvider();
 	}
 
 	public void removePlay(String path) {
-		if (playQueue.remove(path) == false) {
+		if (playQueue.remove(path) == false) { // currently playing ???
 			MediaFormat mf = mediaPlayer == null?null:mediaPlayer.getMedia();
 			try {
 				if (mf != null && Files.isSameFile(mf.getFile().toPath(), Paths.get(path))) {
@@ -171,6 +183,11 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 			} catch (IOException ioe) {
 
 			}
+		}
+		try {
+			ns.publish(new WebEvent().setAction("remove").setId("updatePlayList").setAttributes(path));
+		} catch(Exception e) {
+			
 		}
 	}
 
@@ -256,6 +273,11 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		uie.parameters = new Object[] { stringStatus(getStatus()) }; // TODO convert status to sym_xxxx
 		updater.addEvent(appModel.getAppName(), uie);
 		//System.err.printf("event %s dropped for %s%n", uie, mediaPlayer);
+		try {
+			ns.publish(new WebEvent().setAction("remove").setId("updatePlayList").setAttributes(""));
+		} catch(Exception e) {
+			
+		}
 	}
 
 	@Override

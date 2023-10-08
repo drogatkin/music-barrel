@@ -384,6 +384,8 @@
          <parameter type="path">src/res/html/*.htm?</parameter>
          <parameter>A js/</parameter>
          <parameter type="path">src/js/*.js</parameter>
+         <parameter>A js/</parameter>
+         <parameter variable="BUZZBEE_JS" type="path"/>
          <parameter>A WEB-INF/res/view/</parameter>
          <parameter type="path">src/res/view/*.html</parameter>
          <parameter>A WEB-INF/res/view/</parameter>

@@ -13,6 +13,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Properties;
+import java.util.Iterator;
+import java.lang.reflect.Field;
 
 import javax.sql.DataSource;
 
@@ -21,6 +24,8 @@ import org.aldan3.data.DOService;
 import org.aldan3.model.Log;
 import org.aldan3.model.ProcessException;
 import org.aldan3.util.DataConv;
+import org.aldan3.annot.Inject;
+import org.aldan3.model.ServiceProvider;
 
 import photoorganizer.formats.MP3;
 import photoorganizer.formats.MediaFormatFactory;
@@ -37,6 +42,7 @@ import rogatkin.music_barrel.util.ApeFile;
 import rogatkin.music_barrel.util.RemoteChannel;
 
 import com.beegman.webbee.model.AppModel;
+import com.beegman.buzzbee.NotificationServiceImpl;
 
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
@@ -46,7 +52,8 @@ import net.didion.loopy.AccessStream;
 import org.justcodecs.dsd.DSDStream;
 
 public class MBModel extends AppModel implements Name {
-
+	public static NotificationServiceImpl notifService;
+	
 	private mb_setting settings;
 	private HashMap<String, Object> preserve;
 
@@ -76,6 +83,8 @@ public class MBModel extends AppModel implements Name {
 		} catch (ProcessException e) {
 			Log.l.error("Save settings", e);
 		}
+		((NotificationServiceImpl) unregister(getService(notifService.getPreferredServiceName()))).destroy();
+		notifService =  null;
 		super.deactivateServices();
 		preserve.clear();
 	}
@@ -96,6 +105,7 @@ public class MBModel extends AppModel implements Name {
 	protected void initServices() {
 		preserve = new HashMap<>();
 		super.initServices();
+		register(notifService = new NotificationServiceImpl().init(new Properties(), this).start());
 		settings = new mb_setting(this);
 		settings.id = 1;
 		try {
@@ -111,10 +121,11 @@ public class MBModel extends AppModel implements Name {
 			Log.l.error("Load settings", e);
 		}
 		MediaFormatFactory.setInputStreamFactory(new StreamFactoryWithRemote());
-		register(new PlayerService(this));
+		register(inject(new PlayerService(this)));
 		if (settings.perform_scan)
 			register(new MediaCrawler(this));
 
+		
 		accounts = new ArrayList<>(6);
 	}
 
@@ -305,6 +316,45 @@ public class MBModel extends AppModel implements Name {
 		//	System.out.printf("File null for %s%n", path);
 		return null;
 	}
+	
+	 @Override
+	public <T> T inject(T obj) {
+		if (obj == null) {
+			return null;
+		}
+		for (Field fl : obj.getClass().getDeclaredFields()) { // use cl.getFields() for public with inheritance
+			if (fl.getAnnotation(Inject.class) != null) {
+				try {
+					Class<?> type = fl.getType();
+					Object serv = lookupService(type);
+				//	System.err.printf("Injecting "+serv+" for "+fl+" of "+type+"\n");
+					assureAccessible(fl).set(obj, serv);
+				} catch (Exception e) {
+					Log.l.error("Exception in injection for " + fl, e);
+				}
+			}
+		}
+		return obj;
+	}
+	 
+	 public Object lookupService(Class<?> type) {
+			Iterator<ServiceProvider> i = iterator();
+			while (i.hasNext()) {
+				ServiceProvider sp = i.next();
+				// System.err.printf("Checking %s assign %b from %s%n", sp, type.isAssignableFrom(sp.getClass()), type );
+				if (sp.getClass() == type || type.isAssignableFrom(sp.getClass()) ) 
+					return sp;
+			}
+			return null;
+		}
+		
+		static protected Field assureAccessible(Field fl) {
+			if (fl.isAccessible())
+				return fl;
+			fl.setAccessible(true);
+			return fl;
+		}
+		
 
 	public static void fillMediaModel(mb_media_item mi, MediaInfo info) {
 		fillMediaModel(mi, null, info);

@@ -1,6 +1,11 @@
 @%'insert/playctrl.html'@
 <div id="grid_holder">
    @grid(   
+	   <!-- think to change to:
+	   .box {
+        display: flex;
+        flex-flow: row wrap;
+      } -->
      <div style="height:100%;width:100%">
          @element(
              <div style="width:@w@;float:left; height:100%;cursor:crosshair" title="@model.comment@" onclick="removePlay('@^model.path@')">@.model.content@ 
