@@ -2,6 +2,8 @@ package rogatkin.music_barrel.model;
 
 import com.beegman.webbee.base.BaseBehavior;
 import com.beegman.webbee.base.BaseBlock;
+import com.beegman.webbee.base.WebApp;
+
 import mediautil.gen.MediaFormat;
 import mediautil.gen.MediaInfo;
 import org.aldan3.util.DataConv;
@@ -12,6 +14,7 @@ public class Behavior extends BaseBehavior<MBModel> implements Name {
 		useLabels = true;
 		useBreadCrumbs = false;
 		ignoreSession = true;
+		//mobileOnly = true; // for debugging
 	}
 	
 	@Override

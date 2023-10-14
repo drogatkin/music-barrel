@@ -40,9 +40,12 @@
       function goto(loc) {
          document.location='@contextpath@@request.getServletPath*()*@/'+loc;
       }
+      @%'insert/headjs.htmt'@
   </script>
   @%headextra@
 </head>
+
+<body onload="init()">
 <div style="width:90%;margin:auto">@error@&nbsp;
 <input type="image" src="@contextpath@/image/home.png" border="0" alt="@commonlabels.home@" style="float:left"  onclick="window.location='@contextpath@';">
 &nbsp;&nbsp;<input type="image" onclick="playControl(1)" src="@contextpath@/image/play_ctrl.png" alt="@commonlabels.play@">
@@ -50,8 +53,8 @@
 &nbsp;&nbsp;<input type="image" onclick="playControl(0)" src="@contextpath@/image/next_ctrl.png" alt="@commonlabels.next@">
 &nbsp;&nbsp;<input type="image" onclick="playControl(4, function(){ if (postStop) postStop();})" src="@contextpath@/image/stop_ctrl.png" alt="@commonlabels.stop@">
 &nbsp;&nbsp;<input type="image" onclick="addAllFiles()" src="@contextpath@/image/addall_ctrl.png" style="border:0;display:none" id="addall" alt="@commonlabels.add_all@">
-</div>
-<body onload="init()">
+</div>	
+	
 @%request.INNER_VIEW@
 </body>
 </html>

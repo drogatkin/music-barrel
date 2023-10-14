@@ -8,8 +8,12 @@
      </div>
   )@
 </div>
-
+<script src="@contextpath@/js/buzzbee.js"></script>
 <script>
+	
+  function extra_actions(s, ctx) {
+	WSAPI.init('ws'+s+'://'+location.hostname+':'+location.port+'@contextpath@')
+  }
   function removePlay(p) {
 	makeGenericAjaxCall('Player/ajax/removePlay', 'playPath='+encodeURIComponent(p),
 			true, function(res) {
@@ -22,5 +26,10 @@
   function postStop() {
 	  window.location.reload();
   }
-
+  function add(p,t,per,al,y,c) {
+	  postStop()
+  }
+  function remove(p) {
+	  postStop()
+  }
 </script>

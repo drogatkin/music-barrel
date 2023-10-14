@@ -3,6 +3,7 @@ package rogatkin.music_barrel.srv;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
@@ -14,6 +15,7 @@ import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import mediautil.gen.MediaFormat;
+import mediautil.gen.MediaInfo;
 
 import org.aldan3.model.DataObject;
 import org.aldan3.model.Log;
@@ -33,6 +35,8 @@ import photoorganizer.media.MediaPlayer.Status;
 import rogatkin.music_barrel.model.MBModel;
 import rogatkin.music_barrel.model.PlayMode;
 import rogatkin.music_barrel.model.mb_accnt;
+import rogatkin.music_barrel.model.mb_media_item;
+import rogatkin.music_barrel.util.MusicPath;
 import rogatkin.music_barrel.util.RemoteFile;
 
 import com.beegman.buzzbee.NotificationService;
@@ -165,11 +169,35 @@ public class PlayerService implements ServiceProvider<PlayerService>, ProgressLi
 		}
 		playQueue.add(path);
 		try {
-			ns.publish(new WebEvent().setAction("add").setId("updatePlayList").setAttributes(path));
+			// consider getting item info
+			String infoJson = fillSongInfo(appModel, path, "utf-8", null);
+			ns.publish(new WebEvent().setAction("add").setId("updatePlayList").setAttributes(path, infoJson));
 		} catch(Exception e) {
 			
 		}
 		return getServiceProvider();
+	}
+	
+	// TODO make the method multi use to reduce boilerplating
+	public static String fillSongInfo(MBModel model, String path, String charSet, String templ) {
+		try {
+			
+			MediaFormat mf = MediaFormatFactory.createMediaFormat(new File(path), charSet, true);
+			if (mf != null) {
+				mb_media_item i = new mb_media_item(model);
+				MediaInfo mi;
+				MBModel.fillMediaModel(i, mi = mf.getMediaInfo());
+				if (templ == null)
+					templ ="{\"title\"=\"%s\", \"album\"=\"%s\",\"performer\"=\"%s\",\"year\"=%d}";
+				return String.format(templ, i.title, i.performer, mi.getAttribute(MediaInfo.ALBUM),
+						i.year);
+			} else {
+			
+			}
+		} catch (Exception e) {
+			Log.l.error("Can't get a description from the media", e);
+		}
+		return "{\"error\"}";
 	}
 
 	public void removePlay(String path) {
