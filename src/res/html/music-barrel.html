@@ -23,6 +23,7 @@
 	   window.location.href = url;
    }
    function updateVer() {
+	   document.querySelector('span:nth-child(2)').innerHTML = new Date().getFullYear()
     	ajax.get({
            url:'./webapp/Musicbarrel/ajax/version',
            respType: 'html',
@@ -55,5 +56,5 @@
 </div>
 <div style="position:fixed;bottom:0;text-align:right;width:96%">
   <span>&nbsp;vx.x</span>
-     &copy; 2023 Dmitriy Rogatkin (<a style="color:#667" href="license.html">Licenses</a>)</div>
+     &copy; <span></span> Dmitriy Rogatkin (<a style="color:#667" href="license.html">Licenses</a>)</div>
 </body></html>
