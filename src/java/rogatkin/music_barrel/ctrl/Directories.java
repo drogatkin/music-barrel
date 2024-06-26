@@ -20,7 +20,7 @@ import jcifs.smb.SmbFile;
 import com.beegman.webbee.block.Gadget;
 
 public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
-	
+	static final boolean DEBUG_AUTH = false;
 
 	@Override
 	protected Collection<MusicPath> getGadgetData() {
@@ -30,13 +30,16 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 		//System.out.printf("path %S%n",  ps);
 		Path cp = null;
 		if (ps.startsWith(RemoteFile.SAMBA_PREF)) {
+		    String smbPath = RemoteFile.SAMBA_PROT + ps.substring(RemoteFile.SAMBA_PREF.length());
 			try {
-				String smbPath = RemoteFile.SAMBA_PROT + ps.substring(RemoteFile.SAMBA_PREF.length());
 				NtlmPasswordAuthentication auth = null;
 				mb_accnt accnt = getAppModel().getShareAccnt(smbPath);
 				if (accnt != null) {
 					auth = new NtlmPasswordAuthentication("workgroup", accnt.name, accnt.password);
+					if (DEBUG_AUTH)
+					    System.err.printf("auth %s pas %s for %s%n",  accnt.name, accnt.password);
 				}
+				
 				SmbFile dir = new SmbFile(smbPath, auth);
 				SmbFile[] files = dir.listFiles();
 				if (files != null)
@@ -60,6 +63,8 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 				return result;
 			} catch (Exception bad) {
 				log("Can't process samba path %s", bad, ps);
+				// remove the account as good
+				getAppModel().dropShareAccnt(smbPath);
 			}
 			 
 		} else {

@@ -157,6 +157,16 @@ public class MBModel extends AppModel implements Name {
 		return settings;
 	}
 
+	public boolean dropShareAccnt(String path) {
+		for (mb_accnt a : accounts) {
+			if (path.startsWith(a.share_path)) {
+			    accounts.remove(a);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public mb_accnt getShareAccnt(String path) {
 		for (mb_accnt a : accounts) {
 			if (path.startsWith(a.share_path))
