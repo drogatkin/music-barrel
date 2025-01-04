@@ -98,7 +98,12 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	public static class AOEnumConv implements FieldConverter<output_type> {
 		@Override
 		public output_type convert(String value, TimeZone tz, Locale l) {
-			return Enum.valueOf(output_type.class, value);
+		    try {
+			    return Enum.valueOf(output_type.class, value);
+		    } catch(java.lang.IllegalArgumentException iae) {
+		        System.err.printf("Output type %s can't be converted, AUTO used instead%n", value);
+		        return Enum.valueOf(output_type.class, "AUTO");
+		    }
 		}
 
 		@Override
@@ -113,7 +118,7 @@ public class mb_setting extends SimpleCoordinator<MBModel> {
 	public static class CharsetsFiller implements FieldFiller<DODelegatorEx[], mb_setting> {
 		public DODelegatorEx[] fill(mb_setting modelObject, String filter) {
 			Set<String> charsets = null;
-			if ("1.8.0-ea-b36e".equals(System.getProperty("java.runtime.version")))
+			if ("8".equals(System.getProperty("java.specification.version")))
 				charsets = new HashSet<>(Arrays.asList(DataConv.HTML5_CHARSETS));
 			else
 				charsets = Charset.availableCharsets().keySet();
