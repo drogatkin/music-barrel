@@ -393,9 +393,14 @@ public class MBModel extends AppModel implements Name {
 
 	public static Path getItemPath(String path) {
 		if (path != null) {
-			Path result = Paths.get(path);
-			if (path.startsWith(RemoteFile.SAMBA_PREF) || Files.isRegularFile(result) && Files.isReadable(result))
-				return result;
+			Path result = null;
+			try {
+			    result = Paths.get(path);
+    			if (path.startsWith(RemoteFile.SAMBA_PREF) || Files.isRegularFile(result) && Files.isReadable(result))
+    				return result;
+			} catch(java.nio.file.FileSystemNotFoundException | java.nio.file.InvalidPathException fsne) {
+    	        return new RemoteFile.SMBPath(path);
+    	    }
 		}
 		return null;
 	}

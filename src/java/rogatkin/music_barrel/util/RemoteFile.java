@@ -9,6 +9,15 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.FileSystems;
+import java.nio.file.PathMatcher;
+import java.nio.file.WatchKey;
+import java.nio.file.LinkOption;
+import java.nio.file.FileSystem;
+import java.nio.file.WatchService;
+import java.nio.file.WatchEvent ;
+import java.util.Iterator;
+import java.util.Objects;
 
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbAuthException;
@@ -307,7 +316,180 @@ public class RemoteFile extends File {
 	}
 	
 	public Path asPath() {
-		return Paths.get(SAMBA_PREF + getPath().substring(SAMBA_PROT.length()));
+	    try {
+		    return Paths.get(new URI(SAMBA_PREF + getPath().substring(SAMBA_PROT.length())));
+	//    } catch(URISyntaxException use) {
+	//        System.err.println(use);
+	    } catch (URISyntaxException | java.nio.file.FileSystemNotFoundException fsne) {
+	        return new SMBPath(SAMBA_PREF + getPath().substring(SAMBA_PROT.length()));
+	    }
+	    //return null;
+	}
+	
+	public static class SMBPath implements Path {
+
+        private final SmbFile path;
+    
+        public SMBPath(String pathString) {
+            try {
+                this.path = new SmbFile(pathString);
+            } catch(/*MalformedURL*/Exception use) {
+                throw new RuntimeException(use);
+            }
+        }
+    
+        @Override
+        public FileSystem getFileSystem() {
+            return null;
+        }
+    
+        @Override
+        public boolean isAbsolute() {
+            return true;
+        }
+    
+        @Override
+        public Path getRoot() {
+            return new SMBPath(SAMBA_PREF);
+        }
+    
+        @Override
+        public Path getFileName() {
+            return new SMBPath(path.getName());
+        }
+    
+        @Override
+        public Path getParent() {
+            return new SMBPath(path.getParent());
+        }
+    
+        @Override
+        public int getNameCount() {
+            return 1;
+        }
+    
+        @Override
+        public Path getName(int index) {
+            return new SMBPath(path.getName());
+        }
+    
+        @Override
+        public Path subpath(int beginIndex, int endIndex) {
+            return null;
+        }
+    
+        @Override
+        public boolean startsWith(Path other) {
+            return false;
+        }
+    
+        @Override
+        public boolean startsWith(String other) {
+            return false;
+        }
+    
+        @Override
+        public boolean endsWith(Path other) {
+            return false;
+        }
+    
+        @Override
+        public boolean endsWith(String other) {
+            return false;
+        }
+    
+        @Override
+        public Path normalize() {
+            return this;
+        }
+    
+        @Override
+        public Path resolve(Path other) {
+            return null;
+        }
+    
+        @Override
+        public Path resolve(String other) {
+            return null;
+        }
+    
+        @Override
+        public Path resolveSibling(Path other) {
+            return null;
+        }
+    
+        @Override
+        public Path resolveSibling(String other) {
+            return null;
+        }
+    
+        @Override
+        public Path relativize(Path other) {
+            return null;
+        }
+    
+        @Override
+        public URI toUri() {
+            try {
+                return new URI(path.toString());
+            } catch(URISyntaxException use) {
+                return null;
+            }
+        }
+    
+        @Override
+        public Path toAbsolutePath() {
+            return new SMBPath(path.toString());
+        }
+    
+        @Override
+        public Path toRealPath(LinkOption... options) throws IOException {
+            return null;
+        }
+    
+        @Override
+        public File toFile() {
+            return new File(toString());
+        }
+    
+        @Override
+        public WatchKey register(WatchService watcher, WatchEvent.Kind<?>[] events, WatchEvent.Modifier... modifiers) throws IOException {
+            return null;
+        }
+    
+        @Override
+        public WatchKey register(WatchService watcher, WatchEvent.Kind<?>... events) throws IOException {
+            return null;
+        }
+    
+        @Override
+        public Iterator<Path> iterator() {
+            return null;
+        }
+    
+        @Override
+        public int compareTo(Path other) {
+            return toString().compareTo(other.toString());
+        }
+    
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            SMBPath that = (SMBPath) obj;
+            return Objects.equals(path, that.path);
+        }
+    
+        @Override
+        public int hashCode() {
+            return Objects.hash(path);
+        }
+    
+        @Override
+        public String toString() {
+            return path.toString();
+        }
+
 	}
 	
 	private void loge(String scope, String message, Exception e, Object ... args) {
