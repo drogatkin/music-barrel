@@ -250,6 +250,8 @@ public class MBModel extends AppModel implements Name {
 						new DODelegator(plm, null, "", "item_id,list_id"));
 		} catch (Exception e) {
 			throw new MBError("Add item to list error", e);
+		} finally {
+		    try {mf.getAsStream().close();} catch(Exception e) {}
 		}
 	}
 

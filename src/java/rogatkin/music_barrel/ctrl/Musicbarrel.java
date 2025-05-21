@@ -96,6 +96,7 @@ public class Musicbarrel extends Grid<Musicbarrel.CellModel2, MBModel> {
 								"<div style=\"min-width:100%%\"><img src=\"Artwork?path=%s\" style=\"max-width: %2$dpx; max-height: %2$dpx;margin:auto;display:block\"></div>",
 								URLEncoder.encode(new MusicPath(result.path).toString(), getCharSet()),
 								appearance == Appearance.mobile ? 96 : 260);
+						try {mf.getAsStream().close();} catch(Exception e) {}
 					}
 				} catch (Exception e) {
 					log("Can't get a description from the media", e);

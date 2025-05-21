@@ -75,8 +75,8 @@ public class Directories extends Gadget<Collection<MusicPath>, MBModel> {
 			if (ps.isEmpty() == false) {
 
 				cp = fs.getPath(ps);
-				try {
-					for (Path p : Files.newDirectoryStream(cp)) {
+				try (java.nio.file.DirectoryStream<Path> stream = Files.newDirectoryStream(cp)){
+					for (Path p : stream) {
 						if (Files.isDirectory(p))
 							result.add(new MusicPath(p));
 					}

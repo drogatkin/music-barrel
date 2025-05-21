@@ -42,6 +42,7 @@ public class Artwork extends Stream<MBModel> {
 		//frontController.log("media for path: "+p+" is "+mf);
 		if (mf != null && mf.isValid()) {
 			os.write(mf.getThumbnailData(null));
+			try {mf.getAsStream().close();} catch(Exception e) {}
 		} else {
 			rogatkin.music_barrel.model.Artwork aw = rogatkin.music_barrel.model.Artwork.create(p);
 			if (aw != null) {
