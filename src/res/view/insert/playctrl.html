@@ -2,17 +2,16 @@
    <tr>
       <td> 
 <!-- -->
-<div style="border:1px solid black;width:312px;background-color:#EEE;background-color:#ddd;">
+<div style="border:1px solid black;background-color:#EEE;background-color:#ddd;">
 <table>
     <tr>
       <td style="margin-left:1em"><input type="image" src="../image/pause_ctrl.png" title="@commonlabels.pause@" alt="@commonlabels.pause@" onclick="pausePlay()"></td>
       <td style="margin-left:1em"><input type="image" src="../image/play_ctrl.png" title="@commonlabels.resume@" alt="@commonlabels.resume@" onclick="resumePlay()"></td>
       <td style="margin-left:1em"><input type="image" src="../image/next_ctrl.png" title="@commonlabels.next@" alt="@commonlabels.next@" onclick="nextPlay()"></td>
       <td style="margin-left:1em"><input type="image" src="../image/stop_ctrl.png" title="@commonlabels.stop@" alt="@commonlabels.stop@"  onclick="stopPlay()"></td>
-      <td style="width:120px;background-color:#ddd;background-image:url('../image/progress_bar.png');"><img id="progres_pusher" src="../image/dot.png" width="1" height="24" border="0">
-         <img src="../image/progress_arrow.png" border="0"></td>
+      <td style="margin-left:1em"><progress id="play_pos" max="100" value="70">70%</progress></td>
       <td style="margin-left:1em"><input type="image" id="toggle_btn" src="../image/once_ctrl.png" title="@commonlabels.mode@" alt="@commonlabels.mode@" onclick="toggleMode()"></td>
-      </tr>
+    </tr>
 </table>
 </div>
      </td>
@@ -22,9 +21,7 @@
 <script>
 var curr_mod = 0;
 var mod_img = ['../image/once_ctrl.png', '../image/cycle_ctrl.png', '../image/shuffle_ctrl.png'];
-var curr_prog=0;
-var step ;
-var prog_tmr;
+var prog_tmr
  function toggleMode() {
 	 if (curr_mod < mod_img.length-1)
 		 curr_mod++;
@@ -36,17 +33,13 @@ var prog_tmr;
 	 return curr_mod;
  }
  function startProgress(l,p) {
-	 getElement('progres_pusher').width = 1;
-	 pauseProgress();
-	 if (l > 0) {
-	    step = (120-8)/l;
-	    if (p)
-	    	curr_prog = p*step;
-	    else
-	        curr_prog = 0;
-	    resumeProgress();
-	 }
-	
+     pauseProgress()
+     const play_prog = document.getElementById('play_pos')
+	 play_prog.max=l
+	 if (!p)
+	    p = 0
+	 play_prog.value=p
+	 resumeProgress()
  }
  function pauseProgress() {
 	 if (prog_tmr)
@@ -54,8 +47,10 @@ var prog_tmr;
 	 prog_tmr = null;
  }
  function resumeProgress() {
-	 if (!prog_tmr)
-	 	prog_tmr = setInterval(function () { curr_prog +=step; if (curr_prog < (120-8)) getElement('progres_pusher').width = curr_prog; else pauseProgress(); }, 1000);
+	 if (!prog_tmr) {
+	 	prog_tmr = setInterval(function () { const play_prog = document.getElementById('play_pos'); 
+	 	     if (play_prog.value < play_prog.max) play_prog.value++; else pauseProgress(); }, 1000);
+	 }
 	 flashTit();
  }
  </script>
