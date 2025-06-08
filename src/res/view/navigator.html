@@ -6,12 +6,12 @@
   var artworks = [@artworks[0]('@:element@')@@artworks[1..](,'@:element@')@]
   
   function focusSong(tr) {
-		tr.style.backgroundColor = '#def'
+		tr.classList.add('song_hover');
 		var cdiv = getPlayCtrlDiv(tr)
 		cdiv.style.display = ''
   }
   function meanSong(tr) {
-		tr.style.backgroundColor = ''
+        tr.classList.remove('song_hover');
 		var cdiv = getPlayCtrlDiv(tr)
 		cdiv.style.display = 'none'
   }
