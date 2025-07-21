@@ -2,8 +2,7 @@
    <tr>
       <td> 
 <!-- -->
-<div style="border:1px solid black;background-color:#EEE;background-color:#ddd;">
-<table>
+<table class="controlpan">
     <tr>
       <td style="margin-left:1em"><input type="image" src="../image/pause_ctrl.png" title="@commonlabels.pause@ &#x2386;" alt="@commonlabels.pause@" onclick="pausePlay()"></td>
       <td style="margin-left:1em"><input type="image" src="../image/play_ctrl.png" title="@commonlabels.resume@ &#x23F5;" alt="@commonlabels.resume@" onclick="resumePlay()"></td>
@@ -13,7 +12,6 @@
       <td style="margin-left:1em"><input type="image" id="toggle_btn" src="../image/once_ctrl.png" title="@commonlabels.mode@" alt="@commonlabels.mode@" onclick="toggleMode()"></td>
     </tr>
 </table>
-</div>
      </td>
            @path(<td class="overthrow"> <span style="width:200px; overflow:hidden; white-space:nowrap;text-overflow:ellipsis;">@path.getFileName*()*@</span></td>)@
    </tr>
